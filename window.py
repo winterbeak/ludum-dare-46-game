@@ -178,6 +178,9 @@ class Window:
         """
         self.display = pygame.display.set_mode(self.windowed_resolution)
 
+    def clear(self, color=(0, 0, 0)):
+        self.display.fill(color)
+
 
 class PixelWindow(Window):
     """ The game's window, but for games that use pixel art.
@@ -289,3 +292,7 @@ class PixelWindow(Window):
         """
         self._scale = value
         self._update_unscaled_size()
+
+    def clear(self, color=(0, 0, 0)):
+        self.display.fill(color)
+        self.unscaled.fill(color)
