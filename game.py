@@ -2,6 +2,7 @@ import pygame
 
 import window
 import geometry
+import curves
 import graphics
 import const
 import events
@@ -31,6 +32,8 @@ class PlayScreen:
                       screen.unscaled.get_width() - BOTTLE_SECTION_LEFT,
                       screen.unscaled.get_height())
 
+    SHIFT_AMOUNT = 500
+
     def __init__(self):
         # TODO: Set death_time in the switch_to_play_screen function
         self.death_time = pygame.time.get_ticks() + 15000
@@ -38,6 +41,9 @@ class PlayScreen:
 
         self.generator = bottles.BottleGenerator()
         self.current_bottle = self.generator.next_item()
+        self.previous_bottle = bottles.ghost_bottle
+
+        self.shift = curves.SineOut(-self.SHIFT_AMOUNT, 0, 10)
 
         self.game_over = False
 
@@ -53,33 +59,56 @@ class PlayScreen:
 
         # If you press the key to trash
         elif events.keys.released_key == pygame.K_RIGHT:
+            self.previous_bottle = self.current_bottle
             self.current_bottle = self.generator.next_item()
+            self._start_shifting()
 
-    def draw_bottle(self, surface):
-        bottle = self.current_bottle
+        # If currently in the shift animation
+        if self._is_shifting():
+            self.shift.frame += 1
 
-        position = geometry.centered(self.BOTTLE_SECTION, bottle.total_size)
-        surface.blit(bottle.render(), position)
+    def _is_shifting(self):
+        if self.shift.frame <= self.shift.last_frame:
+            return True
+        return False
+
+    def _start_shifting(self):
+        self.shift.frame = 0
+
+    def draw_bottles(self, surface):
+
+        bottle1 = self.current_bottle
+        x1, y1 = geometry.centered(self.BOTTLE_SECTION, bottle1.total_size)
+
+        if self._is_shifting():
+            bottle2 = self.previous_bottle
+            x2, y2 = geometry.centered(self.BOTTLE_SECTION, bottle2.total_size)
+            x1 += self.shift.current_value
+            x2 += self.shift.current_value + self.SHIFT_AMOUNT
+            surface.blit(bottle1.render(), (x1, y1))
+            surface.blit(bottle2.render(), (x2, y2))
+        else:
+            surface.blit(bottle1.render(), (x1, y1))
 
     def draw(self, surface):
-        test_background.draw(surface, (0, 0), 0)
+        # test_background.draw(surface, (0, 0), 0)
 
-        draw_debug_countdown(self.death_time, surface, (20, 20))
+        draw_debug_countdown(self.death_time, surface, (456, 30))
         # draw_debug_countdown(self.ambulance_time, surface, (20, 36))
 
-        self.draw_bottle(surface)
+        self.draw_bottles(surface)
 
+        x = 425
         if events.keys.held_key == pygame.K_LEFT:
-            x = 120
-        else:
-            x = 125
-        surface.blit(graphics.tahoma.render("PRESS LEFT TO FEED", False, const.WHITE), (x, 100))
+            x -= 5
 
+        surface.blit(graphics.tahoma.render("PRESS LEFT TO FEED", False, const.WHITE), (x, 320))
+
+        x = 425
         if events.keys.held_key == pygame.K_RIGHT:
-            x = 120
-        else:
-            x = 125
-        surface.blit(graphics.tahoma.render("PRESS RIGHT TO PASS", False, const.WHITE), (x, 116))
+            x -= 5
+
+        surface.blit(graphics.tahoma.render("PRESS RIGHT TO PASS", False, const.WHITE), (x, 336))
 
 
 PLAY_SCREEN = 1

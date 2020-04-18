@@ -71,6 +71,7 @@ PALETTES = [
     Palette((187, 187, 187), (124, 0, 177), (247, 208, 108)),  # Purple orange
     Palette((0, 156, 196), (0, 182, 255), (237, 237, 237)),  # Sky
     ]
+TRANSPARENT_PALETTE = Palette(const.TRANSPARENT, const.TRANSPARENT, const.TRANSPARENT)
 
 
 TOP_COUNT = 6
@@ -151,7 +152,7 @@ class Bottle:
         text = ", ".join(self.effects)
         font = graphics.tahoma
         max_width = self.body_width
-        return graphics.text_block(text, font, const.BLACK, max_width)
+        return graphics.text_block(text, font, const.BLACK, max_width - 10)
 
     def render(self):
         surface = graphics.new_surface(self.total_size)
@@ -189,9 +190,13 @@ class Bottle:
 
         # Applies text to the bottle
         side_effects = self.render_text()
-        surface.blit(side_effects, (3, label_y + 3))
+        surface.blit(side_effects, (5, label_y + 3))
 
         return surface
+
+
+ghost_bottle = Bottle()
+ghost_bottle.palette = TRANSPARENT_PALETTE
 
 
 def generate_benign():
