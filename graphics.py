@@ -1,6 +1,61 @@
 import pygame
 import const
 
+pygame.display.set_mode((100, 100))
+
+tahoma = pygame.font.SysFont("Tahoma", 10)
+
+
+def new_surface(size):
+    surface = pygame.Surface(size)
+    surface.set_colorkey(const.TRANSPARENT)
+    surface.fill(const.TRANSPARENT)
+    return surface
+
+
+def text_block(text, font, color, max_width):
+    """ Renders a block of text, and automatically wraps it to a width. """
+    line = ""
+    lines = []
+
+    first_word = True
+    current_width = 0
+
+    # Determines where to split the lines up
+    for word in text.split():
+        width = font.size(word + " ")[0]
+
+        if current_width + width > max_width and not first_word:
+            lines.append(line)
+            line = word + " "
+
+            current_width = width
+
+        else:
+            line += word + " "
+
+            current_width += width
+
+        first_word = False
+
+    lines.append(line)
+
+    # Makes the final rendered surface that all the text is rendered on
+    line_height = font.get_linesize()
+    height = len(lines) * line_height
+
+    surface = new_surface((max_width, height))
+    surface.fill(const.TRANSPARENT)
+
+    # Renders all the lines
+    y = 0
+    for text_line in lines:
+        rendered_text = font.render(text_line, False, color)
+        surface.blit(rendered_text, (0, y))
+        y += line_height
+
+    return surface
+
 
 class SpriteColumn:
     def __init__(self, path, sprite_count):
@@ -14,6 +69,24 @@ class SpriteColumn:
 
         self.single_width = image.get_width()
         self.single_height = int(image.get_height() / sprite_count)
+        self.single_size = (self.single_width, self.single_height)
+
+    def draw(self, surface, position, sprite_num):
+        width = self.single_width
+        height = self.single_height
+
+        y = height * sprite_num
+
+        surface.blit(self.surface, position, (0, y, width, height))
+
+
+def load_multiple_columns(template_string, column_count, sprite_count):
+    columns = []
+    for x in range(column_count):
+        column = SpriteColumn(template_string % x, sprite_count)
+        columns.append(column)
+
+    return columns
 
 
 class SpriteSheet:
@@ -24,18 +97,13 @@ class SpriteSheet:
         width = 0
         height = 0
         for column in column_list:
-            column_x = width
+            self.column_x.append(width)
             width += column.surface.get_width()
             height = max(height, column.surface.get_height())
 
-    def draw_sprite(self, surface, position, column_num, frame_num):
+    def draw(self, surface, position, column_num, sprite_num):
         column = self.columns[column_num]
-
-        width = column.single_width
-        height = column.single_height
-        sprite_y = height * frame_num
-
-        surface.blit(column.surface, position, (0, sprite_y, width, height))
+        column.draw(surface, position, sprite_num)
 
 
 class Animation:
@@ -87,7 +155,7 @@ class Animation:
             self._delay = 0
 
     def draw(self, surface, position):
-        self.sheet.draw_sprite(surface, position, self._col_num, self._frame)
+        self.sheet.draw(surface, position, self._col_num, self._frame)
 
 # import window
 # test_window = window.PixelWindow(10, (320, 180))
