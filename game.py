@@ -17,6 +17,18 @@ screen = window.PixelWindow(2, (1280, 720))
 
 test_background = graphics.SpriteColumn("images/test.png", 1)
 
+homunculus_idle = graphics.SpriteColumn("images/homunculus.png", 4)
+homunculus_eat = graphics.SpriteColumn("images/homunculus_eat.png", 8)
+homunculus_sprite_sheet = graphics.SpriteSheet([homunculus_idle,
+                                                homunculus_eat
+                                                ])
+HOMUNCULUS_IDLE = 0
+HOMUNCULUS_EAT = 1
+
+homunculus = graphics.Animation(homunculus_sprite_sheet)
+homunculus.set_frame_delay(HOMUNCULUS_IDLE, 3)
+homunculus.set_frame_delay(HOMUNCULUS_EAT, 3)
+
 
 def draw_debug_countdown(end_time, surface, position):
     # TODO: Beautify the timers with custom drawn numbers
@@ -33,6 +45,9 @@ class PlayScreen:
                       screen.unscaled.get_height())
 
     SHIFT_AMOUNT = 500
+    SHIFT_LENGTH = 15
+
+    HOMUNCULUS_EAT_DELAY_LENGTH = 5
 
     def __init__(self):
         # TODO: Set death_time in the switch_to_play_screen function
@@ -43,7 +58,17 @@ class PlayScreen:
         self.current_bottle = self.generator.next_item()
         self.previous_bottle = bottles.ghost_bottle
 
-        self.shift = curves.SineOut(-self.SHIFT_AMOUNT, 0, 10)
+        self.shift = curves.SineOut(-self.SHIFT_AMOUNT, 0, self.SHIFT_LENGTH)
+        self.toss_x = curves.Linear(0, -280, self.SHIFT_LENGTH)
+        self.toss_y = curves.QuadraticArc(0, -100, self.SHIFT_LENGTH - 4)
+        self.toss_scale = curves.Linear(1, 0.05, self.SHIFT_LENGTH)
+        self.toss_rotate = curves.Linear(0, 290, self.SHIFT_LENGTH)
+        self.toss_x.frame = self.toss_x.length
+        self.toss_y.frame = self.toss_y.length
+        self.toss_scale.frame = self.toss_scale.length
+        self.toss_rotate.frame = self.toss_rotate.length
+
+        self.homunculus_eat_delay = 0
 
         self.game_over = False
 
@@ -52,8 +77,9 @@ class PlayScreen:
         # If you press the key to feed
         if events.keys.released_key == pygame.K_LEFT:
             if self.current_bottle.lethal:
-                self.game_over = True
+                pass #self.game_over = True
             else:
+                self._start_tossing()
                 self.death_time += 15000
                 self.current_bottle = self.generator.next_item()
 
@@ -63,9 +89,36 @@ class PlayScreen:
             self.current_bottle = self.generator.next_item()
             self._start_shifting()
 
-        # If currently in the shift animation
+        # If currently in tossing animation
+        if self._is_tossing():
+            self.toss_x.frame += 1
+            self.toss_y.frame += 1
+            self.toss_scale.frame += 1
+            self.toss_rotate.frame += 1
+            self.homunculus_eat_delay += 1
+            if self.homunculus_eat_delay == self.HOMUNCULUS_EAT_DELAY_LENGTH:
+                homunculus.col_num = HOMUNCULUS_EAT
+
+        # If currently in shifting animation
         if self._is_shifting():
             self.shift.frame += 1
+
+        homunculus.update()
+        if homunculus.col_num == HOMUNCULUS_EAT and homunculus.done:
+            homunculus.col_num = HOMUNCULUS_IDLE
+            self.homunculus_eat_delay = 0
+
+    def _is_tossing(self):
+        if self.toss_x.frame <= self.toss_x.last_frame:
+            return True
+        return False
+
+    def _start_tossing(self):
+        self.toss_x.frame = 0
+        self.toss_y.frame = 0
+        self.toss_scale.frame = 0
+        self.toss_rotate.frame = 0
+        self._start_shifting()
 
     def _is_shifting(self):
         if self.shift.frame <= self.shift.last_frame:
@@ -80,13 +133,33 @@ class PlayScreen:
         bottle1 = self.current_bottle
         x1, y1 = geometry.centered(self.BOTTLE_SECTION, bottle1.total_size)
 
-        if self._is_shifting():
+        if self._is_tossing():
             bottle2 = self.previous_bottle
             x2, y2 = geometry.centered(self.BOTTLE_SECTION, bottle2.total_size)
+            x2 += self.toss_x.current_value
+            y2 += self.toss_y.current_value
+
+            bottle2_sprite = bottle2.render()
+            width = int(bottle2_sprite.get_width() * self.toss_scale.current_value)
+            height = int(bottle2_sprite.get_height() * self.toss_scale.current_value)
+            scaled = pygame.transform.scale(bottle2_sprite, (width, height))
+
+            angle = self.toss_rotate.current_value
+            rotated = pygame.transform.rotate(scaled, angle)
+
+            surface.blit(rotated, (x2, y2))
+
+        if self._is_shifting():
+
+            if not self._is_tossing():
+                bottle2 = self.previous_bottle
+                x2, y2 = geometry.centered(self.BOTTLE_SECTION, bottle2.total_size)
+                x2 += self.shift.current_value + self.SHIFT_AMOUNT
+                surface.blit(bottle2.render(), (x2, y2))
+
             x1 += self.shift.current_value
-            x2 += self.shift.current_value + self.SHIFT_AMOUNT
             surface.blit(bottle1.render(), (x1, y1))
-            surface.blit(bottle2.render(), (x2, y2))
+
         else:
             surface.blit(bottle1.render(), (x1, y1))
 
@@ -109,6 +182,9 @@ class PlayScreen:
             x -= 5
 
         surface.blit(graphics.tahoma.render("PRESS RIGHT TO PASS", False, const.WHITE), (x, 336))
+
+        y = screen.unscaled.get_height() - homunculus_idle.single_height
+        homunculus.draw(surface, (30, y))
 
 
 PLAY_SCREEN = 1

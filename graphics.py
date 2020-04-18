@@ -118,6 +118,8 @@ class Animation:
         self._col_num = 0
         self.sheet = sprite_sheet
 
+        self.done = False
+
     @property
     def frame(self):
         return self._frame
@@ -125,7 +127,9 @@ class Animation:
     @frame.setter
     def frame(self, value):
         # Automatically loops around when frame reaches end
-        value %= self.sheet.columns[self._col_num].sprite_count
+        if value >= self.sheet.columns[self._col_num].sprite_count:
+            value %= self.sheet.columns[self._col_num].sprite_count
+            self.done = True
         self._frame = value
 
     @property
@@ -140,6 +144,10 @@ class Animation:
         elif value < 0:
             print("Tried to set to an invalid animation " +
                   "(%d when 0 is the min)" % value)
+        else:
+            self._col_num = value
+            self._frame = 0
+            self.done = False
 
     def set_frame_delay(self, col_num, delay):
         frames = self.sheet.columns[col_num].sprite_count
