@@ -73,7 +73,7 @@ PALETTES = [
     ]
 
 
-TOP_COUNT = 3
+TOP_COUNT = 6
 tops = graphics.load_multiple_columns("images/bottle_top_%d.png", TOP_COUNT, 1)
 
 BOTTOM_COUNT = 2
