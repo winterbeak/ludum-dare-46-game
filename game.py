@@ -67,6 +67,9 @@ def render_number(text, color, shake=0):
 
     x = 0
     for char in text:
+        if char == "-":
+            continue
+
         if char == ":":
             sprite_num = 10
         else:
@@ -181,6 +184,8 @@ class PlayScreen:
         self.win = False
 
         self.bottles = []
+        self.allergies = []
+        self.allergy_triggers = []
 
     def update(self):
 
@@ -215,9 +220,27 @@ class PlayScreen:
             # you can skip the game over check.  It takes some pretty quick
             # spamming, though, so it's not too much of an issue.
             if homunculus.frame == 5 and homunculus.delay == 0:
-                if self.previous_bottle.lethal:
+                self.previous_bottle.eaten = True
+
+                # Applies all allergies
+                for allergy in self.previous_bottle.allergies:
+                    if allergy not in self.allergies:
+                        self.allergies.append(allergy)
+                        self.previous_bottle.adds_allergies.append(allergy)
+
+                # Checks if the bottle has a lethal side effect
+                lethal = self.previous_bottle.lethal
+
+                # Checks if an allergy was triggered
+                triggers_allergy = False
+                for allergen in self.previous_bottle.allergens:
+                    if allergen in self.allergies:
+                        triggers_allergy = True
+                        self.allergy_triggers.append(allergen)
+
+                if lethal or triggers_allergy:
                     self.game_over = True
-                    self.bottles.pop()
+                    self.bottles.pop()  # Removes the bottle that's sliding in
                 else:
                     self.death_time += self.bottle_time
                     self.green_timer_frame = 30
@@ -225,6 +248,7 @@ class PlayScreen:
         # Handles winning and losing due to timers
         if self.death_time > self.ambulance_time:
             self.win = True
+            self.bottles.pop()  # Removes the bottle that's sliding in
         elif calculate_time_milliseconds(self.death_time) < 0:
             self.game_over = True
 
@@ -481,6 +505,7 @@ class ResultScreen(MenuScreen):
         self.bottles = None
         self.background = None
         self._bottle_num = 0
+        self.allergies = []
 
     def update(self):
         if self.is_shifting():
@@ -490,12 +515,19 @@ class ResultScreen(MenuScreen):
             self.selected = True
 
         elif events.keys.released_key == pygame.K_LEFT:
+
             if self.bottle_num > 0:
+                for allergy in self.current_bottle.adds_allergies:
+                    self.allergies.remove(allergy)
+
                 self.bottle_num -= 1
 
         elif events.keys.released_key == pygame.K_RIGHT:
             if self.bottle_num < len(self.bottles) - 1:
                 self.bottle_num += 1
+
+                for allergy in self.current_bottle.adds_allergies:
+                    self.allergies.append(allergy)
 
     def render_bottle(self, bottle):
         return bottle.render_color_codes()
@@ -512,6 +544,23 @@ class ResultScreen(MenuScreen):
         pygame.draw.rect(surface, const.WHITE, rect)
 
         surface.blit(text, (text_x, 260))
+
+        if self.current_bottle.eaten:
+            string = graphics.colorize("Eaten.", "r")
+        else:
+            string = graphics.colorize("Skipped.", "o")
+
+        if self.allergies:
+            string += " <br> Allergies: " + ", ".join(self.allergies)
+        max_width = self.BOTTLE_SECTION[2] - 40
+        text = graphics.text_block_color_codes(string, graphics.tahoma, max_width)
+
+        text_x = self.BOTTLE_SECTION[0] + 20
+
+        rect = (text_x - 10, 310, text.get_width() + 20, text.get_height() + 20)
+        pygame.draw.rect(surface, const.WHITE, rect)
+
+        surface.blit(text, (text_x, 320))
 
     @property
     def bottle_num(self):
@@ -547,6 +596,25 @@ def menu_play_transition(menu, play):
 
 
 def play_result_transition(play, result):
+    allergies = []
+    for bottle_index, bottle in enumerate(play.bottles):
+
+        if bottle.eaten:
+            allergies += bottle.allergies
+
+        # Colors red any allergens that are deadly
+        for allergen_index, allergen in enumerate(bottle.allergens):
+            if allergen in allergies:
+                string = graphics.colorize(allergen, "r")
+                play.bottles[bottle_index].allergens[allergen_index] = string
+
+        # Colors any allergies in orange
+        for effect_index, effect in enumerate(bottle.effects):
+            if effect.endswith("allergy"):
+                string = graphics.colorize(effect, "o")
+                play.bottles[bottle_index].effects[effect_index] = string
+
+    result.allergies = play.allergies
     result.bottles = play.bottles
     result.current_bottle = play.previous_bottle
     result.bottle_num = len(result.bottles) - 1
@@ -555,6 +623,8 @@ def play_result_transition(play, result):
 
 incident_list = [
     incidents.generate_basic_incident(),
+    incidents.generate_allergen_incident(),
+    incidents.generate_mixed_incident(),
     incidents.generate_fast_incident(),
 ]
 

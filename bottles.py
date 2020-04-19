@@ -74,6 +74,21 @@ benign_effects = [
     "liver vibrations",
 ]
 
+allergens = [
+    "milk",
+    "soy",
+    "fruit",
+    "wheat",
+    "cotton",
+    "tuna",
+    "trout",
+    "beef",
+    "chicken",
+    "flour",
+    "wood",
+    "celery",
+]
+
 
 for index in range(len(death_effects)):
     death_effects[index] = graphics.colorize(death_effects[index], "r")
@@ -103,6 +118,15 @@ PALETTES = [
     Palette((43, 43, 43), (128, 10, 0), (214, 193, 193)),  # Strawberry Jam
     Palette((187, 187, 187), (124, 0, 177), (247, 208, 108)),  # Purple orange
     Palette((0, 156, 196), (0, 182, 255), (237, 237, 237)),  # Sky
+    Palette((167, 72, 255), (255, 221, 85), (255, 112, 251)),  # Orange pink
+    Palette((141, 138, 198), (9, 0, 155), (253, 241, 190)),  # Royal blue
+    Palette((148, 148, 148), (88, 36, 11), (139, 110, 105)),  # Mahogany
+    Palette((16, 255, 0), (150, 255, 144), (218, 255, 216)),  # Bright green
+    Palette((33, 231, 0), (255, 0, 96), (205, 255, 202)),  # Watermelon
+    Palette((243, 255, 56), (56, 255, 173), (202, 255, 247)),  # Toothpaste
+    Palette((179, 0, 255), (0, 255, 227), (219, 184, 255)),  # Neapolitan
+    Palette((82, 56, 119), (65, 0, 99), (210, 185, 237)),  # Purple
+    Palette((197, 197, 197), (187, 217, 225), (0, 204, 172)),  # Teal label
     ]
 TRANSPARENT_PALETTE = Palette(const.TRANSPARENT, const.TRANSPARENT, const.TRANSPARENT)
 
@@ -151,9 +175,11 @@ class Bottle:
     def __init__(self):
         self.lethal = False
         self.effects = []
+        self.allergens = []
+        self.allergies = []
 
         # Main body
-        self.body_width = random.randint(100, 250)
+        self.body_width = random.randint(100, 230)
         self.body_height = random.randint(150, 200)
 
         # Label
@@ -170,28 +196,55 @@ class Bottle:
         self.cap_x = random.randint(top_width - 15, top_width - 2)
         self.cap_height = random.randint(20, 30)
 
-        self.total_width = self.body_width
+        self._total_width = self.body_width
         total_height = 0
         total_height += self.cap_height
         total_height += self.body_height
         total_height += self.top.single_height
         total_height += self.bottom.single_height
-        self.total_height = total_height
-        self.total_size = (self.total_width, self.total_height)
+        self._total_height = total_height
+        self.total_size = (self._total_width, self._total_height)
 
         self.palette = random.choice(PALETTES)
 
-    def render_text(self):
-        text = ", ".join(self.effects)
-        font = graphics.tahoma
-        max_width = self.body_width
-        return graphics.text_block(text, font, const.BLACK, max_width - 10)
+        self.eaten = False
+        self.adds_allergies = []
 
-    def render_color_text(self):
-        text = ", ".join(self.effects)
+    @property
+    def total_height(self):
+        return self._total_height
+
+    @total_height.setter
+    def total_height(self, value):
+        self._total_height = value
+        self.total_size = (self._total_width, value)
+
+    @property
+    def total_width(self):
+        return self._total_height
+
+    @total_width.setter
+    def total_width(self, value):
+        self._total_width = value
+        self.total_size = (value, self._total_height)
+
+    def render_text(self, colored=False):
+        text = ""
+        if self.allergens:
+            text += "Contains: "
+        text += ", ".join(self.allergens)
+
+        if self.allergens:
+            text += " <br> Side Effects: "
+        text += ", ".join(self.effects)
         font = graphics.tahoma
         max_width = self.body_width
-        return graphics.text_block_color_codes(text, font, max_width - 10)
+
+        if colored:
+            return graphics.text_block_color_codes(text, font, max_width - 10)
+
+        else:
+            return graphics.text_block(text, font, const.BLACK, max_width - 10)
 
     def render_textless(self):
         surface = graphics.new_surface(self.total_size)
@@ -246,24 +299,44 @@ class Bottle:
         label_y = self.cap_height + self.top.single_height + self.label_y_offset
 
         # Applies text to the bottle
-        side_effects = self.render_color_text()
+        side_effects = self.render_text(True)
         surface.blit(side_effects, (5, label_y + 3))
 
         return surface
 
     def add_benign(self, count):
         # Adds a certain amount of benign effects to this bottle
-        for effect in range(count - 1):
+        for _ in range(count):
             effect = random.choice(benign_effects)
             while effect in self.effects:
                 effect = random.choice(benign_effects)
             self.effects.append(effect)
 
-    def replace_lethal(self):
-        # Replaces a random effect with a lethal effect
-        position = random.randint(0, len(self.effects) - 1)
-        self.effects[position] = random.choice(death_effects)
+    def add_allergens(self, count):
+        for _ in range(count):
+            allergen = random.choice(allergens)
+            while allergen in self.allergens:
+                allergen = random.choice(allergens)
+            self.allergens.append(allergen)
+
+    def add_allergy(self, count):
+        for _ in range(count):
+            allergen = random.choice(allergens)
+            while allergen in self.allergies:
+                allergen = random.choice(allergens)
+            self.allergies.append(allergen)
+            self.effects.append(allergen + " allergy")
+
+    def add_lethal(self, count):
         self.lethal = True
+        for _ in range(count):
+            effect = random.choice(death_effects)
+            while effect in self.effects:
+                effect = random.choice(death_effects)
+            self.effects.append(effect)
+
+    def shuffle(self):
+        random.shuffle(self.effects)
 
 
 ghost_bottle = Bottle()
@@ -287,22 +360,54 @@ class BottleGenerator:
                 self.bottles_until_safe = random.randint(0, 3)
             else:
                 self.bottles_until_safe -= 1
-                bottle.replace_lethal()
+                bottle.effects.pop()
+                bottle.add_lethal(1)
+
+        # Allergen level generator
+        elif self.level == const.ALLERGEN_INCIDENT:
+            bottle = Bottle()
+            bottle.add_allergens(random.randint(1, 3))
+            bottle.add_allergy(1)
+
+        # Mixed level generator
+        elif self.level == const.MIXED_INCIDENT:
+            bottle = Bottle()
+            bottle.add_benign(random.randint(3, 5))
+            bottle.add_allergens(random.randint(1, 4))
+
+            if random.random() < 0.33:
+                bottle.effects.pop()
+                bottle.add_allergy(1)
+
+            if self.bottles_until_safe == 0:
+                self.bottles_until_safe = random.randint(0, 1)
+            else:
+                self.bottles_until_safe -= 1
+                bottle.effects.pop(0)  # Pop at start so that it doesn't pop the allergy
+                bottle.add_lethal(1)
 
         # Basic level generator
         else:
             bottle = Bottle()
-            bottle.add_benign(random.randint(6, 9))
+            bottle.add_benign(random.randint(5, 8))
 
             if self.bottles_until_safe == 0:
                 self.bottles_until_safe = random.randint(0, 3)
             else:
                 self.bottles_until_safe -= 1
-                bottle.replace_lethal()
+                bottle.effects.pop()
+                bottle.add_lethal(1)
+
+        bottle.shuffle()
 
         # If the text overflows the label, then extend the label
         text_height = bottle.render_text().get_height()
         if bottle.label_height < text_height + 10:
             bottle.label_height = text_height + 10
+
+            if bottle.label_y_offset + bottle.label_height > bottle.body_height:
+                previous = bottle.body_height
+                bottle.body_height = bottle.label_y_offset + bottle.label_height + 10
+                bottle.total_height += bottle.body_height - previous
 
         return bottle
