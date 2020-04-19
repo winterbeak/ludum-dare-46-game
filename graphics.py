@@ -3,7 +3,7 @@ import const
 
 pygame.display.set_mode((100, 100))
 
-tahoma = pygame.font.SysFont("Tahoma", 10)
+tahoma = pygame.font.Font("Tahoma.ttf", 10)
 
 
 def new_surface(size):

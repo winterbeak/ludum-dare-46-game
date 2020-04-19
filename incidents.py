@@ -166,10 +166,11 @@ def generate_basic_incident():
 
 def generate_fast_incident():
     text = (
-        'Incident 2 <br> '
-        'Year: 2070 <br> <br> '
-        'They just don\'t make medicine like they used to. <br> <br> '
-        'PRESS SPACE TO START'
+        'Incident 4 <br> '
+        'Year: 2020 <br> <br> '
+        'It is I, Lercalo Colison, esteemed time traveller extraordinaire!  In 2945, I went back in time to 2020, taking with me my exquisite companion, <o>Patchwork,<k> to record the history of the twenty-first century!  Astoundingly, <r>medicine used to be allergy-free, and the amount of side effects are extraordinarily low!  Though the effectiveness seems to have dropped a tad.<k>  Very interesting, indeed... <br> <br> '
+        'Oh!  Is that an ancestor I see?  Most curious.  I\'d love to chat, but that could create a paradox.  So, I\'ll just have to watch from a distance.  He\'s talking to the person behind the counter and in response they\'ve filled a cup full of some strange brown liquid.  Ahaha!  He spilt it all over his version of Patchwork!  That\'s gotta be quite the pain, not to mention a threat to the integrity of the universe.  But that was 900 years ago, and comedy is just tragedy plus time, so I do suppose that\'s quite the hilarity, eh, Patchy? ... Patchy?  Where\'d you go?'
+
     )
     bottle = fast_incident_bottle()
     bottle.effects.append("1:30 goal time <br> 0:15 start time <br> +7 seconds per bottle <br> Side effects only")
@@ -187,7 +188,7 @@ def generate_allergen_incident():
     text = (
         'Incident 2 <br> '
         'Year: 2132 <br> <br> '
-        'Jauntra Colison here.  Today I took the <o>orange thing<k> to the local allergery.  It\'s a specialized drugstore that only sells allergy medicine.  No, the medicine doesn\'t cure your allergies.  It <r>gives you them.<k>  And they\'re not the fun kind of allergy that knocks you out for a few hours so you can skip your grandfather\'s funeral.  These are the kinds of allergy that will <r>immediately kill you.<k>  Unfortunately, the more of these allergies you have, the "cooler" you are.  In an attempt to save the lives of every kid in town, I did the responsible thing and set fire to the building.  Unfortunately, the homunculus also caught on fire, and has suffered third degree burns for the fifty-fourth time in its life (the first fifty-tree were why I didn\'t go to your funeral, Mark).  Well, at least there\'s medicine here, I just have to <r>keep track of all the allergies...<k> <br> <br> '
+        'Jauntra Colison here.  Today I took the <o>orange thing<k> to the local allergery.  It\'s a specialized drugstore that only sells allergy medicine.  No, the medicine doesn\'t cure your allergies.  It <r>gives you them.<k>  And they\'re not the fun kind of allergy that knocks you out for a few hours so you can skip your grandfather\'s funeral.  These are the kinds of allergies that will <r>immediately kill you.<k>  Unfortunately, the more of these allergies you have, the "cooler" you are.  In an attempt to save the lives of every kid in town, I did the responsible thing and set fire to the building.  Unfortunately, the homunculus also caught on fire, and has suffered third degree burns for the fifty-fourth time in its life (the first fifty-tree were why I didn\'t go to your funeral, Mark).  Well, at least there\'s medicine here, I just have to <r>keep track of all the allergies...<k> <br> <br> '
         'Note that some medicines cause an allergic reaction to one of its own ingredients.  That\'s lethal.'
     )
     bottle = allergen_incident_bottle()

@@ -48,6 +48,8 @@ homunculus_text = graphics.SpriteColumn("images/homunculus_text.png", 1)
 ambulance_text = graphics.SpriteColumn("images/ambulance_text.png", 1)
 
 one_more_text = graphics.SpriteColumn("images/one_more_text.png", 1)
+win_text = graphics.SpriteColumn("images/win.png", 1)
+lose_text = graphics.SpriteColumn("images/lose.png", 1)
 
 
 def draw_debug_countdown(end_time, surface, position):
@@ -500,12 +502,15 @@ class MenuScreen(PlayScreen):
 
 
 class ResultScreen(MenuScreen):
+
     def __init__(self):
         super().__init__()
         self.bottles = None
         self.background = None
         self._bottle_num = 0
         self.allergies = []
+        self.win = False
+        self.TEXT_SECTION = (0, 0, self.BOTTLE_SECTION_LEFT, screen.unscaled.get_height())
 
     def update(self):
         if self.is_shifting():
@@ -537,6 +542,7 @@ class ResultScreen(MenuScreen):
         self.draw_controls(surface)
         self.draw_bottles(surface)
 
+        # Draws return to menu text
         text = graphics.tahoma.render("Press SPACE to return to level select.", False, const.BLACK)
         text_x = (self.BOTTLE_SECTION_LEFT - text.get_width()) / 2
 
@@ -545,6 +551,7 @@ class ResultScreen(MenuScreen):
 
         surface.blit(text, (text_x, 260))
 
+        # Draws game analysis text
         if self.current_bottle.eaten:
             string = graphics.colorize("Eaten.", "r")
         else:
@@ -561,6 +568,17 @@ class ResultScreen(MenuScreen):
         pygame.draw.rect(surface, const.WHITE, rect)
 
         surface.blit(text, (text_x, 320))
+
+        # Draws win/lose text
+        if self.win:
+            sprite = win_text
+        else:
+            sprite = lose_text
+
+        size = (sprite.single_width, sprite.single_height)
+        x, y = geometry.centered(self.TEXT_SECTION, size)
+        y -= 50
+        sprite.draw(surface, (x, y), 0)
 
     @property
     def bottle_num(self):
@@ -619,6 +637,11 @@ def play_result_transition(play, result):
     result.current_bottle = play.previous_bottle
     result.bottle_num = len(result.bottles) - 1
     result.shift.frame = result.shift.length
+
+    if play_screen.win:
+        result.win = True
+    else:
+        result.win = False
 
 
 incident_list = [
