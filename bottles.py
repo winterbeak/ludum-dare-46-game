@@ -8,16 +8,17 @@ death_effects = [
     "instant death",
     "becoming dead",
     "dying instantly",
+    "dying on the spot",
     "loss of life",
-    "not living",
+    "not living anymore",
     "becoming a corpse",
-    "transforming into a corpse",
-    "loss of existence",
-
-    "heart attack",
-    "heart failure",
-    "failure of the heart",
-    "heart stops beating",
+    "being killed immediately",
+    "stop being alive",
+    "death",
+    "becoming not alive",
+    "becoming deceased",
+    "perishing immediately",
+    "having your life end",
 ]
 
 benign_effects = [
@@ -38,6 +39,34 @@ benign_effects = [
     "malnutrition",
     "stomach pangs",
     "attraction to death",
+    "behaving like a killer whale",
+    "losing depth perception",
+    "weighing a kilogram less",
+    "feeling lively",
+    "feeling alive",
+    "dry throat",
+    "death metal addiction",
+    "earning a dime",
+    "not lying anymore",
+    "not liking anyone",
+    "loss of lice",
+    "lice infection",
+
+    "smooth skin",
+    "better eyesight",
+    "worse eyesight",
+    "carrot addiction",
+    "golden hair",
+    "becoming bald",
+
+    "orange skin",
+    "shaking violently",
+
+    "straight lines start looking wonky",
+    'ms paint vision',
+
+    "learning to drive immediately",
+    "becoming dependable",
 
     "hearing failure",
     "heart beats faster",
@@ -244,7 +273,7 @@ class BottleGenerator:
 
         # If the text overflows the label, then extend the label
         text_height = bottle.render_text().get_height()
-        if bottle.label_height < text_height:
+        if bottle.label_height < text_height + 10:
             bottle.label_height = text_height + 10
 
         return bottle

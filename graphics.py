@@ -149,6 +149,10 @@ class Animation:
             self._frame = 0
             self.done = False
 
+    @property
+    def delay(self):
+        return self._delay
+
     def set_frame_delay(self, col_num, delay):
         frames = self.sheet.columns[col_num].sprite_count
         self._frame_lengths[col_num] = [delay] * frames
