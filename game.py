@@ -143,7 +143,7 @@ class PlayScreen:
                       screen.unscaled.get_width() - BOTTLE_SECTION_LEFT,
                       screen.unscaled.get_height())
 
-    SHIFT_AMOUNT = 500
+    SHIFT_AMOUNT = 600
     SHIFT_LENGTH = 15
 
     HOMUNCULUS_EAT_DELAY_LENGTH = 5
@@ -180,6 +180,8 @@ class PlayScreen:
         self.game_over = False
         self.win = False
 
+        self.bottles = []
+
     def update(self):
 
         # If you press the key to feed
@@ -187,12 +189,14 @@ class PlayScreen:
             self._start_tossing()
             self.previous_bottle = self.current_bottle
             self.current_bottle = self.generator.next_item()
+            self.bottles.append(self.current_bottle)
 
         # If you press the key to trash
         elif events.keys.released_key == pygame.K_RIGHT:
             self._start_shifting()
             self.previous_bottle = self.current_bottle
             self.current_bottle = self.generator.next_item()
+            self.bottles.append(self.current_bottle)
 
         # If currently in tossing animation
         if self.is_tossing():
@@ -206,9 +210,14 @@ class PlayScreen:
 
         # Verdict of whether the bottle eaten was lethal or not
         if homunculus.col_num == HOMUNCULUS_EAT:
+            # TODO: Exploit, spamming FEED fast enough can bypass this check
+            # If you feed faster than this animation takes to get to frame 5,
+            # you can skip the game over check.  It takes some pretty quick
+            # spamming, though, so it's not too much of an issue.
             if homunculus.frame == 5 and homunculus.delay == 0:
                 if self.previous_bottle.lethal:
                     self.game_over = True
+                    self.bottles.pop()
                 else:
                     self.death_time += self.bottle_time
                     self.green_timer_frame = 30
@@ -260,10 +269,13 @@ class PlayScreen:
             bottle2 = self.previous_bottle
             x2, y2 = geometry.centered(self.BOTTLE_SECTION, bottle2.total_size)
             x2 += self.shift.current_value + self.SHIFT_AMOUNT
-            surface.blit(bottle2.render(), (x2, y2))
+            surface.blit(self.render_bottle(bottle2), (x2, y2))
 
         x1 += self.shift.current_value
-        surface.blit(bottle1.render(), (x1, y1))
+        surface.blit(self.render_bottle(bottle1), (x1, y1))
+
+    def render_bottle(self, bottle):
+        return bottle.render()
 
     def draw_bottles(self, surface):
         # Draws all bottles (except a bottle that's being tossed
@@ -273,7 +285,7 @@ class PlayScreen:
         else:
             bottle = self.current_bottle
             x, y = geometry.centered(self.BOTTLE_SECTION, bottle.total_size)
-            surface.blit(bottle.render(), (x, y))
+            surface.blit(self.render_bottle(bottle), (x, y))
 
     def draw_tossed_bottle(self, surface):
 
@@ -427,37 +439,96 @@ class MenuScreen(PlayScreen):
             x1 += self.shift.current_value
             x2 += self.shift.current_value + self.SHIFT_AMOUNT
 
-        surface.blit(bottle1.render(), (x1, y1))
-        surface.blit(bottle2.render(), (x2, y2))
+        surface.blit(self.render_bottle(bottle1), (x1, y1))
+        surface.blit(self.render_bottle(bottle2), (x2, y2))
 
     def draw(self, surface):
         super().draw(surface)
 
+        # Handles the level description text
         text = self.current_level.text
         font = graphics.tahoma
         max_width = self.BOTTLE_SECTION_LEFT - 60
         text_surface = graphics.text_block_color_codes(text, font, max_width)
 
+        # Handles the level description box
         width = text_surface.get_width() + 20
         height = surface.get_height() - 40
         text_rect = (20, 20, width, height)
         color = self.current_level.bottle.palette.label_color
 
+        # Draws them both
         pygame.draw.rect(surface, color, text_rect)
         surface.blit(text_surface, (30, 30))
 
     def draw_controls(self, surface):
-        # Feed text
+        # Prev text
         x = 338
         if events.keys.held_key == pygame.K_LEFT:
             x -= 10
         prev_text.draw(surface, (x, 10), 0)
 
-        # Skip text
+        # Next text
         x = 481
         if events.keys.held_key == pygame.K_RIGHT:
             x += 10
         next_text.draw(surface, (x, 10), 0)
+
+
+class ResultScreen(MenuScreen):
+    def __init__(self):
+        super().__init__()
+        self.bottles = None
+        self.background = None
+        self._bottle_num = 0
+
+    def update(self):
+        if self.is_shifting():
+            self.shift.frame += 1
+
+        if events.keys.released_key == pygame.K_SPACE:
+            self.selected = True
+
+        elif events.keys.released_key == pygame.K_LEFT:
+            if self.bottle_num > 0:
+                self.bottle_num -= 1
+
+        elif events.keys.released_key == pygame.K_RIGHT:
+            if self.bottle_num < len(self.bottles) - 1:
+                self.bottle_num += 1
+
+    def render_bottle(self, bottle):
+        return bottle.render_color_codes()
+
+    def draw(self, surface):
+        self.background.draw(surface, (0, 0), 0)
+        self.draw_controls(surface)
+        self.draw_bottles(surface)
+
+        text = graphics.tahoma.render("Press SPACE to return to level select.", False, const.BLACK)
+        text_x = (self.BOTTLE_SECTION_LEFT - text.get_width()) / 2
+
+        rect = (text_x - 10, 250, text.get_width() + 20, text.get_height() + 20)
+        pygame.draw.rect(surface, const.WHITE, rect)
+
+        surface.blit(text, (text_x, 260))
+
+    @property
+    def bottle_num(self):
+        return self._bottle_num
+
+    @bottle_num.setter
+    def bottle_num(self, value):
+        if value < self._bottle_num:
+            self._shift_direction = const.RIGHT
+        elif value > self._bottle_num:
+            self._shift_direction = const.LEFT
+        else:
+            return
+        self._bottle_num = value
+        self.previous_bottle = self.current_bottle
+        self.current_bottle = self.bottles[value]
+        self._start_shifting()
 
 
 def menu_play_transition(menu, play):
@@ -472,6 +543,14 @@ def menu_play_transition(menu, play):
     play.generator.level = menu.current_level.number
 
     play.current_bottle = play.generator.next_item()
+    play.bottles = [play.current_bottle]
+
+
+def play_result_transition(play, result):
+    result.bottles = play.bottles
+    result.current_bottle = play.previous_bottle
+    result.bottle_num = len(result.bottles) - 1
+    result.shift.frame = result.shift.length
 
 
 incident_list = [
@@ -485,8 +564,9 @@ menu_screen = MenuScreen()
 PLAY_SCREEN = 1
 play_screen = PlayScreen()
 
-GAME_OVER_SCREEN = 2
-WIN_SCREEN = 3
+RESULT_SCREEN = 2
+result_screen = ResultScreen()
+result_screen.background = background
 
 current_screen = MENU_SCREEN
 running = True
@@ -510,22 +590,27 @@ while True:
     elif current_screen == PLAY_SCREEN:
         play_screen.update()
 
-        if play_screen.game_over:
-            play_screen.game_over = False
-            current_screen = GAME_OVER_SCREEN
+        if play_screen.game_over or play_screen.win:
+            play_result_transition(play_screen, result_screen)
 
-        elif play_screen.win:
+            play_screen.game_over = False
             play_screen.win = False
-            current_screen = WIN_SCREEN
+            current_screen = RESULT_SCREEN
+            # Since play_screen is not drawn, skip a frame
+            continue
 
         else:
             play_screen.draw(screen.unscaled)
 
-    if current_screen == GAME_OVER_SCREEN:
-        screen.unscaled.blit(graphics.tahoma.render("GAME OVER", False, const.BLACK), (50, 100))
+    elif current_screen == RESULT_SCREEN:
+        result_screen.update()
+        result_screen.draw(screen.unscaled)
 
-    if current_screen == WIN_SCREEN:
-        screen.unscaled.blit(graphics.tahoma.render("WIN", False, const.BLACK), (50, 100))
+        if result_screen.selected:
+            result_screen.selected = False
+            current_screen = MENU_SCREEN
+
+            play_screen = PlayScreen()
 
     screen.scale_blit()
     screen.update(60)

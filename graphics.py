@@ -16,7 +16,7 @@ def new_surface(size):
 def remove_color_codes(text):
     text_line = text
     for code in color_codes:
-        text_line = text.replace("<%s>" % code, "")
+        text_line = text_line.replace("<%s>" % code, "")
 
     return text_line
 
@@ -90,6 +90,11 @@ color_codes = {
     "r" : const.AMBULANCE_RED,
     "o" : const.ORANGE_TEXT,
 }
+
+
+def colorize(text, code):
+    return "<%s>%s<k>" % (code, text)
+
 
 def text_block_color_codes(text, font, max_width):
     """ Renders a block of wrapped text, and applies color codes to them. """

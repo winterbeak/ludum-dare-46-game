@@ -75,6 +75,10 @@ benign_effects = [
 ]
 
 
+for index in range(len(death_effects)):
+    death_effects[index] = graphics.colorize(death_effects[index], "r")
+
+
 TOP_TYPES = 5
 TOP_ROUND_SMALL = 0
 TOP_ROUND_MEDIUM = 1
@@ -183,7 +187,13 @@ class Bottle:
         max_width = self.body_width
         return graphics.text_block(text, font, const.BLACK, max_width - 10)
 
-    def render(self):
+    def render_color_text(self):
+        text = ", ".join(self.effects)
+        font = graphics.tahoma
+        max_width = self.body_width
+        return graphics.text_block_color_codes(text, font, max_width - 10)
+
+    def render_textless(self):
         surface = graphics.new_surface(self.total_size)
 
         # Draws the cap of the bottle
@@ -217,8 +227,26 @@ class Bottle:
         pixel_array.replace(LABEL_PLACEHOLDER_COLOR, self.palette.label_color)
         pixel_array.close()
 
+        return surface
+
+    def render(self):
+        surface = self.render_textless()
+
+        label_y = self.cap_height + self.top.single_height + self.label_y_offset
+
         # Applies text to the bottle
         side_effects = self.render_text()
+        surface.blit(side_effects, (5, label_y + 3))
+
+        return surface
+
+    def render_color_codes(self):
+        surface = self.render_textless()
+
+        label_y = self.cap_height + self.top.single_height + self.label_y_offset
+
+        # Applies text to the bottle
+        side_effects = self.render_color_text()
         surface.blit(side_effects, (5, label_y + 3))
 
         return surface
