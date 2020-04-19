@@ -35,6 +35,9 @@ RESOLUTIONS.sort()  # Resolutions should be in order of size.
 startup_info = pygame.display.Info()
 monitor_size = (startup_info.current_w, startup_info.current_h)
 
+pygame.display.set_caption("READ THE LABEL")
+pygame.display.set_icon(pygame.image.load("images/icon_large.png"))
+
 
 def get_display_size():
     """ Find the current size of the game window.
