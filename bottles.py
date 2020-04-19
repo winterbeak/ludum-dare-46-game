@@ -223,37 +223,23 @@ class Bottle:
 
         return surface
 
+    def add_benign(self, count):
+        # Adds a certain amount of benign effects to this bottle
+        for effect in range(count - 1):
+            effect = random.choice(benign_effects)
+            while effect in self.effects:
+                effect = random.choice(benign_effects)
+            self.effects.append(effect)
+
+    def replace_lethal(self):
+        # Replaces a random effect with a lethal effect
+        position = random.randint(0, len(self.effects) - 1)
+        self.effects[position] = random.choice(death_effects)
+        self.lethal = True
+
 
 ghost_bottle = Bottle()
 ghost_bottle.palette = TRANSPARENT_PALETTE
-
-
-def generate_benign():
-    bottle = Bottle()
-
-    effect_count = random.randint(6, 9)
-
-    # Generates random benign effects
-    for effect in range(effect_count - 1):
-        effect = random.choice(benign_effects)
-        while effect in bottle.effects:
-            effect = random.choice(benign_effects)
-        bottle.effects.append(effect)
-
-    random.shuffle(bottle.effects)
-
-    return bottle
-
-
-def generate_lethal():
-    bottle = generate_benign()
-
-    # Replaces one benign effect with a lethal effect
-    position = random.randint(0, len(bottle.effects) - 1)
-    bottle.effects[position] = random.choice(death_effects)
-    bottle.lethal = True
-
-    return bottle
 
 
 class BottleGenerator:
@@ -263,13 +249,28 @@ class BottleGenerator:
         self.bottles_until_safe = random.randint(0, 3)
 
     def next_item(self):
-        if self.bottles_until_safe == 0:
-            self.bottles_until_safe = random.randint(0, 3)
-            bottle = generate_benign()
 
+        # Fast level generator
+        if self.level == const.FAST_INCIDENT:
+            bottle = Bottle()
+            bottle.add_benign(random.randint(3, 5))
+
+            if self.bottles_until_safe == 0:
+                self.bottles_until_safe = random.randint(0, 3)
+            else:
+                self.bottles_until_safe -= 1
+                bottle.replace_lethal()
+
+        # Basic level generator
         else:
-            self.bottles_until_safe -= 1
-            bottle = generate_lethal()
+            bottle = Bottle()
+            bottle.add_benign(random.randint(6, 9))
+
+            if self.bottles_until_safe == 0:
+                self.bottles_until_safe = random.randint(0, 3)
+            else:
+                self.bottles_until_safe -= 1
+                bottle.replace_lethal()
 
         # If the text overflows the label, then extend the label
         text_height = bottle.render_text().get_height()

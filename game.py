@@ -9,6 +9,7 @@ import graphics
 import const
 import events
 import bottles
+import incidents
 
 # TODO: change to full screen
 # screen = window.PixelWindow(int(window.monitor_size[0] / 320), (0, 0))
@@ -21,7 +22,10 @@ background = graphics.SpriteColumn("images/background.png", 1)
 ui = graphics.SpriteColumn("images/test.png", 1)
 
 feed_text = graphics.SpriteColumn("images/feed_text.png", 1)
-pass_text = graphics.SpriteColumn("images/pass_text.png", 1)
+skip_text = graphics.SpriteColumn("images/skip_text.png", 1)
+
+prev_text = graphics.SpriteColumn("images/prev_text.png", 1)
+next_text = graphics.SpriteColumn("images/next_text.png", 1)
 
 homunculus_idle = graphics.SpriteColumn("images/homunculus.png", 4)
 homunculus_eat = graphics.SpriteColumn("images/homunculus_eat.png", 8)
@@ -38,6 +42,7 @@ homunculus.set_frame_delay(HOMUNCULUS_EAT, 3)
 TIME_ADDED_GREEN = (27, 255, 27)
 HOMUNCULUS_ORANGE = (255, 173, 0)
 AMBULANCE_RED = (250, 3, 0)
+MENU_WHITE = (225, 225, 225)
 
 homunculus_text = graphics.SpriteColumn("images/homunculus_text.png", 1)
 ambulance_text = graphics.SpriteColumn("images/ambulance_text.png", 1)
@@ -79,7 +84,7 @@ def render_number(text, color, shake=0):
     return surface
 
 
-def render_small_number(text, color, shake = 0):
+def render_small_number(text, color, shake=0):
     width = numbers_small.single_width * len(text)
     surface = graphics.new_surface((width, numbers_small.single_height))
 
@@ -102,15 +107,24 @@ def render_small_number(text, color, shake = 0):
     return surface
 
 
-def calculate_time(end_time):
+def milliseconds_to_time(total_milliseconds):
+    minutes = math.floor(total_milliseconds / 60000)
+    seconds = math.floor(total_milliseconds / 1000) % 60
+    milliseconds = total_milliseconds % 1000
+    return minutes, seconds, milliseconds
+
+
+def calculate_time_milliseconds(end_time):
     return end_time - pygame.time.get_ticks()
 
 
-def draw_countdown(surface, color, end_time, position, shake=0):
-    time = calculate_time(end_time)
-    minutes = math.floor(time / 60000)
-    seconds = math.floor(time / 1000) % 60
-    milliseconds = time % 1000
+def calculate_time(end_time):
+    milliseconds = calculate_time_milliseconds(end_time)
+    return milliseconds_to_time(milliseconds)
+
+
+def draw_countdown(surface, color, time, position, shake=0):
+    minutes, seconds, milliseconds = time
 
     number = render_number("%d:%02d" % (minutes, seconds), color, shake)
     small_number = render_small_number(".%03d" % milliseconds, color, shake)
@@ -134,13 +148,18 @@ class PlayScreen:
 
     HOMUNCULUS_EAT_DELAY_LENGTH = 5
 
+    AMBULANCE_TIMER_POSITION = (40, 6)
+    HOMUNCULUS_TIMER_POSITION = (40, 80)
+
     def __init__(self):
-        # TODO: Set death_time in the switch_to_play_screen function
-        self.death_time = pygame.time.get_ticks() + 15000
-        self.ambulance_time = pygame.time.get_ticks() + 115000
+        self.death_time = 0
+        self.ambulance_time = 0
+        self.bottle_time = 0
+
+        self.incident_num = 0
 
         self.generator = bottles.BottleGenerator()
-        self.current_bottle = self.generator.next_item()
+        self.current_bottle = bottles.ghost_bottle
         self.previous_bottle = bottles.ghost_bottle
 
         self.shift = curves.SineOut(-self.SHIFT_AMOUNT, 0, self.SHIFT_LENGTH)
@@ -188,17 +207,16 @@ class PlayScreen:
         # Verdict of whether the bottle eaten was lethal or not
         if homunculus.col_num == HOMUNCULUS_EAT:
             if homunculus.frame == 5 and homunculus.delay == 0:
-                print(self.previous_bottle.lethal)
                 if self.previous_bottle.lethal:
                     self.game_over = True
                 else:
-                    self.death_time += 15000
+                    self.death_time += self.bottle_time
                     self.green_timer_frame = 30
 
         # Handles winning and losing due to timers
         if self.death_time > self.ambulance_time:
             self.win = True
-        elif calculate_time(self.death_time) < 0:
+        elif calculate_time_milliseconds(self.death_time) < 0:
             self.game_over = True
 
         # Handles turning the timer green when time is gained
@@ -234,24 +252,28 @@ class PlayScreen:
     def _start_shifting(self):
         self.shift.frame = 0
 
-    def draw_bottles(self, surface):
-        # Draws all bottles (except a bottle that's being tossed
+    def _draw_bottles_shifting(self, surface):
         bottle1 = self.current_bottle
         x1, y1 = geometry.centered(self.BOTTLE_SECTION, bottle1.total_size)
 
+        if not self.is_tossing():
+            bottle2 = self.previous_bottle
+            x2, y2 = geometry.centered(self.BOTTLE_SECTION, bottle2.total_size)
+            x2 += self.shift.current_value + self.SHIFT_AMOUNT
+            surface.blit(bottle2.render(), (x2, y2))
+
+        x1 += self.shift.current_value
+        surface.blit(bottle1.render(), (x1, y1))
+
+    def draw_bottles(self, surface):
+        # Draws all bottles (except a bottle that's being tossed
+
         if self.is_shifting():
-
-            if not self.is_tossing():
-                bottle2 = self.previous_bottle
-                x2, y2 = geometry.centered(self.BOTTLE_SECTION, bottle2.total_size)
-                x2 += self.shift.current_value + self.SHIFT_AMOUNT
-                surface.blit(bottle2.render(), (x2, y2))
-
-            x1 += self.shift.current_value
-            surface.blit(bottle1.render(), (x1, y1))
-
+            self._draw_bottles_shifting(surface)
         else:
-            surface.blit(bottle1.render(), (x1, y1))
+            bottle = self.current_bottle
+            x, y = geometry.centered(self.BOTTLE_SECTION, bottle.total_size)
+            surface.blit(bottle.render(), (x, y))
 
     def draw_tossed_bottle(self, surface):
 
@@ -270,6 +292,50 @@ class PlayScreen:
 
         surface.blit(rotated, (x2, y2))
 
+    def draw_countdowns(self, surface):
+        # Ambulance timer
+        time = calculate_time(self.ambulance_time)
+        position = self.AMBULANCE_TIMER_POSITION
+        draw_countdown(surface, AMBULANCE_RED, time, position)
+
+        # Homunculus timer
+        milliseconds = calculate_time_milliseconds(self.death_time)
+        shake = max(0, (15000 - milliseconds) / 5000)
+        if self.green_timer_frame > 0:
+            color = TIME_ADDED_GREEN
+        else:
+            color = HOMUNCULUS_ORANGE
+
+        time = calculate_time(self.death_time)
+        position = self.HOMUNCULUS_TIMER_POSITION
+        draw_countdown(surface, color, time, position, shake)
+
+    def draw_controls(self, surface):
+        # Feed text
+        x = 338
+        if events.keys.held_key == pygame.K_LEFT:
+            x -= 10
+        feed_text.draw(surface, (x, 322), 0)
+
+        # Skip text
+        x = 481
+        if events.keys.held_key == pygame.K_RIGHT:
+            x += 10
+        skip_text.draw(surface, (x, 324), 0)
+
+    def draw_ui_text(self, surface):
+        self.draw_countdowns(surface)
+
+        # Homunculus and ambulance timer labels
+        ambulance_text.draw(surface, (5, 7), 0)
+        homunculus_text.draw(surface, (5, 88), 0)
+
+        self.draw_controls(surface)
+
+    def draw_homunculus(self, surface):
+        y = screen.unscaled.get_height() - homunculus_idle.single_height
+        homunculus.draw(surface, (0, y))
+
     def draw(self, surface):
         background.draw(surface, (0, 0), 0)
 
@@ -277,44 +343,144 @@ class PlayScreen:
         self.draw_bottles(surface)
 
         ui.draw(surface, (0, 0), 0)
-
-        # Draws ambulance timer
-        draw_countdown(surface, AMBULANCE_RED, self.ambulance_time, (40, 6))
-
-        # Draws homunculus timer
-        time = calculate_time(self.death_time)
-        shake = max(0, (15000 - time) / 5000)
-        if self.green_timer_frame > 0:
-            color = TIME_ADDED_GREEN
-        else:
-            color = HOMUNCULUS_ORANGE
-        draw_countdown(surface, color, self.death_time, (40, 80), shake)
-
-        # Homunculus and ambulance timer labels
-        ambulance_text.draw(surface, (5, 7), 0)
-        homunculus_text.draw(surface, (5, 88), 0)
-
-        # Feed and pass text
-        x = 338
-        if events.keys.held_key == pygame.K_LEFT:
-            x -= 10
-        feed_text.draw(surface, (x, 322), 0)
-
-        x = 481
-        if events.keys.held_key == pygame.K_RIGHT:
-            x += 10
-        pass_text.draw(surface, (x, 324), 0)
+        self.draw_ui_text(surface)
 
         # Bottles that are tossed appear above UI
         if self.is_tossing():
             self.draw_tossed_bottle(surface)
 
-        y = screen.unscaled.get_height() - homunculus_idle.single_height
-        homunculus.draw(surface, (0, y))
+        self.draw_homunculus(surface)
 
         # fps_text = graphics.tahoma.render(str(screen.clock.get_fps()), False, const.WHITE, const.BLACK)
         # surface.blit(fps_text, (10, 10))
 
+
+class MenuScreen(PlayScreen):
+    def __init__(self):
+        super().__init__()
+        self._current_level = incident_list[0]
+        self._current_level_number = 0
+        self._shift_direction = const.LEFT
+        self.current_bottle = incident_list[0].bottle
+        self.selected = False
+
+    def update(self):
+        homunculus.update()
+
+        if homunculus.col_num == HOMUNCULUS_EAT and homunculus.done:
+            homunculus.col_num = HOMUNCULUS_IDLE
+            self.homunculus_eat_delay = 0
+
+        if self.is_shifting():
+            self.shift.frame += 1
+
+        if events.keys.released_key == pygame.K_SPACE:
+            self.selected = True
+
+        elif events.keys.released_key == pygame.K_LEFT:
+            if self.current_level_number > 0:
+                self.current_level_number -= 1
+
+        elif events.keys.released_key == pygame.K_RIGHT:
+            if self.current_level_number < len(incident_list) - 1:
+                self.current_level_number += 1
+
+    @property
+    def current_level_number(self):
+        return self._current_level_number
+
+    @current_level_number.setter
+    def current_level_number(self, value):
+        if value < self.current_level_number:
+            self._shift_direction = const.RIGHT
+        elif value > self.current_level_number:
+            self._shift_direction = const.LEFT
+        else:
+            return
+        self._current_level_number = value
+        self._current_level = incident_list[value]
+        self.previous_bottle = self.current_bottle
+        self.current_bottle = self._current_level.bottle
+        self._start_shifting()
+
+    @property
+    def current_level(self):
+        return self._current_level
+
+    def draw_ui_text(self, surface):
+        self.draw_controls(surface)
+
+    def draw_homunculus(self, surface):
+        pass
+
+    def _draw_bottles_shifting(self, surface):
+        bottle1 = self.current_bottle
+        x1, y1 = geometry.centered(self.BOTTLE_SECTION, bottle1.total_size)
+
+        bottle2 = self.previous_bottle
+        x2, y2 = geometry.centered(self.BOTTLE_SECTION, bottle2.total_size)
+
+        if self._shift_direction == const.LEFT:
+            x1 -= self.shift.current_value
+            x2 -= self.shift.current_value + self.SHIFT_AMOUNT
+        else:
+            x1 += self.shift.current_value
+            x2 += self.shift.current_value + self.SHIFT_AMOUNT
+
+        surface.blit(bottle1.render(), (x1, y1))
+        surface.blit(bottle2.render(), (x2, y2))
+
+    def draw(self, surface):
+        super().draw(surface)
+
+        text = self.current_level.text
+        font = graphics.tahoma
+        max_width = self.BOTTLE_SECTION_LEFT - 60
+        text_surface = graphics.text_block(text, font, const.BLACK, max_width)
+
+        width = text_surface.get_width() + 20
+        height = surface.get_height() - 40
+        text_rect = (20, 20, width, height)
+        color = self.current_level.bottle.palette.label_color
+
+        pygame.draw.rect(surface, color, text_rect)
+        surface.blit(text_surface, (30, 30))
+
+    def draw_controls(self, surface):
+        # Feed text
+        x = 338
+        if events.keys.held_key == pygame.K_LEFT:
+            x -= 10
+        prev_text.draw(surface, (x, 10), 0)
+
+        # Skip text
+        x = 481
+        if events.keys.held_key == pygame.K_RIGHT:
+            x += 10
+        next_text.draw(surface, (x, 10), 0)
+
+
+def menu_play_transition(menu, play):
+    time = pygame.time.get_ticks()
+    play.ambulance_time = time + menu.current_level.ambulance_time
+    play.death_time = time + menu.current_level.homunculus_time
+    play.bottle_time = menu.current_level.bottle_time
+
+    play.previous_bottle = menu.current_level.bottle
+
+    play.incident_num = menu.current_level.number
+    play.generator.level = menu.current_level.number
+
+    play.current_bottle = play.generator.next_item()
+
+
+incident_list = [
+    incidents.generate_basic_incident(),
+    incidents.generate_fast_incident(),
+]
+
+MENU_SCREEN = 0
+menu_screen = MenuScreen()
 
 PLAY_SCREEN = 1
 play_screen = PlayScreen()
@@ -322,7 +488,7 @@ play_screen = PlayScreen()
 GAME_OVER_SCREEN = 2
 WIN_SCREEN = 3
 
-current_screen = PLAY_SCREEN
+current_screen = MENU_SCREEN
 running = True
 
 while True:
@@ -332,13 +498,24 @@ while True:
     if events.quit_program:
         break
 
-    if current_screen == PLAY_SCREEN:
+    if current_screen == MENU_SCREEN:
+        menu_screen.update()
+        menu_screen.draw(screen.unscaled)
+
+        if menu_screen.selected:
+            menu_screen.selected = False
+            current_screen = PLAY_SCREEN
+            menu_play_transition(menu_screen, play_screen)
+
+    elif current_screen == PLAY_SCREEN:
         play_screen.update()
 
         if play_screen.game_over:
+            play_screen.game_over = False
             current_screen = GAME_OVER_SCREEN
 
         elif play_screen.win:
+            play_screen.win = False
             current_screen = WIN_SCREEN
 
         else:

@@ -25,12 +25,23 @@ def text_block(text, font, color, max_width):
     for word in text.split():
         width = font.size(word + " ")[0]
 
-        if current_width + width > max_width and not first_word:
+
+        # Special line break denoter
+        if word == "<br>":
+            lines.append(line)
+            line = ""
+            first_word = True
+
+            current_width = 0
+
+        # If word makes the line too long, cut this line here
+        elif current_width + width > max_width and not first_word:
             lines.append(line)
             line = word + " "
 
             current_width = width
 
+        # Add word to the line
         else:
             line += word + " "
 

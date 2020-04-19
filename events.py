@@ -1,5 +1,7 @@
 import pygame
 
+# This file was copied from my Sightline repository at
+# https://github.com/winterbeak/sightline
 
 class MouseHandler:
     def __init__(self):
