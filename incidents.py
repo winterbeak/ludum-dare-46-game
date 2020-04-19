@@ -1,6 +1,7 @@
 import const
 import bottles
 
+
 class Incident:
     def __init__(self, number, bottle, text, ambulance_time, homunculus_time, bottle_time):
         self.number = number
@@ -74,7 +75,7 @@ def fast_incident_bottle():
     bottle.total_height = total_height
     bottle.total_size = (bottle.total_width, bottle.total_height)
 
-    bottle.palette = bottles.PALETTES[3]
+    bottle.palette = bottles.PALETTES[5]
 
     return bottle
 
@@ -83,7 +84,7 @@ def generate_basic_incident():
     text = (
         'Incident 1 <br> '
         'Year: 2054 <br> <br> '
-        'Several thousand years ago, some great ancestor of mine sealed away a cosmological shadow monster into this weird orange puppet thing.  If the puppet dies, the monster gets out, so my lineage has been tasked with taking care of it.  Unfortunately, it seems those hero genes have worn out over the centuries, because I, Mark Colison, have managed to spill hot coffee all over the puppet for the twenty seventh-time in my life!  Fortunately, it happened in a drugstore, so there’s plenty of medication to keep it alive until the ambulance arrives.  I just need to avoid feeding it anything with lethal side effects... <br> <br> '
+        'Several thousand years ago, some great ancestor of mine sealed away a cosmological shadow monster into this <o>weird orange puppet<k> thing.  If the puppet dies, the monster gets out, so my lineage has been tasked with taking care of it.  Unfortunately, it seems those hero genes have worn out over the centuries, because I, Mark Colison, have managed to spill hot coffee all over the puppet for the twenty seventh-time in my life!  Fortunately, it happened in a drugstore, so there’s plenty of medication to keep it alive until the ambulance arrives.  I just need to avoid feeding it anything with <r>lethal side effects...<k> <br> <br> '
         '"911 here.  What’s your emergency?" <br> "Hahaha.  Haha.  You won’t believe - " <br> "Okay, Mark.  We’re sending the ambulance over right away." <br> <br> '
         'PRESS SPACE TO START'
     )

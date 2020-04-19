@@ -13,8 +13,15 @@ def new_surface(size):
     return surface
 
 
-def text_block(text, font, color, max_width):
-    """ Renders a block of text, and automatically wraps it to a width. """
+def remove_color_codes(text):
+    text_line = text
+    for code in color_codes:
+        text_line = text.replace("<%s>" % code, "")
+
+    return text_line
+
+
+def split_into_lines(text, font, max_width):
     line = ""
     lines = []
 
@@ -23,8 +30,7 @@ def text_block(text, font, color, max_width):
 
     # Determines where to split the lines up
     for word in text.split():
-        width = font.size(word + " ")[0]
-
+        width = font.size(remove_color_codes(word + " "))[0]
 
         # Special line break denoter
         if word == "<br>":
@@ -51,6 +57,13 @@ def text_block(text, font, color, max_width):
 
     lines.append(line)
 
+    return lines
+
+
+def text_block(text, font, color, max_width):
+    """ Renders a block of text, and automatically wraps it to a width. """
+    lines = split_into_lines(text, font, max_width)
+
     # Makes the final rendered surface that all the text is rendered on
     line_height = font.get_linesize()
     height = len(lines) * line_height
@@ -61,8 +74,54 @@ def text_block(text, font, color, max_width):
     # Renders all the lines
     y = 0
     for text_line in lines:
+
+        # Gets rid of all color codes
+        text_line = remove_color_codes(text_line)
+
         rendered_text = font.render(text_line, False, color)
         surface.blit(rendered_text, (0, y))
+        y += line_height
+
+    return surface
+
+
+color_codes = {
+    "k" : const.BLACK,
+    "r" : const.AMBULANCE_RED,
+    "o" : const.ORANGE_TEXT,
+}
+
+def text_block_color_codes(text, font, max_width):
+    """ Renders a block of wrapped text, and applies color codes to them. """
+
+    lines = split_into_lines(text, font, max_width)
+    # Makes the final rendered surface that all the text is rendered on
+    line_height = font.get_linesize()
+    height = len(lines) * line_height
+
+    surface = new_surface((max_width, height))
+    surface.fill(const.TRANSPARENT)
+
+    # Renders all the lines
+    previous_color = const.BLACK
+    y = 0
+    for text_line in lines:
+
+        x = 0
+        while text_line.count("<") >= 1:
+            index = text_line.index("<")
+            previous_text = text_line[:index]
+            code = text_line[index + 1]
+            text_line = text_line[index + 3:]
+
+            rendered_text = font.render(previous_text, False, previous_color)
+            surface.blit(rendered_text, (x, y))
+
+            x += rendered_text.get_width()
+            previous_color = color_codes[code]
+
+        rendered_text = font.render(text_line, False, previous_color)
+        surface.blit(rendered_text, (x, y))
         y += line_height
 
     return surface

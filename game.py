@@ -40,8 +40,8 @@ homunculus.set_frame_delay(HOMUNCULUS_IDLE, 3)
 homunculus.set_frame_delay(HOMUNCULUS_EAT, 3)
 
 TIME_ADDED_GREEN = (27, 255, 27)
-HOMUNCULUS_ORANGE = (255, 173, 0)
-AMBULANCE_RED = (250, 3, 0)
+HOMUNCULUS_ORANGE = const.HOMUNCULUS_ORANGE
+AMBULANCE_RED = const.AMBULANCE_RED
 MENU_WHITE = (225, 225, 225)
 
 homunculus_text = graphics.SpriteColumn("images/homunculus_text.png", 1)
@@ -436,7 +436,7 @@ class MenuScreen(PlayScreen):
         text = self.current_level.text
         font = graphics.tahoma
         max_width = self.BOTTLE_SECTION_LEFT - 60
-        text_surface = graphics.text_block(text, font, const.BLACK, max_width)
+        text_surface = graphics.text_block_color_codes(text, font, max_width)
 
         width = text_surface.get_width() + 20
         height = surface.get_height() - 40
