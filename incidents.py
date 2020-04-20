@@ -192,11 +192,11 @@ def generate_allergen_incident():
         'Note that some medicines cause an allergic reaction to one of its own ingredients.  That\'s lethal.'
     )
     bottle = allergen_incident_bottle()
-    bottle.effects.append("1:15 goal time <br> 0:20 start time <br> +12 seconds per bottle <br> Allergens only")
+    bottle.effects.append("1:25 goal time <br> 0:20 start time <br> +10 seconds per bottle <br> Allergens only")
 
-    ambulance_time = 90000
+    ambulance_time = 85000
     homunculus_time = 20000
-    bottle_time = 12000
+    bottle_time = 10000
 
     number = const.ALLERGEN_INCIDENT
 

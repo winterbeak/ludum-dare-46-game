@@ -373,7 +373,7 @@ class BottleGenerator:
             bottle.add_benign(random.randint(3, 5))
             bottle.add_allergens(random.randint(1, 4))
 
-            if random.random() < 0.33:
+            if random.random() < 0.40:
                 bottle.effects.pop()
                 bottle.add_allergy(1)
 
