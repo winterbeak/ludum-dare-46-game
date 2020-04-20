@@ -11,12 +11,22 @@ import events
 import bottles
 import incidents
 
-# TODO: change to full screen
-# screen = window.PixelWindow(int(window.monitor_size[0] / 320), (0, 0))
-screen = window.PixelWindow(2, (1280, 720))
-# screen is 640 by 360, scaled to 2x for 720p and 3x for 1080p
 
-# pygame.display.set_caption("Read The Label")
+if window.monitor_size == (1920, 1080):
+    screen = window.PixelWindow(3, (0, 0))
+elif window.monitor_size == (1280, 720):
+    screen = window.PixelWindow(2, (0, 0))
+else:
+    resolution = window.find_default_windowed_resolution()
+    if resolution == (1920, 1080):
+        screen = window.PixelWindow(3, (1920, 1080))
+    elif resolution == (1280, 720):
+        screen = window.PixelWindow(2, (1280, 720))
+    else:
+        screen = window.PixelWindow(1, (640, 360))
+
+pygame.display.set_caption("READ THE LABEL")
+pygame.display.set_icon(pygame.image.load("images/icon_large.png"))
 
 background = graphics.SpriteColumn("images/background.png", 1)
 ui = graphics.SpriteColumn("images/test.png", 1)
@@ -50,6 +60,8 @@ ambulance_text = graphics.SpriteColumn("images/ambulance_text.png", 1)
 one_more_text = graphics.SpriteColumn("images/one_more_text.png", 1)
 win_text = graphics.SpriteColumn("images/win.png", 1)
 lose_text = graphics.SpriteColumn("images/lose.png", 1)
+
+ambulance = graphics.SpriteColumn("images/ambulance.png", 1)
 
 
 def draw_debug_countdown(end_time, surface, position):
@@ -156,6 +168,8 @@ class PlayScreen:
     AMBULANCE_TIMER_POSITION = (40, 6)
     HOMUNCULUS_TIMER_POSITION = (40, 80)
 
+    DEATH_CIRCLE_COUNT = 8
+
     def __init__(self):
         self.death_time = 0
         self.ambulance_time = 0
@@ -185,25 +199,39 @@ class PlayScreen:
         self.game_over = False
         self.win = False
 
+        self.ambulance_anim_countdown = 0
+        self.death_anim_countdown = 0
+
+        self.death_anim_frame = 0
+        self.death_circles = []
+
+        self.in_animation = False
+
+        self.ambulance_entrance = curves.SineOut(1000, -250, 80)
+        self.ambulance_exit = curves.SineOut(-250, -1000, 80)
+        self.ambulance_x = 1000
+
         self.bottles = []
         self.allergies = []
         self.allergy_triggers = []
 
     def update(self):
 
-        # If you press the key to feed
-        if events.keys.released_key == pygame.K_LEFT:
-            self._start_tossing()
-            self.previous_bottle = self.current_bottle
-            self.current_bottle = self.generator.next_item()
-            self.bottles.append(self.current_bottle)
+        if not self.in_animation:
 
-        # If you press the key to trash
-        elif events.keys.released_key == pygame.K_RIGHT:
-            self._start_shifting()
-            self.previous_bottle = self.current_bottle
-            self.current_bottle = self.generator.next_item()
-            self.bottles.append(self.current_bottle)
+            # If you press the key to feed
+            if events.keys.released_key == pygame.K_LEFT:
+                self._start_tossing()
+                self.previous_bottle = self.current_bottle
+                self.current_bottle = self.generator.next_item()
+                self.bottles.append(self.current_bottle)
+
+            # If you press the key to trash
+            elif events.keys.released_key == pygame.K_RIGHT:
+                self._start_shifting()
+                self.previous_bottle = self.current_bottle
+                self.current_bottle = self.generator.next_item()
+                self.bottles.append(self.current_bottle)
 
         # If currently in tossing animation
         if self.is_tossing():
@@ -242,16 +270,22 @@ class PlayScreen:
 
                 if lethal or triggers_allergy:
                     self.game_over = True
+                    self.in_animation = True
                     self.bottles.pop()  # Removes the bottle that's sliding in
                 else:
                     self.death_time += self.bottle_time
                     self.green_timer_frame = 30
 
         # Handles winning and losing due to timers
-        if self.death_time > self.ambulance_time:
+        if self.death_time > self.ambulance_time and not self.win:
+            self.in_animation = True
+            self.ambulance_anim_countdown = calculate_time_milliseconds(self.ambulance_time)
+            self.death_anim_countdown = calculate_time_milliseconds(self.death_time)
             self.win = True
             self.bottles.pop()  # Removes the bottle that's sliding in
+
         elif calculate_time_milliseconds(self.death_time) < 0:
+            self.in_animation = True
             self.game_over = True
 
         # Handles turning the timer green when time is gained
@@ -266,6 +300,42 @@ class PlayScreen:
         if homunculus.col_num == HOMUNCULUS_EAT and homunculus.done:
             homunculus.col_num = HOMUNCULUS_IDLE
             self.homunculus_eat_delay = 0
+
+
+        # Win animation
+        if self.win:
+            if self.ambulance_anim_countdown > 0:
+                self.ambulance_anim_countdown -= 400
+                if self.ambulance_anim_countdown <= 0:
+                    self.death_time = self.death_time - self.ambulance_anim_countdown
+                    self.ambulance_anim_countdown = 0
+                else:
+                    self.death_anim_countdown -= 400
+            else:
+                if self.ambulance_entrance.frame < self.ambulance_entrance.length - 1:
+                    self.ambulance_entrance.frame += 1
+                    self.ambulance_x = self.ambulance_entrance.current_value
+                else:
+                    self.ambulance_exit.frame += 1
+
+                    if self.ambulance_exit.frame > self.ambulance_exit.length:
+                        self.in_animation = False
+                    else:
+                        self.ambulance_x = self.ambulance_exit.current_value
+
+        elif self.game_over:
+            if self.death_anim_frame % 10 == 0:
+                if len(self.death_circles) < self.DEATH_CIRCLE_COUNT:
+                    self.death_circles.append(0)
+                else:
+                    if self.death_circles[-1] >= 1000:
+                        self.in_animation = False
+
+            for index in range(len(self.death_circles)):
+                if self.death_circles[index] < 1000:
+                    self.death_circles[index] += 20
+
+            self.death_anim_frame += 1
 
     def is_tossing(self):
         if self.toss_x.frame <= self.toss_x.last_frame:
@@ -332,19 +402,30 @@ class PlayScreen:
 
     def draw_countdowns(self, surface):
         # Ambulance timer
-        time = calculate_time(self.ambulance_time)
+        if self.win:
+            time = milliseconds_to_time(self.ambulance_anim_countdown)
+        else:
+            time = calculate_time(self.ambulance_time)
         position = self.AMBULANCE_TIMER_POSITION
         draw_countdown(surface, AMBULANCE_RED, time, position)
 
         # Homunculus timer
         milliseconds = calculate_time_milliseconds(self.death_time)
-        shake = max(0, (15000 - milliseconds) / 5000)
+        if self.win:
+            shake = 0
+        else:
+            shake = max(0, (15000 - milliseconds) / 5000)
         if self.green_timer_frame > 0:
             color = TIME_ADDED_GREEN
         else:
             color = HOMUNCULUS_ORANGE
 
-        time = calculate_time(self.death_time)
+        if self.win:
+            time = milliseconds_to_time(self.death_anim_countdown)
+        elif self.game_over:
+            time = (0, 0, 0)
+        else:
+            time = calculate_time(self.death_time)
         position = self.HOMUNCULUS_TIMER_POSITION
         draw_countdown(surface, color, time, position, shake)
 
@@ -387,7 +468,17 @@ class PlayScreen:
         if self.is_tossing():
             self.draw_tossed_bottle(surface)
 
-        self.draw_homunculus(surface)
+        if not self.win or self.ambulance_entrance.frame < self.ambulance_entrance.length - 1:
+            self.draw_homunculus(surface)
+
+        if self.win:
+            ambulance.draw(surface, (self.ambulance_x, 162), 0)
+
+        if self.game_over:
+            for circle_num, circle in enumerate(self.death_circles):
+                if circle_num > len(self.death_circles) - 5:
+                    color = (circle_num * -20 + self.DEATH_CIRCLE_COUNT * 20 - 20, ) * 3
+                    pygame.draw.circle(surface, color, (117, 229), circle)
 
         # fps_text = graphics.tahoma.render(str(screen.clock.get_fps()), False, const.WHITE, const.BLACK)
         # surface.blit(fps_text, (10, 10))
@@ -538,9 +629,16 @@ class ResultScreen(MenuScreen):
         return bottle.render_color_codes()
 
     def draw(self, surface):
-        self.background.draw(surface, (0, 0), 0)
-        self.draw_controls(surface)
+        if self.win:
+            self.background.draw(surface, (0, 0), 0)
+        else:
+            surface.fill(const.BLACK)
+
         self.draw_bottles(surface)
+        if self.win:
+            ui.draw(surface, (0, 0), 0)
+
+        self.draw_controls(surface)
 
         # Draws return to menu text
         text = graphics.tahoma.render("Press SPACE to return to level select.", False, const.BLACK)
@@ -572,13 +670,14 @@ class ResultScreen(MenuScreen):
         # Draws win/lose text
         if self.win:
             sprite = win_text
+            sprite.draw(surface, (48, 50), 0)
         else:
             sprite = lose_text
 
-        size = (sprite.single_width, sprite.single_height)
-        x, y = geometry.centered(self.TEXT_SECTION, size)
-        y -= 50
-        sprite.draw(surface, (x, y), 0)
+            size = (sprite.single_width, sprite.single_height)
+            x, y = geometry.centered(self.TEXT_SECTION, size)
+            y -= 50
+            sprite.draw(surface, (x, y), 0)
 
     @property
     def bottle_num(self):
@@ -683,7 +782,7 @@ while True:
     elif current_screen == PLAY_SCREEN:
         play_screen.update()
 
-        if play_screen.game_over or play_screen.win:
+        if (play_screen.game_over or play_screen.win) and not play_screen.in_animation:
             play_result_transition(play_screen, result_screen)
 
             play_screen.game_over = False

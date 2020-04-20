@@ -33,7 +33,6 @@ benign_effects = [
     "living the life",
     "strange thoughts",
     "hallucination",
-    "dying on the inside",
     "becoming deaf",
     "becoming corporate",
     "malnutrition",
@@ -63,7 +62,6 @@ benign_effects = [
     "shaking violently",
 
     "straight lines start looking wonky",
-    'ms paint vision',
 
     "learning to drive immediately",
     "becoming dependable",

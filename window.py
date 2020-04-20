@@ -28,15 +28,12 @@ ctypes.windll.user32.SetProcessDPIAware()
 
 
 # TODO: Expand this list to support more windowed resolutions
-RESOLUTIONS = [(800, 600), (1280, 720), (1920, 1080)]
+RESOLUTIONS = [(640, 360), (1280, 720), (1920, 1080)]
 RESOLUTIONS.sort()  # Resolutions should be in order of size.
 
 # Gets the monitor size.
 startup_info = pygame.display.Info()
 monitor_size = (startup_info.current_w, startup_info.current_h)
-
-pygame.display.set_caption("READ THE LABEL")
-pygame.display.set_icon(pygame.image.load("images/icon_large.png"))
 
 
 def get_display_size():
