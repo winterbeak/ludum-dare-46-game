@@ -339,8 +339,7 @@ class PlayScreen:
                     extra_time.play_random()
 
         # Handles winning and losing due to timers
-        #if self.death_time > self.ambulance_time and not self.win:
-        if events.keys.pressed_key == pygame.K_f:
+        if self.death_time > self.ambulance_time and not self.win:
             self.in_animation = True
             self.ambulance_anim_countdown = calculate_time_milliseconds(self.ambulance_time)
             self.death_anim_countdown = calculate_time_milliseconds(self.death_time)
