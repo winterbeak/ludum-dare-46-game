@@ -1,3 +1,5 @@
+import sound
+
 import pygame
 import math
 import random
@@ -63,6 +65,52 @@ lose_text = graphics.SpriteColumn("images/lose.png", 1)
 
 ambulance = graphics.SpriteColumn("images/ambulance.png", 1)
 
+
+# shobango
+menu_press = sound.load_numbers("menu_press%d", 1)
+menu_release = sound.load_numbers("menu_release%d", 1)
+menu_press.set_volumes(0.5)
+menu_release.set_volumes(0.5)
+
+feed_press = sound.load_numbers("feed_press%d", 3)
+toss = sound.load_numbers("toss%d", 3)
+feed_press.set_volumes(0.3)
+
+skip_press = sound.load_numbers("skip_press%d", 3)
+slide = sound.load_numbers("slide%d", 3)
+skip_press.set_volumes(0.3)
+
+tick = sound.load_numbers("tick%d", 1)
+tick.set_volumes(0.3)
+subtick = sound.load_numbers("subtick%d", 1)
+subtick.set_volumes(0.3)
+
+death = sound.load_numbers("death%d", 1)
+death.set_volumes(0.5)
+
+start_release = sound.load_numbers("start_release%d", 1)
+start_press = sound.load_numbers("start_press%d", 1)
+start_release.set_volumes(0.8)
+start_press.set_volumes(0.8)
+
+extra_time = sound.load_numbers("extra_time%d", 1)
+extra_time.set_volumes(0.6)
+
+ambulance_arrive = sound.load_numbers("ambulance%d", 1)
+ambulance_arrive.set_volumes(0.5)
+
+fast_tick = sound.load_numbers("fast_tick%d", 1)
+fast_tick.set_volumes(0.3)
+ambulance_pickup = sound.load_numbers("ambulance_pickup_%d", 1)
+ambulance_pickup.set_volumes(0.5)
+
+eat = sound.load_numbers("eat%d", 1)
+eat.set_volumes(0.8)
+
+win_sound = sound.load_numbers("win%d", 1)
+win_sound.set_volumes(0.5)
+lose_sound = sound.load_numbers("lose%d", 1)
+lose_sound.set_volumes(0.4)
 
 def draw_debug_countdown(end_time, surface, position):
     time = (end_time - pygame.time.get_ticks()) / 1000
@@ -171,6 +219,8 @@ class PlayScreen:
     DEATH_CIRCLE_COUNT = 8
 
     def __init__(self):
+        self.previous_tick_time = 0
+
         self.death_time = 0
         self.ambulance_time = 0
         self.bottle_time = 0
@@ -219,8 +269,14 @@ class PlayScreen:
 
         if not self.in_animation:
 
+            if events.keys.pressed_key == pygame.K_LEFT:
+                feed_press.play_random()
+            elif events.keys.pressed_key == pygame.K_RIGHT:
+                skip_press.play_random()
+
             # If you press the key to feed
             if events.keys.released_key == pygame.K_LEFT:
+                toss.play_random()
                 self._start_tossing()
                 self.previous_bottle = self.current_bottle
                 self.current_bottle = self.generator.next_item()
@@ -228,6 +284,7 @@ class PlayScreen:
 
             # If you press the key to trash
             elif events.keys.released_key == pygame.K_RIGHT:
+                slide.play_random()
                 self._start_shifting()
                 self.previous_bottle = self.current_bottle
                 self.current_bottle = self.generator.next_item()
@@ -245,6 +302,9 @@ class PlayScreen:
 
         # Verdict of whether the bottle eaten was lethal or not
         if homunculus.col_num == HOMUNCULUS_EAT:
+            if homunculus.frame == 4 and homunculus.delay == 0:
+                eat.play_random()
+
             # TODO: Exploit, spamming FEED fast enough can bypass this check
             # If you feed faster than this animation takes to get to frame 5,
             # you can skip the game over check.  It takes some pretty quick
@@ -269,24 +329,28 @@ class PlayScreen:
                         self.allergy_triggers.append(allergen)
 
                 if lethal or triggers_allergy:
+                    death.play_random()
                     self.game_over = True
                     self.in_animation = True
                     self.bottles.pop()  # Removes the bottle that's sliding in
                 else:
                     self.death_time += self.bottle_time
                     self.green_timer_frame = 30
+                    extra_time.play_random()
 
         # Handles winning and losing due to timers
-        if self.death_time > self.ambulance_time and not self.win:
+        #if self.death_time > self.ambulance_time and not self.win:
+        if events.keys.pressed_key == pygame.K_f:
             self.in_animation = True
             self.ambulance_anim_countdown = calculate_time_milliseconds(self.ambulance_time)
             self.death_anim_countdown = calculate_time_milliseconds(self.death_time)
             self.win = True
             self.bottles.pop()  # Removes the bottle that's sliding in
 
-        elif calculate_time_milliseconds(self.death_time) < 0:
+        elif calculate_time_milliseconds(self.death_time) < 0 and not self.game_over:
             self.in_animation = True
             self.game_over = True
+            death.play_random()
 
         # Handles turning the timer green when time is gained
         if self.green_timer_frame > 0:
@@ -301,11 +365,40 @@ class PlayScreen:
             homunculus.col_num = HOMUNCULUS_IDLE
             self.homunculus_eat_delay = 0
 
+        if not self.in_animation:
+            prev_before = (self.death_time - self.previous_tick_time) % 1000 < 500
+            next_after = calculate_time_milliseconds(self.death_time) % 1000 > 500
+            if prev_before and next_after:
+                tick.play_random()
+
+            time = calculate_time_milliseconds(self.death_time)
+            if time > 30000:
+                interval = 1000
+            elif time > 15000:
+                interval = 500
+            elif time > 5000:
+                interval = 250
+            else:
+                interval = 125
+
+            if (self.death_time - self.previous_tick_time) % interval < interval / 2:
+                if calculate_time_milliseconds(self.death_time) % interval > interval / 2:
+                    subtick.play_random()
+
+        self.previous_tick_time = pygame.time.get_ticks()
+
 
         # Win animation
         if self.win:
+            if self.ambulance_entrance.frame == 1:
+                ambulance_arrive.play_random()
+            elif self.ambulance_exit.frame == 1:
+                ambulance_pickup.play_random()
+
             if self.ambulance_anim_countdown > 0:
                 self.ambulance_anim_countdown -= 400
+                if self.ambulance_anim_countdown % 1600 < 400:
+                    fast_tick.play_random()
                 if self.ambulance_anim_countdown <= 0:
                     self.death_time = self.death_time - self.ambulance_anim_countdown
                     self.ambulance_anim_countdown = 0
@@ -504,15 +597,25 @@ class MenuScreen(PlayScreen):
             self.shift.frame += 1
 
         if events.keys.released_key == pygame.K_SPACE:
+            start_release.play_random()
             self.selected = True
 
         elif events.keys.released_key == pygame.K_LEFT:
+            menu_release.play_random()
             if self.current_level_number > 0:
                 self.current_level_number -= 1
 
         elif events.keys.released_key == pygame.K_RIGHT:
+            menu_release.play_random()
             if self.current_level_number < len(incident_list) - 1:
                 self.current_level_number += 1
+
+        if events.keys.pressed_key == pygame.K_SPACE:
+            start_press.play_random()
+        elif events.keys.pressed_key == pygame.K_LEFT:
+            menu_press.play_random()
+        elif events.keys.pressed_key == pygame.K_RIGHT:
+            menu_press.play_random()
 
     @property
     def current_level_number(self):
@@ -612,6 +715,8 @@ class ResultScreen(MenuScreen):
 
         elif events.keys.released_key == pygame.K_LEFT:
 
+            menu_release.play_random()
+
             if self.bottle_num > 0:
                 for allergy in self.current_bottle.adds_allergies:
                     self.allergies.remove(allergy)
@@ -619,11 +724,26 @@ class ResultScreen(MenuScreen):
                 self.bottle_num -= 1
 
         elif events.keys.released_key == pygame.K_RIGHT:
+
+            menu_release.play_random()
+
             if self.bottle_num < len(self.bottles) - 1:
                 self.bottle_num += 1
 
                 for allergy in self.current_bottle.adds_allergies:
                     self.allergies.append(allergy)
+
+        if events.keys.released_key == pygame.K_SPACE:
+            start_release.play_random()
+            self.selected = True
+
+        if events.keys.pressed_key == pygame.K_SPACE:
+            start_press.play_random()
+
+        if events.keys.pressed_key == pygame.K_LEFT:
+            menu_press.play_random()
+        elif events.keys.pressed_key == pygame.K_RIGHT:
+            menu_press.play_random()
 
     def render_bottle(self, bottle):
         return bottle.render_color_codes()
@@ -739,8 +859,10 @@ def play_result_transition(play, result):
 
     if play_screen.win:
         result.win = True
+        win_sound.play_random()
     else:
         result.win = False
+        lose_sound.play_random()
 
 
 incident_list = [
