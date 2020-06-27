@@ -19,6 +19,9 @@ death_effects = [
     "becoming deceased",
     "perishing immediately",
     "having your life end",
+    "becoming slain",
+    "end of life",
+    "termination of life",
 ]
 
 benign_effects = [
@@ -38,13 +41,13 @@ benign_effects = [
     "malnutrition",
     "stomach pangs",
     "attraction to death",
-    "behaving like a killer whale",
+    "liking killer whales",
     "losing depth perception",
     "weighing a kilogram less",
     "feeling lively",
     "feeling alive",
     "dry throat",
-    "death metal addiction",
+    "liking death metal",
     "earning a dime",
     "not lying anymore",
     "not liking anyone",
@@ -61,15 +64,27 @@ benign_effects = [
     "orange skin",
     "shaking violently",
 
-    "straight lines start looking wonky",
+    "straight lines look wonky",
 
-    "learning to drive immediately",
+    "learning to drive",
     "becoming dependable",
 
     "hearing failure",
     "heart beats faster",
 
     "liver vibrations",
+
+    "getting lighter",
+    "nausea",
+    "becoming sick",
+    "becoming sane",
+    "liver mending",
+    "termination of wife",
+    "having your liver mend",
+    "instant dread",
+    "becoming dreary",
+    "instant debt",
+    "midlife crisis",
 ]
 
 allergens = [
