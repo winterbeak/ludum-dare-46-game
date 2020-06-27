@@ -255,3 +255,21 @@ def generate_mixed_hard_incident():
     number = const.MIXED_HARD_INCIDENT
 
     return Incident(number, bottle, text, ambulance_time, homunculus_time, bottle_time)
+
+
+def generate_faster_incident():
+    text = (
+        'Incident ? <br> '
+        'Quickest reader in the west'
+    )
+    bottle = basic_incident_bottle()
+    bottle.effects.append(
+        "1:30 goal time <br> 0:10 start time <br> +3 seconds per bottle <br> Side effects only")
+
+    ambulance_time = time_math.min_sec_ms_to_ms((1, 30, 0))
+    homunculus_time = time_math.min_sec_ms_to_ms((0, 10, 0))
+    bottle_time = time_math.min_sec_ms_to_ms((0, 3, 0))
+
+    number = const.FASTER_INCIDENT
+
+    return Incident(number, bottle, text, ambulance_time, homunculus_time, bottle_time)

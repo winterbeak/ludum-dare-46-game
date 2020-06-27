@@ -860,6 +860,7 @@ incident_list = [
     incidents.generate_fast_incident(),
     incidents.generate_basic_hard_incident(),
     incidents.generate_mixed_hard_incident(),
+    incidents.generate_faster_incident(),
 ]
 
 MENU_SCREEN = 0

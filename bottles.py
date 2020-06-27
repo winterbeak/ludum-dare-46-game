@@ -361,6 +361,8 @@ class BottleGenerator:
     def __init__(self):
         self.level = 0
         self.bottles_until_safe = random.randint(0, 3)
+        self.safes_in_a_row = 0
+        self.deadlies_in_a_row = 0
 
     def next_item(self):
 
@@ -374,6 +376,25 @@ class BottleGenerator:
             else:
                 self.bottles_until_safe -= 1
                 bottle.effects.pop()
+                bottle.add_lethal(1)
+
+        # Faster level generator
+        elif self.level == const.FASTER_INCIDENT:
+            bottle = Bottle()
+
+            # The more safes you get in a row, the less likely the next
+            # bottle is safe.  Likewise for deadlies.
+            # It's impossible to get 6 safes/deadlies in a row.
+            safe_chance = 0.5
+            safe_chance += self.deadlies_in_a_row * 0.09
+            safe_chance -= self.safes_in_a_row * 0.09
+            if random.random() < safe_chance:
+                self.deadlies_in_a_row = 0
+                self.safes_in_a_row += 1
+                bottle.add_benign(1)
+            else:
+                self.deadlies_in_a_row += 1
+                self.safes_in_a_row = 0
                 bottle.add_lethal(1)
 
         # Allergen level generator
