@@ -1,5 +1,6 @@
 import const
 import bottles
+import time_math
 
 
 class Incident:
@@ -155,9 +156,9 @@ def generate_basic_incident():
     bottle = basic_incident_bottle()
     bottle.effects.append("1:55 goal time <br> 0:30 start time <br> +15 seconds per bottle <br> Side effects only")
 
-    ambulance_time = 115000
-    homunculus_time = 30000
-    bottle_time = 15000
+    ambulance_time = time_math.min_sec_ms_to_ms((1, 55, 0))
+    homunculus_time = time_math.min_sec_ms_to_ms((0, 30, 0))
+    bottle_time = time_math.min_sec_ms_to_ms((0, 15, 0))
 
     number = const.BASIC_INCIDENT
 
@@ -175,9 +176,9 @@ def generate_fast_incident():
     bottle = fast_incident_bottle()
     bottle.effects.append("1:30 goal time <br> 0:15 start time <br> +7 seconds per bottle <br> Side effects only")
 
-    ambulance_time = 90000
-    homunculus_time = 15000
-    bottle_time = 7000
+    ambulance_time = time_math.min_sec_ms_to_ms((1, 30, 0))
+    homunculus_time = time_math.min_sec_ms_to_ms((0, 15, 0))
+    bottle_time = time_math.min_sec_ms_to_ms((0, 7, 0))
 
     number = const.FAST_INCIDENT
 
@@ -194,9 +195,9 @@ def generate_allergen_incident():
     bottle = allergen_incident_bottle()
     bottle.effects.append("1:25 goal time <br> 0:20 start time <br> +10 seconds per bottle <br> Allergens only")
 
-    ambulance_time = 85000
-    homunculus_time = 20000
-    bottle_time = 10000
+    ambulance_time = time_math.min_sec_ms_to_ms((1, 25, 0))
+    homunculus_time = time_math.min_sec_ms_to_ms((0, 20, 0))
+    bottle_time = time_math.min_sec_ms_to_ms((0, 10, 0))
 
     number = const.ALLERGEN_INCIDENT
 
@@ -213,9 +214,9 @@ def generate_mixed_incident():
     bottle = mixed_incident_bottle()
     bottle.effects.append("1:55 goal time <br> 0:15 start time <br> +15 seconds per bottle <br> Side effects and allergens")
 
-    ambulance_time = 115000
-    homunculus_time = 15000
-    bottle_time = 15000
+    ambulance_time = time_math.min_sec_ms_to_ms((1, 55, 0))
+    homunculus_time = time_math.min_sec_ms_to_ms((0, 15, 0))
+    bottle_time = time_math.min_sec_ms_to_ms((0, 15, 0))
 
     number = const.MIXED_INCIDENT
 
