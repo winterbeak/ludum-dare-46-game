@@ -584,6 +584,7 @@ class MenuScreen(PlayScreen):
         self._shift_direction = const.LEFT
         self.current_bottle = incident_list[0].bottle
         self.selected = False
+        self.quit = False
 
     def update(self):
         homunculus.update()
@@ -608,6 +609,9 @@ class MenuScreen(PlayScreen):
             menu_release.play_random()
             if self.current_level_number < len(incident_list) - 1:
                 self.current_level_number += 1
+
+        if events.keys.pressed_key == pygame.K_ESCAPE:
+            self.quit = True
 
         if events.keys.pressed_key == pygame.K_SPACE:
             start_press.play_random()
@@ -894,6 +898,9 @@ while True:
     if current_screen == MENU_SCREEN:
         menu_screen.update()
         menu_screen.draw(screen.unscaled)
+
+        if menu_screen.quit:
+            break
 
         if menu_screen.selected:
             menu_screen.selected = False
