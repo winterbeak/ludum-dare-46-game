@@ -383,7 +383,7 @@ class BottleGenerator:
             bottle.add_allergy(1)
 
         # Mixed level generator
-        elif self.level == const.MIXED_INCIDENT:
+        elif self.level == const.MIXED_INCIDENT or self.level == const.MIXED_HARD_INCIDENT:
             bottle = Bottle()
             bottle.add_benign(random.randint(3, 5))
             bottle.add_allergens(random.randint(1, 4))
