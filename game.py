@@ -113,6 +113,7 @@ win_sound.set_volumes(0.5)
 lose_sound = sound.load_numbers("lose%d", 1)
 lose_sound.set_volumes(0.4)
 
+
 def draw_debug_countdown(end_time, surface, position):
     time = (end_time - pygame.time.get_ticks()) / 1000
     text = graphics.tahoma.render(str(time), False, const.WHITE)
@@ -171,9 +172,6 @@ def render_small_number(text, color, shake=0):
     pixel_array.replace(TEXT_PLACEHOLDER_COLOR, color)
 
     return surface
-
-
-
 
 
 def draw_countdown(surface, color, time, position, shake=0):
@@ -373,7 +371,6 @@ class PlayScreen:
                     subtick.play_random()
 
         self.previous_tick_time = pygame.time.get_ticks()
-
 
         # Win animation
         if self.win:
