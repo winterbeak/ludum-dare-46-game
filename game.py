@@ -2,6 +2,7 @@ import sound
 
 import pygame
 import math
+import time_math
 import random
 
 import window
@@ -172,20 +173,7 @@ def render_small_number(text, color, shake=0):
     return surface
 
 
-def milliseconds_to_time(total_milliseconds):
-    minutes = math.floor(total_milliseconds / 60000)
-    seconds = math.floor(total_milliseconds / 1000) % 60
-    milliseconds = total_milliseconds % 1000
-    return minutes, seconds, milliseconds
 
-
-def calculate_time_milliseconds(end_time):
-    return end_time - pygame.time.get_ticks()
-
-
-def calculate_time(end_time):
-    milliseconds = calculate_time_milliseconds(end_time)
-    return milliseconds_to_time(milliseconds)
 
 
 def draw_countdown(surface, color, time, position, shake=0):
@@ -341,12 +329,12 @@ class PlayScreen:
         # Handles winning and losing due to timers
         if self.death_time > self.ambulance_time and not self.win:
             self.in_animation = True
-            self.ambulance_anim_countdown = calculate_time_milliseconds(self.ambulance_time)
-            self.death_anim_countdown = calculate_time_milliseconds(self.death_time)
+            self.ambulance_anim_countdown = time_math.ms_time_to(self.ambulance_time)
+            self.death_anim_countdown = time_math.ms_time_to(self.death_time)
             self.win = True
             self.bottles.pop()  # Removes the bottle that's sliding in
 
-        elif calculate_time_milliseconds(self.death_time) < 0 and not self.game_over:
+        elif time_math.ms_time_to(self.death_time) < 0 and not self.game_over:
             self.in_animation = True
             self.game_over = True
             death.play_random()
@@ -366,11 +354,11 @@ class PlayScreen:
 
         if not self.in_animation:
             prev_before = (self.death_time - self.previous_tick_time) % 1000 < 500
-            next_after = calculate_time_milliseconds(self.death_time) % 1000 > 500
+            next_after = time_math.ms_time_to(self.death_time) % 1000 > 500
             if prev_before and next_after:
                 tick.play_random()
 
-            time = calculate_time_milliseconds(self.death_time)
+            time = time_math.ms_time_to(self.death_time)
             if time > 30000:
                 interval = 1000
             elif time > 15000:
@@ -381,7 +369,7 @@ class PlayScreen:
                 interval = 125
 
             if (self.death_time - self.previous_tick_time) % interval < interval / 2:
-                if calculate_time_milliseconds(self.death_time) % interval > interval / 2:
+                if time_math.ms_time_to(self.death_time) % interval > interval / 2:
                     subtick.play_random()
 
         self.previous_tick_time = pygame.time.get_ticks()
@@ -495,14 +483,14 @@ class PlayScreen:
     def draw_countdowns(self, surface):
         # Ambulance timer
         if self.win:
-            time = milliseconds_to_time(self.ambulance_anim_countdown)
+            time = time_math.ms_to_min_sec_ms(self.ambulance_anim_countdown)
         else:
-            time = calculate_time(self.ambulance_time)
+            time = time_math.min_sec_ms_time_to(self.ambulance_time)
         position = self.AMBULANCE_TIMER_POSITION
         draw_countdown(surface, AMBULANCE_RED, time, position)
 
         # Homunculus timer
-        milliseconds = calculate_time_milliseconds(self.death_time)
+        milliseconds = time_math.ms_time_to(self.death_time)
         if self.win:
             shake = 0
         else:
@@ -513,11 +501,11 @@ class PlayScreen:
             color = HOMUNCULUS_ORANGE
 
         if self.win:
-            time = milliseconds_to_time(self.death_anim_countdown)
+            time = time_math.ms_to_min_sec_ms(self.death_anim_countdown)
         elif self.game_over:
             time = (0, 0, 0)
         else:
-            time = calculate_time(self.death_time)
+            time = time_math.min_sec_ms_time_to(self.death_time)
         position = self.HOMUNCULUS_TIMER_POSITION
         draw_countdown(surface, color, time, position, shake)
 
