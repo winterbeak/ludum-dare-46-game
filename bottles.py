@@ -399,7 +399,7 @@ class BottleGenerator:
                 bottle.effects.pop(0)  # Pop at start so that it doesn't pop the allergy
                 bottle.add_lethal(1)
 
-        # Basic level generator
+        # Basic level generator (also includes hard version of basic level)
         else:
             bottle = Bottle()
             bottle.add_benign(random.randint(5, 8))

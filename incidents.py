@@ -221,3 +221,20 @@ def generate_mixed_incident():
     number = const.MIXED_INCIDENT
 
     return Incident(number, bottle, text, ambulance_time, homunculus_time, bottle_time)
+
+
+def generate_basic_hard_incident():
+    text = (
+        'Incident ? <br> '
+        'Harder version of incident 1'
+    )
+    bottle = basic_incident_bottle()
+    bottle.effects.append("3:00 goal time <br> 0:18 start time <br> +12 seconds per bottle <br> Side effects only")
+
+    ambulance_time = time_math.min_sec_ms_to_ms((3, 0, 0))
+    homunculus_time = time_math.min_sec_ms_to_ms((0, 18, 0))
+    bottle_time = time_math.min_sec_ms_to_ms((0, 12, 0))
+
+    number = const.BASIC_HARD_INCIDENT
+
+    return Incident(number, bottle, text, ambulance_time, homunculus_time, bottle_time)
