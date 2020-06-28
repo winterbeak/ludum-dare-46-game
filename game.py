@@ -204,6 +204,9 @@ class PlayScreen:
 
     DEATH_CIRCLE_COUNT = 8
 
+    # Length of delay is the sum of the first five frames of the eating animation
+    JUDGEMENT_TIMER_LENGTH = sum(homunculus.frame_lengths[HOMUNCULUS_EAT][:5])
+
     def __init__(self):
         self.previous_tick_time = 0
 
@@ -251,6 +254,9 @@ class PlayScreen:
         self.allergies = []
         self.allergy_triggers = []
 
+        self.bottles_to_judge = []
+        self.judgement_timers = []
+
     def update(self):
 
         if not self.in_animation:
@@ -262,6 +268,10 @@ class PlayScreen:
 
             # If you press the key to feed
             if events.keys.released_key == pygame.K_LEFT:
+                self.bottles_to_judge.append(self.current_bottle)
+                self.judgement_timers.append(self.JUDGEMENT_TIMER_LENGTH)
+                self.current_bottle.eaten = True
+
                 toss.play_random()
                 self._start_tossing()
                 self.previous_bottle = self.current_bottle
@@ -287,29 +297,30 @@ class PlayScreen:
                 homunculus.col_num = HOMUNCULUS_EAT
 
         # Verdict of whether the bottle eaten was lethal or not
-        if homunculus.col_num == HOMUNCULUS_EAT:
+        if not self.in_animation and homunculus.col_num == HOMUNCULUS_EAT:
             if homunculus.frame == 4 and homunculus.delay == 0:
                 eat.play_random()
 
-            # TODO: Exploit, spamming FEED fast enough can bypass this check
-            # If you feed faster than this animation takes to get to frame 5,
-            # you can skip the game over check.  It takes some pretty quick
-            # spamming, though, so it's not too much of an issue.
-            if homunculus.frame == 5 and homunculus.delay == 0:
-                self.previous_bottle.eaten = True
+            # Counts down timers
+            for i in range(len(self.judgement_timers)):
+                self.judgement_timers[i] -= 1
+
+            # Judges bottle once their timer runs out
+            if self.judgement_timers and self.judgement_timers[0] <= 0:
+                bottle = self.bottles_to_judge[0]
 
                 # Applies all allergies
-                for allergy in self.previous_bottle.allergies:
+                for allergy in bottle.allergies:
                     if allergy not in self.allergies:
                         self.allergies.append(allergy)
-                        self.previous_bottle.adds_allergies.append(allergy)
+                        bottle.adds_allergies.append(allergy)
 
                 # Checks if the bottle has a lethal side effect
-                lethal = self.previous_bottle.lethal
+                lethal = bottle.lethal
 
                 # Checks if an allergy was triggered
                 triggers_allergy = False
-                for allergen in self.previous_bottle.allergens:
+                for allergen in bottle.allergens:
                     if allergen in self.allergies:
                         triggers_allergy = True
                         self.allergy_triggers.append(allergen)
@@ -318,11 +329,19 @@ class PlayScreen:
                     death.play_random()
                     self.game_over = True
                     self.in_animation = True
-                    self.bottles.pop()  # Removes the bottle that's sliding in
+
+                    # Removes all bottles after the lethal bottle
+                    while self.bottles[-1] is not bottle:
+                        self.bottles.pop()
+
                 else:
                     self.death_time += self.bottle_time
                     self.green_timer_frame = 30
                     extra_time.play_random()
+
+                # Removes the bottle from the judgement list
+                del self.judgement_timers[0]
+                del self.bottles_to_judge[0]
 
         # Handles winning and losing due to timers
         if self.death_time > self.ambulance_time and not self.win:
