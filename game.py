@@ -380,6 +380,10 @@ class PlayScreen:
         if self.green_timer_frame > 0:
             self.green_timer_frame -= 1
 
+            # If you die, the timer stops being green.
+            if self.game_over:
+                self.green_timer_frame = 0
+
         # If currently in shifting animation
         if self.is_shifting():
             self.shift.frame += 1
