@@ -398,13 +398,13 @@ class BottleGenerator:
                 bottle.add_lethal(1)
 
         # Allergen level generator
-        elif self.level == const.ALLERGEN_INCIDENT:
+        elif self.level == const.ALLERGENS_INCIDENT:
             bottle = Bottle()
             bottle.add_allergens(random.randint(1, 3))
             bottle.add_allergy(1)
 
-        # Mixed level generator
-        elif self.level == const.MIXED_INCIDENT or self.level == const.MIXED_HARD_INCIDENT:
+        # Effects and allergens level generator
+        elif self.level == const.EFFECTS_ALLERGENS_INCIDENT or self.level == const.EFFECTS_ALLERGENS_HARD_INCIDENT:
             bottle = Bottle()
             bottle.add_benign(random.randint(3, 5))
             bottle.add_allergens(random.randint(1, 4))
@@ -420,7 +420,7 @@ class BottleGenerator:
                 bottle.effects.pop(0)  # Pop at start so that it doesn't pop the allergy
                 bottle.add_lethal(1)
 
-        # Basic level generator (also includes hard version of basic level)
+        # Effects-only level generator (also includes the hard version)
         else:
             bottle = Bottle()
             bottle.add_benign(random.randint(5, 8))

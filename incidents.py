@@ -13,7 +13,7 @@ class Incident:
         self.bottle_time = bottle_time
 
 
-def basic_incident_bottle():
+def effects_incident_bottle():
     bottle = bottles.Bottle()
 
     bottle.body_width = 120
@@ -112,7 +112,7 @@ def allergen_incident_bottle():
     return bottle
 
 
-def mixed_incident_bottle():
+def effects_allergens_incident_bottle():
     bottle = bottles.Bottle()
 
     bottle.body_width = 130
@@ -145,7 +145,7 @@ def mixed_incident_bottle():
     return bottle
 
 
-def generate_basic_incident():
+def generate_effects_incident():
     text = (
         'Incident 1 <br> '
         'Year: 2054 <br> <br> '
@@ -153,14 +153,14 @@ def generate_basic_incident():
         '"911 here.  What’s your emergency?" <br> "Hahaha.  Haha.  You won’t believe - " <br> "Okay, Mark.  We’re sending the ambulance over right away." <br> <br> '
         'PRESS SPACE TO START'
     )
-    bottle = basic_incident_bottle()
+    bottle = effects_incident_bottle()
     bottle.effects.append("1:55 goal time <br> 0:30 start time <br> +15 seconds per bottle <br> Side effects only")
 
     ambulance_time = time_math.min_sec_ms_to_ms((1, 55, 0))
     homunculus_time = time_math.min_sec_ms_to_ms((0, 30, 0))
     bottle_time = time_math.min_sec_ms_to_ms((0, 15, 0))
 
-    number = const.BASIC_INCIDENT
+    number = const.EFFECTS_INCIDENT
 
     return Incident(number, bottle, text, ambulance_time, homunculus_time, bottle_time)
 
@@ -199,60 +199,60 @@ def generate_allergen_incident():
     homunculus_time = time_math.min_sec_ms_to_ms((0, 20, 0))
     bottle_time = time_math.min_sec_ms_to_ms((0, 10, 0))
 
-    number = const.ALLERGEN_INCIDENT
+    number = const.ALLERGENS_INCIDENT
 
     return Incident(number, bottle, text, ambulance_time, homunculus_time, bottle_time)
 
 
-def generate_mixed_incident():
+def generate_effects_allergens_incident():
     text = (
         'Incident 3 <br> '
         'Year: 2285 <br> <br> '
         'WHAT?  You\'re telling me that you\'ve never heard of THE FABULOUS, THE DIVINE, THE ONE AND ONLY DOCTOR BUNA COLISON?  The scientist known WORLDWIDE for adding <r>ALLERGY EFFECTS to NORMAL MEDICINE?<k>  Oh... you\'ve really never heard of me.  Well, I\'ll have you know that I\'m not as legendary of an idiot as a certain Mark Colison.  However, today I did forget to keep my gratimesium and my butane at least five centimeters apart, causing an explosion.  But, FEAR NOT, for I REMEMBERED to keep the <o>orange flesh sack<k> at least twenty meters away from my work!  Through the marvelous application of the latest technology, A LOCKED CAGE, I have managed to keep good ol\' <o>Homunculorange<k> safe from fire and flame.  Now, hold on a moment as I scream internally at the sight of an open door. <br> <br> '
         'Ah, that\'s better.  Yes, I\'ve got tons of medicine from my allergy experiments.  Yes, yes, this\'ll do fine.'
     )
-    bottle = mixed_incident_bottle()
+    bottle = effects_allergens_incident_bottle()
     bottle.effects.append("1:55 goal time <br> 0:15 start time <br> +15 seconds per bottle <br> Side effects and allergens")
 
     ambulance_time = time_math.min_sec_ms_to_ms((1, 55, 0))
     homunculus_time = time_math.min_sec_ms_to_ms((0, 15, 0))
     bottle_time = time_math.min_sec_ms_to_ms((0, 15, 0))
 
-    number = const.MIXED_INCIDENT
+    number = const.EFFECTS_ALLERGENS_INCIDENT
 
     return Incident(number, bottle, text, ambulance_time, homunculus_time, bottle_time)
 
 
-def generate_basic_hard_incident():
+def generate_effects_hard_incident():
     text = (
         'Incident ? <br> '
         'Harder version of incident 1'
     )
-    bottle = basic_incident_bottle()
+    bottle = effects_incident_bottle()
     bottle.effects.append("3:00 goal time <br> 0:18 start time <br> +12 seconds per bottle <br> Side effects only")
 
     ambulance_time = time_math.min_sec_ms_to_ms((3, 0, 0))
     homunculus_time = time_math.min_sec_ms_to_ms((0, 18, 0))
     bottle_time = time_math.min_sec_ms_to_ms((0, 12, 0))
 
-    number = const.BASIC_HARD_INCIDENT
+    number = const.EFFECTS_HARD_INCIDENT
 
     return Incident(number, bottle, text, ambulance_time, homunculus_time, bottle_time)
 
 
-def generate_mixed_hard_incident():
+def generate_effects_allergens_hard_incident():
     text = (
         'Incident ? <br> '
         'Harder version of incident 3'
     )
-    bottle = basic_incident_bottle()
+    bottle = effects_incident_bottle()
     bottle.effects.append("3:00 goal time <br> 0:18 start time <br> +12 seconds per bottle <br> Side effects and allergens")
 
     ambulance_time = time_math.min_sec_ms_to_ms((3, 0, 0))
     homunculus_time = time_math.min_sec_ms_to_ms((0, 18, 0))
     bottle_time = time_math.min_sec_ms_to_ms((0, 12, 0))
 
-    number = const.MIXED_HARD_INCIDENT
+    number = const.EFFECTS_ALLERGENS_HARD_INCIDENT
 
     return Incident(number, bottle, text, ambulance_time, homunculus_time, bottle_time)
 
@@ -262,7 +262,7 @@ def generate_faster_incident():
         'Incident ? <br> '
         'Quickest reader in the west'
     )
-    bottle = basic_incident_bottle()
+    bottle = effects_incident_bottle()
     bottle.effects.append(
         "1:30 goal time <br> 0:10 start time <br> +3 seconds per bottle <br> Side effects only")
 

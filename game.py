@@ -902,13 +902,13 @@ def play_result_transition(play, result):
 
 
 incident_list = [
-    incidents.generate_basic_incident(),
+    incidents.generate_effects_incident(),
     incidents.generate_allergen_incident(),
-    incidents.generate_mixed_incident(),
+    incidents.generate_effects_allergens_incident(),
     incidents.generate_fast_incident(),
-    incidents.generate_basic_hard_incident(),
-    incidents.generate_mixed_hard_incident(),
-    incidents.generate_faster_incident(),
+    incidents.generate_effects_hard_incident(),
+    incidents.generate_effects_allergens_hard_incident(),
+    incidents.generate_effects_brands_incident(),
 ]
 
 MENU_SCREEN = 0
