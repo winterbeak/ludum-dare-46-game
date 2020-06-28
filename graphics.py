@@ -235,6 +235,15 @@ class Animation:
     def set_frame_delays(self, col_num, delays):
         self._frame_lengths[col_num] = delays
 
+    @property
+    def frame_lengths(self):
+        return self._frame_lengths
+
+    @property
+    def current_frame_lengths(self):
+        """ Returns the frame delays for the current animation. """
+        return self._frame_lengths[self._col_num]
+
     def update(self):
         self._delay += 1
         if self._delay >= self._frame_lengths[self.col_num][self._frame]:
