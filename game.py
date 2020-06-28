@@ -14,7 +14,8 @@ import events
 import bottles
 import incidents
 
-
+# TODO: Fix this window sizing code.
+# Sets window size
 if window.monitor_size == (1920, 1080):
     screen = window.PixelWindow(3, (0, 0))
 elif window.monitor_size == (1280, 720):
@@ -28,9 +29,13 @@ else:
     else:
         screen = window.PixelWindow(1, (640, 360))
 
+
+# Caption and image of the game window
 pygame.display.set_caption("READ THE LABEL")
 pygame.display.set_icon(pygame.image.load("images/icon_large.png"))
 
+
+# Graphics loading
 background = graphics.SpriteColumn("images/background.png", 1)
 ui = graphics.SpriteColumn("images/test.png", 1)
 
@@ -67,7 +72,7 @@ lose_text = graphics.SpriteColumn("images/lose.png", 1)
 ambulance = graphics.SpriteColumn("images/ambulance.png", 1)
 
 
-# shobango
+# Sound loading
 menu_press = sound.load_numbers("menu_press%d", 1)
 menu_release = sound.load_numbers("menu_release%d", 1)
 menu_press.set_volumes(0.5)
@@ -114,7 +119,9 @@ lose_sound = sound.load_numbers("lose%d", 1)
 lose_sound.set_volumes(0.4)
 
 
+# Countdown stuff
 def draw_debug_countdown(end_time, surface, position):
+    """ Draws a primitive, unstylized countdown. """
     time = (end_time - pygame.time.get_ticks()) / 1000
     text = graphics.tahoma.render(str(time), False, const.WHITE)
     surface.blit(text, position)
@@ -126,6 +133,10 @@ numbers_small = graphics.SpriteColumn("images/numbers_small.png", 11)
 
 
 def render_number(text, color, shake=0):
+    """ Renders a number using numbers.png.
+
+    Supports the : character.  Ignores the negative sign.
+    """
     width = numbers.single_width * len(text)
     surface = graphics.new_surface((width, numbers.single_height))
 
@@ -152,6 +163,10 @@ def render_number(text, color, shake=0):
 
 
 def render_small_number(text, color, shake=0):
+    """ Renders a number using numbers_small.png.
+
+    Supports the . character.
+    """
     width = numbers_small.single_width * len(text)
     surface = graphics.new_surface((width, numbers_small.single_height))
 
@@ -175,6 +190,10 @@ def render_small_number(text, color, shake=0):
 
 
 def draw_countdown(surface, color, time, position, shake=0):
+    """ Draws the countdown to a given time.
+
+    The time variable is a 3-tuple in minutes/seconds/milliseconds form.
+    """
     minutes, seconds, milliseconds = time
 
     number = render_number("%d:%02d" % (minutes, seconds), color, shake)
@@ -188,6 +207,7 @@ def draw_countdown(surface, color, time, position, shake=0):
 
 
 class PlayScreen:
+    """ Handles the main gameplay. """
 
     BOTTLE_SECTION_LEFT = 300
     BOTTLE_SECTION = (BOTTLE_SECTION_LEFT, 0,
@@ -369,6 +389,7 @@ class PlayScreen:
             homunculus.col_num = HOMUNCULUS_IDLE
             self.homunculus_eat_delay = 0
 
+        # Handles the timer ticking sound
         if not self.in_animation:
             prev_before = (self.death_time - self.previous_tick_time) % 1000 < 500
             next_after = time_math.ms_time_to(self.death_time) % 1000 > 500
