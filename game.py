@@ -359,19 +359,23 @@ class PlayScreen:
                     self.green_timer_frame = 30
                     extra_time.play_random()
 
+                    # Handles winning
+                    if self.death_time > self.ambulance_time and not self.win:
+                        self.in_animation = True
+                        self.ambulance_anim_countdown = time_math.ms_time_to(self.ambulance_time)
+                        self.death_anim_countdown = time_math.ms_time_to(self.death_time)
+                        self.win = True
+
+                        # Removes all bottles after the winning bottle
+                        while self.bottles[-1] is not bottle:
+                            self.bottles.pop()
+
                 # Removes the bottle from the judgement list
                 del self.judgement_timers[0]
                 del self.bottles_to_judge[0]
 
-        # Handles winning and losing due to timers
-        if self.death_time > self.ambulance_time and not self.win:
-            self.in_animation = True
-            self.ambulance_anim_countdown = time_math.ms_time_to(self.ambulance_time)
-            self.death_anim_countdown = time_math.ms_time_to(self.death_time)
-            self.win = True
-            self.bottles.pop()  # Removes the bottle that's sliding in
-
-        elif time_math.ms_time_to(self.death_time) < 0 and not self.game_over:
+        # Handles losing when time runs out
+        if time_math.ms_time_to(self.death_time) < 0 and not self.game_over and not self.win:
             self.in_animation = True
             self.game_over = True
             death.play_random()
