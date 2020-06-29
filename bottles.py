@@ -344,14 +344,14 @@ class Bottle:
     def add_allergens(self, count):
         for _ in range(count):
             allergen = random.choice(allergens)
-            while allergen in self.allergens:
+            while allergen in self.allergens or allergen in self.allergies:
                 allergen = random.choice(allergens)
             self.allergens.append(allergen)
 
     def add_allergy(self, count):
         for _ in range(count):
             allergen = random.choice(allergens)
-            while allergen in self.allergies:
+            while allergen in self.allergens or allergen in self.allergies:
                 allergen = random.choice(allergens)
             self.allergies.append(allergen)
             self.effects.append(allergen + " allergy")

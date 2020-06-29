@@ -190,7 +190,7 @@ def generate_allergen_incident():
         'Incident 2 <br> '
         'Year: 2132 <br> <br> '
         'Jauntra Colison here.  Today I took the <o>orange thing<k> to the local allergery.  It\'s a specialized drugstore that only sells allergy medicine.  No, the medicine doesn\'t cure your allergies.  It <r>gives you them.<k>  And they\'re not the fun kind of allergy that knocks you out for a few hours so you can skip your grandfather\'s funeral.  These are the kinds of allergies that will <r>immediately kill you.<k>  Unfortunately, the more of these allergies you have, the "cooler" you are.  In an attempt to save the lives of every kid in town, I did the responsible thing and set fire to the building.  Unfortunately, the homunculus also caught on fire, and has suffered third degree burns for the fifty-fourth time in its life (the first fifty-tree were why I didn\'t go to your funeral, Mark).  Well, at least there\'s medicine here, I just have to <r>keep track of all the allergies...<k> <br> <br> '
-        'Note that some medicines cause an allergic reaction to one of its own ingredients.  That\'s lethal.'
+        'Note that medicine will never cause an allergy to one of its own ingredients.'
     )
     bottle = allergen_incident_bottle()
     bottle.effects.append("1:25 goal time <br> 0:20 start time <br> +10 seconds per bottle <br> Allergens only")
