@@ -273,3 +273,21 @@ def generate_faster_incident():
     number = const.FASTER_INCIDENT
 
     return Incident(number, bottle, text, ambulance_time, homunculus_time, bottle_time)
+
+
+def generate_effects_brands_incident():
+    text = (
+        'Incident ? <br> '
+        'Introduces brands'
+    )
+    bottle = effects_incident_bottle()
+    bottle.effects.append(
+        "1:30 goal time <br> 0:15 start time <br> +10 seconds per bottle <br> Side effects and brands")
+
+    ambulance_time = time_math.min_sec_ms_to_ms((1, 30, 0))
+    homunculus_time = time_math.min_sec_ms_to_ms((0, 15, 0))
+    bottle_time = time_math.min_sec_ms_to_ms((0, 10, 0))
+
+    number = const.EFFECTS_BRANDS_INCIDENT
+
+    return Incident(number, bottle, text, ambulance_time, homunculus_time, bottle_time)

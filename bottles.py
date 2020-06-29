@@ -102,6 +102,15 @@ allergens = [
     "celery",
 ]
 
+brands = [
+    "Acetone",
+    "Terrible",
+    "Somewhat",
+    "Memory",
+    "Silk",
+    "Pharmacy",
+]
+
 
 for index in range(len(death_effects)):
     death_effects[index] = graphics.colorize(death_effects[index], "r")
@@ -190,6 +199,7 @@ class Bottle:
         self.effects = []
         self.allergens = []
         self.allergies = []
+        self.brand = ""
 
         # Main body
         self.body_width = random.randint(100, 230)
@@ -243,6 +253,9 @@ class Bottle:
 
     def render_text(self, colored=False):
         text = ""
+        if self.brand:
+            text += "Brand: %s <br> " % self.brand
+
         if self.allergens:
             text += "Contains: "
         text += ", ".join(self.allergens)
@@ -348,6 +361,9 @@ class Bottle:
                 effect = random.choice(death_effects)
             self.effects.append(effect)
 
+    def add_brand(self):
+        self.brand = random.choice(brands)
+
     def shuffle(self):
         random.shuffle(self.effects)
 
@@ -418,6 +434,19 @@ class BottleGenerator:
             else:
                 self.bottles_until_safe -= 1
                 bottle.effects.pop(0)  # Pop at start so that it doesn't pop the allergy
+                bottle.add_lethal(1)
+
+        # Effects and brand level generator
+        elif self.level == const.EFFECTS_BRANDS_INCIDENT:
+            bottle = Bottle()
+            bottle.add_benign(random.randint(3, 5))
+            bottle.add_brand()
+
+            if self.bottles_until_safe == 0:
+                self.bottles_until_safe = random.randint(0, 2)
+            else:
+                self.bottles_until_safe -= 1
+                bottle.effects.pop()
                 bottle.add_lethal(1)
 
         # Effects-only level generator (also includes the hard version)

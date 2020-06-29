@@ -273,6 +273,7 @@ class PlayScreen:
         self.bottles = []
         self.allergies = []
         self.allergy_triggers = []
+        self.previous_brand = ""
 
         self.bottles_to_judge = []
         self.judgement_timers = []
@@ -345,7 +346,14 @@ class PlayScreen:
                         triggers_allergy = True
                         self.allergy_triggers.append(allergen)
 
-                if lethal or triggers_allergy:
+                # Checks for two of the same brand in a row
+                if bottle.brand and bottle.brand == self.previous_brand:
+                    double_brand = True
+                else:
+                    double_brand = False
+                    self.previous_brand = bottle.brand
+
+                if lethal or triggers_allergy or double_brand:
                     death.play_random()
                     self.game_over = True
                     self.in_animation = True
