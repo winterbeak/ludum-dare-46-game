@@ -254,13 +254,16 @@ class Bottle:
     def render_text(self, colored=False):
         text = ""
         if self.brand:
-            text += "Brand: %s <br> " % self.brand
+            text += "Brand: %s" % self.brand
 
         if self.allergens:
-            text += "Contains: "
+            if self.brand:
+                text += " <br> Contains: "
+            else:
+                text += "Contains: "
         text += ", ".join(self.allergens)
 
-        if self.allergens:
+        if self.allergens or self.brand:
             text += " <br> Side Effects: "
         text += ", ".join(self.effects)
         font = graphics.tahoma
@@ -447,6 +450,24 @@ class BottleGenerator:
             else:
                 self.bottles_until_safe -= 1
                 bottle.effects.pop()
+                bottle.add_lethal(1)
+
+        # Effects, allergens, and brands level generator
+        elif self.level == const.EFFECTS_ALLERGENS_BRANDS_INCIDENT:
+            bottle = Bottle()
+            bottle.add_benign(random.randint(3, 5))
+            bottle.add_allergens(random.randint(1, 2))
+            bottle.add_brand()
+
+            if random.random() < 0.75:
+                bottle.effects.pop()
+                bottle.add_allergy(1)
+
+            if self.bottles_until_safe == 0:
+                self.bottles_until_safe = random.randint(0, 1)
+            else:
+                self.bottles_until_safe -= 1
+                bottle.effects.pop(0)  # Pop at start so that it doesn't pop the allergy
                 bottle.add_lethal(1)
 
         # Effects-only level generator (also includes the hard version)

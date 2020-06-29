@@ -291,3 +291,21 @@ def generate_effects_brands_incident():
     number = const.EFFECTS_BRANDS_INCIDENT
 
     return Incident(number, bottle, text, ambulance_time, homunculus_time, bottle_time)
+
+
+def generate_effects_allergens_brands_incident():
+    text = (
+        'Incident ? <br> '
+        'Brands, side effects, and allergens'
+    )
+    bottle = effects_incident_bottle()
+    bottle.effects.append(
+        "2:25 goal time <br> 0:30 start time <br> +15 seconds per bottle <br> Side effects, allergens, and brands")
+
+    ambulance_time = time_math.min_sec_ms_to_ms((2, 25, 0))
+    homunculus_time = time_math.min_sec_ms_to_ms((0, 30, 0))
+    bottle_time = time_math.min_sec_ms_to_ms((0, 15, 0))
+
+    number = const.EFFECTS_ALLERGENS_BRANDS_INCIDENT
+
+    return Incident(number, bottle, text, ambulance_time, homunculus_time, bottle_time)
