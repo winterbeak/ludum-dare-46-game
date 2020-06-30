@@ -565,13 +565,13 @@ class PlayScreen:
     def draw_controls(self, surface):
         # Feed text
         x = 338
-        if events.keys.held_key == pygame.K_LEFT:
+        if pygame.K_LEFT in events.keys.queue:
             x -= 10
         feed_text.draw(surface, (x, 322), 0)
 
         # Skip text
         x = 481
-        if events.keys.held_key == pygame.K_RIGHT:
+        if pygame.K_RIGHT in events.keys.queue:
             x += 10
         skip_text.draw(surface, (x, 324), 0)
 
@@ -728,13 +728,13 @@ class MenuScreen(PlayScreen):
     def draw_controls(self, surface):
         # Prev text
         x = 338
-        if events.keys.held_key == pygame.K_LEFT:
+        if pygame.K_LEFT in events.keys.queue:
             x -= 10
         prev_text.draw(surface, (x, 10), 0)
 
         # Next text
         x = 481
-        if events.keys.held_key == pygame.K_RIGHT:
+        if pygame.K_RIGHT in events.keys.queue:
             x += 10
         next_text.draw(surface, (x, 10), 0)
 
