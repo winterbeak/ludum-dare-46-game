@@ -353,7 +353,7 @@ class PlayScreen:
                     double_brand = False
                     self.previous_brand = bottle.brand
 
-                if lethal or triggers_allergy or double_brand:
+                if lethal or triggers_allergy or double_brand or bottle.bootleg:
                     death.play_random()
                     self.game_over = True
                     self.in_animation = True
@@ -918,6 +918,7 @@ incident_list = [
     incidents.generate_effects_allergens_hard_incident(),
     incidents.generate_effects_brands_incident(),
     incidents.generate_effects_allergens_brands_incident(),
+    incidents.generate_effects_bootlegs()
 ]
 
 MENU_SCREEN = 0

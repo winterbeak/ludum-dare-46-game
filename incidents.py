@@ -309,3 +309,23 @@ def generate_effects_allergens_brands_incident():
     number = const.EFFECTS_ALLERGENS_BRANDS_INCIDENT
 
     return Incident(number, bottle, text, ambulance_time, homunculus_time, bottle_time)
+
+
+def generate_effects_bootlegs():
+    text = (
+        'Incident ? <br> '
+        'Intro to bootlegs <br> '
+        'Possibly the only bootlegs incident, since other game types have only 3-5 side effects, at which point duplicates become easier to spot. <br> '
+        'Maybe the ingredients can be duplicate?  Though, those would be easy to spot too, plus they would also require a separate explanation.'
+    )
+    bottle = effects_incident_bottle()
+    bottle.effects.append(
+        "2:05 goal time <br> 0:20 start time <br> +12 seconds per bottle <br> Side effects and bootlegs")
+
+    ambulance_time = time_math.min_sec_ms_to_ms((2, 5, 0))
+    homunculus_time = time_math.min_sec_ms_to_ms((0, 20, 0))
+    bottle_time = time_math.min_sec_ms_to_ms((0, 12, 0))
+
+    number = const.EFFECTS_BOOTLEGS_INCIDENT
+
+    return Incident(number, bottle, text, ambulance_time, homunculus_time, bottle_time)

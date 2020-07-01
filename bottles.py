@@ -200,6 +200,7 @@ class Bottle:
         self.allergens = []
         self.allergies = []
         self.brand = ""
+        self._bootleg = False
 
         # Main body
         self.body_width = random.randint(100, 230)
@@ -367,6 +368,22 @@ class Bottle:
     def add_brand(self):
         self.brand = random.choice(brands)
 
+    def become_bootleg(self):
+        self._bootleg = True
+        for effect in self.effects:
+            if effect in benign_effects:
+                duplicate = effect
+                break
+        else:
+            raise Exception("Can't make a bottle with no benign effects "
+                            "into a bootleg!")
+
+        self.effects.append(duplicate)
+
+    @property
+    def bootleg(self):
+        return self._bootleg
+
     def shuffle(self):
         random.shuffle(self.effects)
 
@@ -469,6 +486,25 @@ class BottleGenerator:
                 self.bottles_until_safe -= 1
                 bottle.effects.pop(0)  # Pop at start so that it doesn't pop the allergy
                 bottle.add_lethal(1)
+
+        # Effects and bootlegs level generator
+        elif self.level == const.EFFECTS_BOOTLEGS_INCIDENT:
+            bottle = Bottle()
+            bottle.add_benign(random.randint(5, 8))
+
+            if self.bottles_until_safe == 0:
+                self.bottles_until_safe = random.randint(0, 3)
+            else:
+                self.bottles_until_safe -= 1
+                bottle.effects.pop()
+
+                # 70% chance of being a bootleg
+                if random.random() < 0.7:
+                    bottle.become_bootleg()
+
+                # 30% chance of just being normally deadly
+                else:
+                    bottle.add_lethal(1)
 
         # Effects-only level generator (also includes the hard version)
         else:
