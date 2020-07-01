@@ -32,14 +32,13 @@ def effects_incident_bottle():
     bottle.cap_x = top_width - 5
     bottle.cap_height = 15
 
-    bottle._total_width = bottle.body_width
+    bottle.total_width = bottle.body_width
     total_height = 0
     total_height += bottle.cap_height
     total_height += bottle.body_height
     total_height += bottle.top.single_height
     total_height += bottle.bottom.single_height
-    bottle._total_height = total_height
-    bottle.total_size = (bottle._total_width, bottle._total_height)
+    bottle.total_height = total_height
 
     bottle.palette = bottles.PALETTES[1]
 
@@ -65,14 +64,13 @@ def fast_incident_bottle():
     bottle.cap_x = top_width - 5
     bottle.cap_height = 20
 
-    bottle._total_width = bottle.body_width
+    bottle.total_width = bottle.body_width
     total_height = 0
     total_height += bottle.cap_height
     total_height += bottle.body_height
     total_height += bottle.top.single_height
     total_height += bottle.bottom.single_height
-    bottle._total_height = total_height
-    bottle.total_size = (bottle._total_width, bottle._total_height)
+    bottle.total_height = total_height
 
     bottle.palette = bottles.PALETTES[14]
 
@@ -98,14 +96,13 @@ def allergen_incident_bottle():
     bottle.cap_x = top_width - 5
     bottle.cap_height = 30
 
-    bottle._total_width = bottle.body_width
+    bottle.total_width = bottle.body_width
     total_height = 0
     total_height += bottle.cap_height
     total_height += bottle.body_height
     total_height += bottle.top.single_height
     total_height += bottle.bottom.single_height
-    bottle._total_height = total_height
-    bottle.total_size = (bottle._total_width, bottle._total_height)
+    bottle.total_height = total_height
 
     bottle.palette = bottles.PALETTES[7]
 
@@ -131,14 +128,13 @@ def effects_allergens_incident_bottle():
     bottle.cap_x = top_width
     bottle.cap_height = 24
 
-    bottle._total_width = bottle.body_width
+    bottle.total_width = bottle.body_width
     total_height = 0
     total_height += bottle.cap_height
     total_height += bottle.body_height
     total_height += bottle.top.single_height
     total_height += bottle.bottom.single_height
-    bottle._total_height = total_height
-    bottle.total_size = (bottle._total_width, bottle._total_height)
+    bottle.total_height = total_height
 
     bottle.palette = bottles.PALETTES[6]
 
