@@ -272,7 +272,6 @@ class PlayScreen:
 
         self.bottles = []
         self.allergies = []
-        self.allergy_triggers = []
         self.previous_brand = ""
 
         self.bottles_to_judge = []
@@ -344,7 +343,6 @@ class PlayScreen:
                 for allergen in bottle.allergens:
                     if allergen in self.allergies:
                         triggers_allergy = True
-                        self.allergy_triggers.append(allergen)
 
                 # Checks for two of the same brand in a row
                 if bottle.brand and bottle.brand == self.previous_brand:
