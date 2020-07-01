@@ -227,7 +227,7 @@ class Bottle:
         total_height += self.top.single_height
         total_height += self.bottom.single_height
         self._total_height = total_height
-        self.total_size = (self._total_width, self._total_height)
+        self._total_size = (self._total_width, self._total_height)
 
         self.palette = random.choice(PALETTES)
 
@@ -241,7 +241,7 @@ class Bottle:
     @total_height.setter
     def total_height(self, value):
         self._total_height = value
-        self.total_size = (self._total_width, value)
+        self._total_size = (self._total_width, value)
 
     @property
     def total_width(self):
@@ -250,7 +250,17 @@ class Bottle:
     @total_width.setter
     def total_width(self, value):
         self._total_width = value
-        self.total_size = (value, self._total_height)
+        self._total_size = (value, self._total_height)
+
+    @property
+    def total_size(self):
+        return self._total_size
+
+    @total_size.setter
+    def total_size(self, value):
+        self._total_size = value
+        self._total_width = value[0]
+        self._total_height = value[1]
 
     def render_text(self, colored=False):
         text = ""
