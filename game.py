@@ -335,35 +335,13 @@ class PlayScreen:
                         self.allergies.append(allergy)
                         bottle.adds_allergies.append(allergy)
 
-                # Checks if the bottle has a lethal side effect
-                lethal = bottle.lethal
+                # Checks if bottle is safe
+                if self.bottle_is_safe(bottle):
 
-                # Checks if an allergy was triggered
-                triggers_allergy = False
-                for allergen in bottle.allergens:
-                    if allergen in self.allergies:
-                        triggers_allergy = True
-
-                # Checks for two of the same brand in a row
-                if bottle.brand and bottle.brand == self.previous_brand:
-                    double_brand = True
-                else:
-                    double_brand = False
-                    self.previous_brand = bottle.brand
-
-                if lethal or triggers_allergy or double_brand or bottle.bootleg:
-                    death.play_random()
-                    self.game_over = True
-                    self.in_animation = True
-
-                    # Removes all bottles after the lethal bottle
-                    while self.bottles[-1] is not bottle:
-                        self.bottles.pop()
-
-                else:
-                    self.death_time += self.bottle_time
-                    self.green_timer_frame = 30
-                    extra_time.play_random()
+                    self.previous_brand = bottle.brand  # Updates brand
+                    self.death_time += self.bottle_time  # Adds time to timer
+                    self.green_timer_frame = 30  # Makes timer turn green
+                    extra_time.play_random()  # Plays time-gain sound
 
                     # Handles winning
                     if self.death_time > self.ambulance_time and not self.win:
@@ -375,6 +353,16 @@ class PlayScreen:
                         # Removes all bottles after the winning bottle
                         while self.bottles[-1] is not bottle:
                             self.bottles.pop()
+
+                # If the bottle is deadly
+                else:
+                    death.play_random()
+                    self.game_over = True
+                    self.in_animation = True
+
+                    # Removes all bottles after the lethal bottle
+                    while self.bottles[-1] is not bottle:
+                        self.bottles.pop()
 
                 # Removes the bottle from the judgement list
                 del self.judgement_timers[0]
@@ -467,6 +455,26 @@ class PlayScreen:
                     self.death_circles[index] += 20
 
             self.death_anim_frame += 1
+
+    def bottle_is_safe(self, bottle):
+        # If it has any lethal side effects
+        if bottle.lethal:
+            return False
+
+        # If it triggers an allergy
+        for allergen in bottle.allergens:
+            if allergen in self.allergies:
+                return False
+
+        # If it has the same brand as the previous bottle
+        if bottle.brand and bottle.brand == self.previous_brand:
+            return False
+
+        # If it is a bootleg
+        if bottle.bootleg:
+            return False
+
+        return True
 
     def is_tossing(self):
         if self.toss_x.frame <= self.toss_x.last_frame:
