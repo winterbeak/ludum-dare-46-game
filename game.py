@@ -474,6 +474,11 @@ class PlayScreen:
         if bottle.bootleg:
             return False
 
+        # If the verification code is invalid
+        if bottle.code:
+            if not bottles.verification_code_is_valid(bottle.code):
+                return False
+
         return True
 
     def is_tossing(self):
@@ -924,7 +929,8 @@ incident_list = [
     incidents.generate_effects_allergens_hard_incident(),
     incidents.generate_effects_brands_incident(),
     incidents.generate_effects_allergens_brands_incident(),
-    incidents.generate_effects_bootlegs_incident()
+    incidents.generate_effects_bootlegs_incident(),
+    incidents.generate_effects_verification_incident(),
 ]
 
 MENU_SCREEN = 0

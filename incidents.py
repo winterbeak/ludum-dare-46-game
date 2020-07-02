@@ -444,3 +444,36 @@ def generate_effects_bootlegs_incident():
     number = const.EFFECTS_BOOTLEGS_INCIDENT
 
     return Incident(number, bottle, text, ambulance_time, homunculus_time, bottle_time)
+
+
+def generate_effects_verification_incident():
+    text = (
+        "Incident ? <br> "
+        "Intro to verification codes <br> "
+        "Bootleg medicine has become a rampant problem in the"
+        " industry.  However, companies have come up with an ingenious"
+        " solution; using a verification code.  Each medicine has a code which"
+        " follows a pattern too complex for bootleg companies to understand:"
+        " <r>the letters in the code must be in alphabetical order.<k>  Of"
+        " course, bootleg companies aren't completely incompetent: they"
+        " have used neural networks to analyze the pattern of these letters."
+        " So, they can produce codes that are almost correct, but never"
+        " exactly correct. <br> <br> "
+        "Example valid code: aabcf <br> "
+        "Example invalid code: aa<r>cb<k>f"
+    )
+    bottle = effects_incident_bottle()
+    bottle.effects.append(
+        "1:50 goal time <br> "
+        "0:20 start time <br> "
+        "+12 seconds per bottle <br> "
+        "Side effects and verification codes"
+    )
+
+    ambulance_time = time_math.min_sec_ms_to_ms((1, 50, 0))
+    homunculus_time = time_math.min_sec_ms_to_ms((0, 20, 0))
+    bottle_time = time_math.min_sec_ms_to_ms((0, 12, 0))
+
+    number = const.EFFECTS_VERIFICATION_INCIDENT
+
+    return Incident(number, bottle, text, ambulance_time, homunculus_time, bottle_time)

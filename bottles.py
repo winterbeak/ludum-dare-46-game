@@ -112,6 +112,48 @@ brands = [
 ]
 
 
+letters = [chr(a) for a in range(ord('a'), ord('z'))]
+
+
+def generate_verification_code(length):
+    code = []
+    for _ in range(length):
+        code.append(random.choice(letters))
+    code.sort()
+    return "".join(code)
+
+
+def generate_fake_verification_code(length):
+    string = generate_verification_code(length)
+    code = list(string)
+
+    # Check if the code is all the same letter
+    for letter in code:
+        if letter != code[0]:
+            break
+    # If it is, the fake algorithm won't work.  Generate a new code
+    else:
+        return generate_fake_verification_code(length)
+
+    # Randomly finds two adjacent letters that aren't the same
+    i = random.randint(0, length - 2)
+    while code[i] == code[i + 1]:
+        i = random.randint(0, length - 2)
+
+    # Swaps the two letters
+    code[i], code[i + 1] = code[i + 1], code[i]
+
+    return "".join(code)
+
+
+def verification_code_is_valid(code):
+    for i in range(1, len(code)):
+        if code[i - 1] > code[i]:
+            return False
+
+    return True
+
+
 for index in range(len(death_effects)):
     death_effects[index] = graphics.colorize(death_effects[index], "r")
 
@@ -201,6 +243,7 @@ class Bottle:
         self.allergies = []
         self.brand = ""
         self._bootleg = False
+        self.code = ""
 
         # Main body
         self.body_width = random.randint(100, 230)
@@ -276,6 +319,9 @@ class Bottle:
             text += "Side Effects: "
         text += ", ".join(self.effects)
         text += " <br> "
+
+        if self.code:
+            text += "Code: %s <br> " % self.code
 
         # Removes the final <br>
         if text.endswith(" <br> "):
@@ -393,6 +439,12 @@ class Bottle:
                             "into a bootleg!")
 
         self.effects.append(duplicate)
+
+    def add_verification(self):
+        self.code = generate_verification_code(random.randint(3, 5))
+
+    def add_fake_verification(self):
+        self.code = generate_fake_verification_code(random.randint(3, 5))
 
     @property
     def bootleg(self):
@@ -519,6 +571,27 @@ class BottleGenerator:
                 # 30% chance of just being normally deadly
                 else:
                     bottle.add_lethal(1)
+
+        # Effects and verification level generator
+        elif self.level == const.EFFECTS_VERIFICATION_INCIDENT:
+            bottle = Bottle()
+            bottle.add_benign(random.randint(3, 5))
+
+            if self.bottles_until_safe == 0:
+                self.bottles_until_safe = random.randint(0, 2)
+            else:
+                self.bottles_until_safe -= 1
+
+                # 70% chance of being a fake code
+                if random.random() < 0.7:
+                    bottle.add_fake_verification()
+                else:
+                    bottle.effects.pop()
+                    bottle.add_lethal(1)
+
+            # Adds verification, if a fake one hasn't already been made
+            if not bottle.code:
+                bottle.add_verification()
 
         # Effects-only level generator (also includes the hard version)
         else:
