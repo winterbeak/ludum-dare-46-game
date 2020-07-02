@@ -143,25 +143,25 @@ def effects_allergens_incident_bottle():
 
 def generate_effects_incident():
     text = (
-        'Incident 1 <br> '
-        'Year: 2054 <br> <br> '
-        'Several thousand years ago, some great ancestor of mine sealed'
-        ' away a cosmological shadow monster into this <o>weird orange'
-        ' puppet<k> thing.  If the puppet dies, the monster gets out, so'
-        ' my lineage has been tasked with taking care of it.  Unfortunately,'
-        ' it seems those hero genes have worn out over the centuries,'
-        ' because I, Mark Colison, have managed to spill hot coffee all'
-        ' over the puppet for the twenty-seventh time in my'
-        ' life!  Fortunately, it happened in a drugstore, so there’s'
-        ' plenty of medication to keep it alive until the ambulance'
-        ' arrives.  I just need to avoid feeding it anything with <r>lethal'
-        ' side effects...<k> <br> <br> '
+        "Incident 1 <br> "
+        "Year: 2054 <br> <br> "
+        "Several thousand years ago, some great ancestor of mine sealed"
+        " away a cosmological shadow monster into this <o>weird orange"
+        " puppet<k> thing.  If the puppet dies, the monster gets out, so"
+        " my lineage has been tasked with taking care of it.  Unfortunately,"
+        " it seems those hero genes have worn out over the centuries,"
+        " because I, Mark Colison, have managed to spill hot coffee all"
+        " over the puppet for the twenty-seventh time in my"
+        " life!  Fortunately, it happened in a drugstore, so there's"
+        " plenty of medication to keep it alive until the ambulance"
+        " arrives.  I just need to avoid feeding it anything with <r>lethal"
+        " side effects...<k> <br> <br> "
         
-        '"911 here.  What’s your emergency?" <br> '
-        '"Hahaha.  Haha.  You won’t believe - " <br> '
-        '"Okay, Mark.  We’re sending the ambulance over right away." <br> <br> '
+        "\"911 here.  What's your emergency?\" <br> "
+        "\"Hahaha.  Haha.  You won't believe - \" <br> "
+        "\"Okay, Mark.  We're sending the ambulance over right away.\" <br> <br> "
         
-        'PRESS SPACE TO START'
+        "PRESS SPACE TO START"
     )
     bottle = effects_incident_bottle()
     bottle.effects.append(
@@ -182,26 +182,26 @@ def generate_effects_incident():
 
 def generate_fast_incident():
     text = (
-        'Incident 4 <br> '
-        'Year: 2020 <br> <br> '
-        'It is I, Lercalo Colison, esteemed time traveller'
-        ' extraordinaire!  In 2945, I went back in time to 2020, taking'
-        ' with me my exquisite companion, <o>Patchwork,<k> to record the'
-        ' history of the twenty-first century!  Astoundingly, <r>medicine'
-        ' used to be allergy-free, and the amount of side effects are'
-        ' extraordinarily low!  Though the effectiveness seems to have'
-        ' dropped a tad.<k>  Very interesting, indeed... <br> <br> '
+        "Incident 4 <br> "
+        "Year: 2020 <br> <br> "
+        "It is I, Lercalo Colison, esteemed time traveller"
+        " extraordinaire!  In 2945, I went back in time to 2020, taking"
+        " with me my exquisite companion, <o>Patchwork,<k> to record the"
+        " history of the twenty-first century!  Astoundingly, <r>medicine"
+        " used to be allergy-free, and the amount of side effects are"
+        " extraordinarily low!  Though the effectiveness seems to have"
+        " dropped a tad.<k>  Very interesting, indeed... <br> <br> "
         
-        'Oh!  Is that an ancestor I see?  Most curious.  I\'d love to'
-        ' chat, but that could create a paradox.  So, I\'ll just have to'
-        ' watch from a distance.  He\'s talking to the person behind the'
-        ' counter and in response they\'ve filled a cup full of some'
-        ' strange brown liquid.  Ahaha!  He spilt it all over his version'
-        ' of Patchwork!  That\'s gotta be quite the pain, not to mention'
-        ' a threat to the integrity of the universe.  But that was 900'
-        ' years ago, and comedy is just tragedy plus time, so I do'
-        ' suppose that\'s quite the hilarity, eh,'
-        ' Patchy? ... Patchy?  Where\'d you go?'
+        "Oh!  Is that an ancestor I see?  Most curious.  I'd love to"
+        " chat, but that could create a paradox.  So, I'll just have to"
+        " watch from a distance.  He's talking to the person behind the"
+        " counter and in response they've filled a cup full of some"
+        " strange brown liquid.  Ahaha!  He spilt it all over his version"
+        " of Patchwork!  That's gotta be quite the pain, not to mention"
+        " a threat to the integrity of the universe.  But that was 900"
+        " years ago, and comedy is just tragedy plus time, so I do"
+        " suppose that's quite the hilarity, eh,"
+        " Patchy? ... Patchy?  Where'd you go?"
     )
     bottle = fast_incident_bottle()
     bottle.effects.append(
@@ -222,26 +222,26 @@ def generate_fast_incident():
 
 def generate_allergen_incident():
     text = (
-        'Incident 2 <br> '
-        'Year: 2132 <br> <br> '
-        'Jauntra Colison here.  Today I took the <o>orange thing<k> to'
-        ' the local allergery.  It\'s a specialized drugstore that only'
-        ' sells allergy medicine.  No, the medicine doesn\'t cure your'
-        ' allergies.  It <r>gives you them.<k>  And they\'re not the fun'
-        ' kind of allergy that knocks you out for a few hours so you can'
-        ' skip your grandfather\'s funeral.  These are the kinds of'
-        ' allergies that will <r>immediately kill you.<k>  Unfortunately,'
-        ' the more of these allergies you have, the "cooler" you are.  In'
-        ' an attempt to save the lives of every kid in town, I did the'
-        ' responsible thing and set fire to the building.  Unfortunately,'
-        ' the homunculus also caught on fire, and has suffered third degree'
-        ' burns for the fifty-fourth time in its life (the first fifty-tree'
-        ' were why I didn\'t go to your funeral, Mark).  Well, at least'
-        ' there\'s medicine here, I just have to <r>keep track of all the'
-        ' allergies...<k> <br> <br> '
+        "Incident 2 <br> "
+        "Year: 2132 <br> <br> "
+        "Jauntra Colison here.  Today I took the <o>orange thing<k> to"
+        " the local allergery.  It's a specialized drugstore that only"
+        " sells allergy medicine.  No, the medicine doesn't cure your"
+        " allergies.  It <r>gives you them.<k>  And they're not the fun"
+        " kind of allergy that knocks you out for a few hours so you can"
+        " skip your grandfather's funeral.  These are the kinds of"
+        " allergies that will <r>immediately kill you.<k>  Unfortunately,"
+        " the more of these allergies you have, the \"cooler\" you are.  In"
+        " an attempt to save the lives of every kid in town, I did the"
+        " responsible thing and set fire to the building.  Unfortunately,"
+        " the homunculus also caught on fire, and has suffered third degree"
+        " burns for the fifty-fourth time in its life (the first fifty-tree"
+        " were why I didn't go to your funeral, Mark).  Well, at least"
+        " there's medicine here, I just have to <r>keep track of all the"
+        " allergies...<k> <br> <br> "
         
-        'Note that medicine will never cause an allergy to one of its'
-        ' own ingredients.'
+        "Note that medicine will never cause an allergy to one of its"
+        " own ingredients."
     )
     bottle = allergen_incident_bottle()
     bottle.effects.append(
@@ -262,25 +262,25 @@ def generate_allergen_incident():
 
 def generate_effects_allergens_incident():
     text = (
-        'Incident 3 <br> '
-        'Year: 2285 <br> <br> '
-        'WHAT?  You\'re telling me that you\'ve never heard of THE'
-        ' FABULOUS, THE DIVINE, THE ONE AND ONLY DOCTOR BUNA'
-        ' COLISON?  The scientist known WORLDWIDE for adding <r>ALLERGY'
-        ' EFFECTS to NORMAL MEDICINE?<k>  Oh... you\'ve really never'
-        ' heard of me.  Well, I\'ll have you know that I\'m not as'
-        ' legendary of an idiot as a certain Mark Colison.  However,'
-        ' today I did forget to keep my gratimesium and my butane at'
-        ' least five centimeters apart, causing an explosion.  But,'
-        ' FEAR NOT, for I REMEMBERED to keep the <o>orange flesh sack<k>'
-        ' at least twenty meters away from my work!  Through the'
-        ' marvelous application of the latest technology, A LOCKED CAGE,'
-        ' I have managed to keep good ol\' <o>Homunculorange<k> safe'
-        ' from fire and flame.  Now, hold on a moment as I scream'
-        ' internally at the sight of an open door. <br> <br> '
+        "Incident 3 <br> "
+        "Year: 2285 <br> <br> "
+        "WHAT?  You're telling me that you've never heard of THE"
+        " FABULOUS, THE DIVINE, THE ONE AND ONLY DOCTOR BUNA"
+        " COLISON?  The scientist known WORLDWIDE for adding <r>ALLERGY"
+        " EFFECTS to NORMAL MEDICINE?<k>  Oh... you've really never"
+        " heard of me.  Well, I'll have you know that I'm not as"
+        " legendary of an idiot as a certain Mark Colison.  However,"
+        " today I did forget to keep my gratimesium and my butane at"
+        " least five centimeters apart, causing an explosion.  But,"
+        " FEAR NOT, for I REMEMBERED to keep the <o>orange flesh sack<k>"
+        " at least twenty meters away from my work!  Through the"
+        " marvelous application of the latest technology, A LOCKED CAGE,"
+        " I have managed to keep good ol' <o>Homunculorange<k> safe"
+        " from fire and flame.  Now, hold on a moment as I scream"
+        " internally at the sight of an open door. <br> <br> "
         
-        'Ah, that\'s better.  Yes, I\'ve got tons of medicine from my'
-        ' allergy experiments.  Yes, yes, this\'ll do fine.'
+        "Ah, that's better.  Yes, I've got tons of medicine from my"
+        " allergy experiments.  Yes, yes, this'll do fine."
     )
     bottle = effects_allergens_incident_bottle()
     bottle.effects.append(
@@ -301,8 +301,8 @@ def generate_effects_allergens_incident():
 
 def generate_effects_hard_incident():
     text = (
-        'Incident ? <br> '
-        'Harder version of incident 1'
+        "Incident ? <br> "
+        "Harder version of incident 1"
     )
     bottle = effects_incident_bottle()
     bottle.effects.append(
@@ -323,8 +323,8 @@ def generate_effects_hard_incident():
 
 def generate_effects_allergens_hard_incident():
     text = (
-        'Incident ? <br> '
-        'Harder version of incident 3'
+        "Incident ? <br> "
+        "Harder version of incident 3"
     )
     bottle = effects_incident_bottle()
     bottle.effects.append(
@@ -345,8 +345,8 @@ def generate_effects_allergens_hard_incident():
 
 def generate_faster_incident():
     text = (
-        'Incident ? <br> '
-        'Quickest reader in the west'
+        "Incident ? <br> "
+        "Quickest reader in the west"
     )
     bottle = effects_incident_bottle()
     bottle.effects.append(
@@ -367,11 +367,11 @@ def generate_faster_incident():
 
 def generate_effects_brands_incident():
     text = (
-        'Incident ? <br> '
-        'Introduces brands.  In an effort to prevent monopolies and promote'
-        ' competition, a scientist has made a contagious viral infection'
-        ' which kills you if you eat two medicines from the same brand'
-        ' in a row.'
+        "Incident ? <br> "
+        "Introduces brands.  In an effort to prevent monopolies and promote"
+        " competition, a scientist has made a contagious viral infection"
+        " which kills you if you eat two medicines from the same brand"
+        " in a row."
     )
     bottle = effects_incident_bottle()
     bottle.effects.append(
@@ -392,8 +392,8 @@ def generate_effects_brands_incident():
 
 def generate_effects_allergens_brands_incident():
     text = (
-        'Incident ? <br> '
-        'Brands, side effects, and allergens'
+        "Incident ? <br> "
+        "Brands, side effects, and allergens"
     )
     bottle = effects_incident_bottle()
     bottle.effects.append(
@@ -414,20 +414,20 @@ def generate_effects_allergens_brands_incident():
 
 def generate_effects_bootlegs():
     text = (
-        'Incident ? <br> '
-        'Intro to bootlegs <br> '
-        'To cash in on the medicine craze, bootleg companies have started'
-        ' making their own medicine.  These are all made with the cheapest'
-        ' possible ingredient, which just so happens to be poison.  However,'
-        ' due to the general incompetence of bootleggers, all of these fake'
-        ' medicines contain a printing error where one of the side effects'
-        ' is listed twice. <br> '
-        'Possibly the only bootlegs incident, since other game types'
-        ' have only 3-5 side effects, at which point duplicates become'
-        ' easier to spot. <br> '
-        'Maybe the ingredients can be duplicate?  Though, those would'
-        ' be easy to spot too, plus they would also require a separate'
-        ' explanation.'
+        "Incident ? <br> "
+        "Intro to bootlegs <br> "
+        "To cash in on the medicine craze, bootleg companies have started"
+        " making their own medicine.  These are all made with the cheapest"
+        " possible ingredient, which just so happens to be poison.  However,"
+        " due to the general incompetence of bootleggers, all of these fake"
+        " medicines contain a printing error where one of the side effects"
+        " is listed twice. <br> "
+        "Possibly the only bootlegs incident, since other game types"
+        " have only 3-5 side effects, at which point duplicates become"
+        " easier to spot. <br> "
+        "Maybe the ingredients can be duplicate?  Though, those would"
+        " be easy to spot too, plus they would also require a separate"
+        " explanation."
     )
     bottle = effects_incident_bottle()
     bottle.effects.append(
