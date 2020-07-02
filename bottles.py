@@ -265,18 +265,22 @@ class Bottle:
     def render_text(self, colored=False):
         text = ""
         if self.brand:
-            text += "Brand: %s" % self.brand
+            text += "Brand: %s <br> " % self.brand
 
         if self.allergens:
-            if self.brand:
-                text += " <br> Contains: "
-            else:
-                text += "Contains: "
-        text += ", ".join(self.allergens)
+            text += "Contains: "
+            text += ", ".join(self.allergens)
+            text += " <br> "
 
-        if self.allergens or self.brand:
-            text += " <br> Side Effects: "
+        if self.brand or self.allergens or self.code:
+            text += "Side Effects: "
         text += ", ".join(self.effects)
+        text += " <br> "
+
+        # Removes the final <br>
+        if text.endswith(" <br> "):
+            text = text[:-len(" <br> ")]
+
         font = graphics.tahoma
         max_width = self.body_width
 
