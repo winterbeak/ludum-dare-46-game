@@ -924,7 +924,7 @@ incident_list = [
     incidents.generate_effects_allergens_hard_incident(),
     incidents.generate_effects_brands_incident(),
     incidents.generate_effects_allergens_brands_incident(),
-    incidents.generate_effects_bootlegs()
+    incidents.generate_effects_bootlegs_incident()
 ]
 
 MENU_SCREEN = 0

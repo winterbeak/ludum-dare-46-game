@@ -412,7 +412,7 @@ def generate_effects_allergens_brands_incident():
     return Incident(number, bottle, text, ambulance_time, homunculus_time, bottle_time)
 
 
-def generate_effects_bootlegs():
+def generate_effects_bootlegs_incident():
     text = (
         "Incident ? <br> "
         "Intro to bootlegs <br> "
