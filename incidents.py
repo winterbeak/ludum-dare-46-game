@@ -368,7 +368,10 @@ def generate_faster_incident():
 def generate_effects_brands_incident():
     text = (
         'Incident ? <br> '
-        'Introduces brands'
+        'Introduces brands.  In an effort to prevent monopolies and promote'
+        ' competition, a scientist has made a contagious viral infection'
+        ' which kills you if you eat two medicines from the same brand'
+        ' in a row.'
     )
     bottle = effects_incident_bottle()
     bottle.effects.append(
@@ -413,6 +416,12 @@ def generate_effects_bootlegs():
     text = (
         'Incident ? <br> '
         'Intro to bootlegs <br> '
+        'To cash in on the medicine craze, bootleg companies have started'
+        ' making their own medicine.  These are all made with the cheapest'
+        ' possible ingredient, which just so happens to be poison.  However,'
+        ' due to the general incompetence of bootleggers, all of these fake'
+        ' medicines contain a printing error where one of the side effects'
+        ' is listed twice. <br> '
         'Possibly the only bootlegs incident, since other game types'
         ' have only 3-5 side effects, at which point duplicates become'
         ' easier to spot. <br> '
