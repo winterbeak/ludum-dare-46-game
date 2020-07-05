@@ -1,17 +1,18 @@
 import sound
 
 import pygame
-import math
-import time_math
 import random
 
+import events
 import window
 import geometry
 import curves
 import graphics
+import time_math
+
 import const
 import colors
-import events
+
 import bottles
 import incidents
 

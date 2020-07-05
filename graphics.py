@@ -1,5 +1,4 @@
 import pygame
-import const
 import colors
 
 pygame.display.set_mode((100, 100))
