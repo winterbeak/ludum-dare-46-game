@@ -375,7 +375,8 @@ def generate_faster_incident():
 def generate_effects_brands_incident():
     text = (
         "Incident ? <br> "
-        "Introduces brands.  In an effort to prevent monopolies and promote"
+        "Intro to brands <br> <br> "
+        "In an effort to prevent monopolies and promote"
         " competition, a scientist has made a contagious viral infection"
         " which kills you if you eat two medicines from the same brand"
         " in a row."
@@ -424,7 +425,7 @@ def generate_effects_allergens_brands_incident():
 def generate_effects_bootlegs_incident():
     text = (
         "Incident ? <br> "
-        "Intro to bootlegs <br> "
+        "Intro to bootlegs <br> <br> "
         "To cash in on the medicine craze, bootleg companies have started"
         " making their own medicine.  These are all made with the cheapest"
         " possible ingredient, which just so happens to be poison.  However,"
@@ -459,7 +460,7 @@ def generate_effects_bootlegs_incident():
 def generate_effects_verification_incident():
     text = (
         "Incident ? <br> "
-        "Intro to verification codes <br> "
+        "Intro to verification codes <br> <br> "
         "Bootleg medicine has become a rampant problem in the"
         " industry.  However, companies have come up with an ingenious"
         " solution; using a verification code.  Each medicine has a code which"
