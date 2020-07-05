@@ -191,34 +191,44 @@ class PlayScreen:
         self.has_eaten = False
         self.last_eaten_is_safe = False
 
+    def _next_bottle(self):
+        """ Generates the next bottle.
+
+        Does not start any animations.  Those must be started separately.
+        """
+        self.previous_bottle = self.current_bottle
+        self.current_bottle = self.generator.next_item()
+        self.bottles.append(self.current_bottle)
+
+    def _feed_current_bottle(self):
+        """ Feeds a bottle to the homunculus. """
+        feed_release.play_random()
+
+        self.bottles_to_judge.append(self.current_bottle)
+        self.judgement_timers.append(self.JUDGEMENT_TIMER_LENGTH)
+        self.current_bottle.eaten = True
+
+        self._start_tossing()
+        self._next_bottle()
+
+    def _skip_current_bottle(self):
+        """ Skips a bottle, and doesn't feed it to the homunculus. """
+        skip_release.play_random()
+        self._start_shifting()
+        self._next_bottle()
+
     def update(self):
 
         if not self.in_animation:
-
             if events.keys.pressed_key == pygame.K_LEFT:
                 feed_press.play_random()
             elif events.keys.pressed_key == pygame.K_RIGHT:
                 skip_press.play_random()
 
-            # If you press the key to feed
             if events.keys.released_key == pygame.K_LEFT:
-                self.bottles_to_judge.append(self.current_bottle)
-                self.judgement_timers.append(self.JUDGEMENT_TIMER_LENGTH)
-                self.current_bottle.eaten = True
-
-                feed_release.play_random()
-                self._start_tossing()
-                self.previous_bottle = self.current_bottle
-                self.current_bottle = self.generator.next_item()
-                self.bottles.append(self.current_bottle)
-
-            # If you press the key to trash
+                self._feed_current_bottle()
             elif events.keys.released_key == pygame.K_RIGHT:
-                skip_release.play_random()
-                self._start_shifting()
-                self.previous_bottle = self.current_bottle
-                self.current_bottle = self.generator.next_item()
-                self.bottles.append(self.current_bottle)
+                self._skip_current_bottle()
 
         # If currently in tossing animation
         if self.is_tossing():
