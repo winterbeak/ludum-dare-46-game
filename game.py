@@ -76,11 +76,11 @@ menu_press.set_volumes(0.5)
 menu_release.set_volumes(0.5)
 
 feed_press = sound.load_numbers("feed_press%d", 3)
-toss = sound.load_numbers("toss%d", 3)
+feed_release = sound.load_numbers("feed_release%d", 3)
 feed_press.set_volumes(0.3)
 
 skip_press = sound.load_numbers("skip_press%d", 3)
-slide = sound.load_numbers("slide%d", 3)
+skip_release = sound.load_numbers("skip_release%d", 3)
 skip_press.set_volumes(0.3)
 
 tick = sound.load_numbers("tick%d", 1)
@@ -96,8 +96,8 @@ start_press = sound.load_numbers("start_press%d", 1)
 start_release.set_volumes(0.8)
 start_press.set_volumes(0.8)
 
-extra_time = sound.load_numbers("extra_time%d", 1)
-extra_time.set_volumes(0.6)
+time_gain = sound.load_numbers("time_gain%d", 1)
+time_gain.set_volumes(0.6)
 
 ambulance_arrive = sound.load_numbers("ambulance%d", 1)
 ambulance_arrive.set_volumes(0.5)
@@ -206,7 +206,7 @@ class PlayScreen:
                 self.judgement_timers.append(self.JUDGEMENT_TIMER_LENGTH)
                 self.current_bottle.eaten = True
 
-                toss.play_random()
+                feed_release.play_random()
                 self._start_tossing()
                 self.previous_bottle = self.current_bottle
                 self.current_bottle = self.generator.next_item()
@@ -214,7 +214,7 @@ class PlayScreen:
 
             # If you press the key to trash
             elif events.keys.released_key == pygame.K_RIGHT:
-                slide.play_random()
+                skip_release.play_random()
                 self._start_shifting()
                 self.previous_bottle = self.current_bottle
                 self.current_bottle = self.generator.next_item()
@@ -268,7 +268,7 @@ class PlayScreen:
                     self.previous_brand = bottle.brand  # Updates brand
                     self.death_time += self.bottle_time  # Adds time to timer
                     self.green_timer_frame = 30  # Makes timer turn green
-                    extra_time.play_random()  # Plays time-gain sound
+                    time_gain.play_random()  # Plays time-gain sound
 
                     # If you won, this handles winning
                     if self.death_time > self.ambulance_time and not self.win:
