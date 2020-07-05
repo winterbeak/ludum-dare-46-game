@@ -11,6 +11,7 @@ class Incident:
         self.ambulance_time = ambulance_time
         self.homunculus_time = homunculus_time
         self.bottle_time = bottle_time
+        self.alternating = False
 
 
 def effects_incident_bottle():
@@ -488,4 +489,35 @@ def generate_effects_verification_incident():
     number = const.EFFECTS_VERIFICATION_INCIDENT
 
     incident = Incident(number, bottle, text, ambulance_time, homunculus_time, bottle_time)
+    return incident
+
+
+def generate_effects_alternating_incident():
+    text = (
+        "Incident ? <br> "
+        "Intro to alternation <br> <br> "
+        "Due to the recent collapse of society, food has become extremely"
+        " scarce!  Thankfully, scientists have invented a beneficial virus"
+        " that lets you eat things that are typically inedible, as long as you"
+        " eat something edible afterwards.  Unthankfully, unforseen"
+        " complications have made it so that the reverse is also true: after"
+        " everything edible, you must eat something inedible!  You have to"
+        " alternate between eating something deadly and something not deadly."
+    )
+    bottle = effects_incident_bottle()
+    bottle.effects.append(
+        "1:55 goal time <br> "
+        "0:20 start time <br> "
+        "+10 seconds per bottle <br> "
+        "Side effects and alternation"
+    )
+
+    ambulance_time = time_math.min_sec_ms_to_ms((1, 55, 0))
+    homunculus_time = time_math.min_sec_ms_to_ms((0, 20, 0))
+    bottle_time = time_math.min_sec_ms_to_ms((0, 10, 0))
+
+    number = const.EFFECTS_ALTERNATION_INCIDENT
+
+    incident = Incident(number, bottle, text, ambulance_time, homunculus_time, bottle_time)
+    incident.alternating = True
     return incident

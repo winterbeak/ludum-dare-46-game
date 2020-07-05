@@ -277,6 +277,10 @@ class PlayScreen:
         self.bottles_to_judge = []
         self.judgement_timers = []
 
+        self.alternating = False
+        self.has_eaten = False
+        self.last_eaten_is_safe = False
+
     def update(self):
 
         if not self.in_animation:
@@ -335,15 +339,28 @@ class PlayScreen:
                         self.allergies.append(allergy)
                         bottle.adds_allergies.append(allergy)
 
-                # Checks if bottle is safe
-                if self.bottle_is_safe(bottle):
+                # If the level is alternating
+                if self.alternating:
+                    # First thing eaten when alternating is always safe
+                    if not self.has_eaten:
+                        safe = True
 
+                    # False if this and the last were both safe or both
+                    # deadly.  True otherwise.
+                    else:
+                        safe = self.bottle_is_safe(bottle) != self.last_eaten_is_safe
+
+                # Checks if bottle is safe in every other case
+                else:
+                    safe = self.bottle_is_safe(bottle)
+
+                if safe:
                     self.previous_brand = bottle.brand  # Updates brand
                     self.death_time += self.bottle_time  # Adds time to timer
                     self.green_timer_frame = 30  # Makes timer turn green
                     extra_time.play_random()  # Plays time-gain sound
 
-                    # Handles winning
+                    # If you won, this handles winning
                     if self.death_time > self.ambulance_time and not self.win:
                         self.in_animation = True
                         self.ambulance_anim_countdown = time_math.ms_time_to(self.ambulance_time)
@@ -363,6 +380,10 @@ class PlayScreen:
                     # Removes all bottles after the lethal bottle
                     while self.bottles[-1] is not bottle:
                         self.bottles.pop()
+
+                # Updates some variables (mostly used for alternating stages)
+                self.has_eaten = True
+                self.last_eaten_is_safe = self.bottle_is_safe(bottle)
 
                 # Removes the bottle from the judgement list
                 del self.judgement_timers[0]
@@ -886,6 +907,8 @@ def menu_play_transition(menu, play):
     play.current_bottle = play.generator.next_item()
     play.bottles = [play.current_bottle]
 
+    play.alternating = menu.current_level.alternating
+
 
 def play_result_transition(play, result):
     allergies = []
@@ -931,6 +954,7 @@ incident_list = [
     incidents.generate_effects_allergens_brands_incident(),
     incidents.generate_effects_bootlegs_incident(),
     incidents.generate_effects_verification_incident(),
+    incidents.generate_effects_alternating_incident(),
 ]
 
 MENU_SCREEN = 0

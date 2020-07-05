@@ -593,6 +593,26 @@ class BottleGenerator:
             if not bottle.code:
                 bottle.add_verification()
 
+        # Effects and alternation level generator
+        elif self.level == const.EFFECTS_ALTERNATION_INCIDENT:
+            bottle = Bottle()
+            bottle.add_benign(random.randint(5, 8))
+
+            # The more safes you get in a row, the less likely the next
+            # bottle is safe.  Likewise for deadlies.
+            # It's impossible to get 4 safes/deadlies in a row.
+            safe_chance = 0.5
+            safe_chance += self.deadlies_in_a_row * 0.13
+            safe_chance -= self.safes_in_a_row * 0.13
+            if random.random() < safe_chance:
+                self.deadlies_in_a_row = 0
+                self.safes_in_a_row += 1
+            else:
+                self.deadlies_in_a_row += 1
+                self.safes_in_a_row = 0
+                bottle.effects.pop()
+                bottle.add_lethal(1)
+
         # Effects-only level generator (also includes the hard version)
         else:
             bottle = Bottle()
