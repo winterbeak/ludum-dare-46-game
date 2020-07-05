@@ -1,5 +1,6 @@
 import pygame
 import const
+import colors
 
 pygame.display.set_mode((100, 100))
 
@@ -8,8 +9,8 @@ tahoma = pygame.font.Font("Tahoma.ttf", 10)
 
 def new_surface(size):
     surface = pygame.Surface(size)
-    surface.set_colorkey(const.TRANSPARENT)
-    surface.fill(const.TRANSPARENT)
+    surface.set_colorkey(colors.TRANSPARENT)
+    surface.fill(colors.TRANSPARENT)
     return surface
 
 
@@ -69,7 +70,7 @@ def text_block(text, font, color, max_width):
     height = len(lines) * line_height
 
     surface = new_surface((max_width, height))
-    surface.fill(const.TRANSPARENT)
+    surface.fill(colors.TRANSPARENT)
 
     # Renders all the lines
     y = 0
@@ -86,9 +87,9 @@ def text_block(text, font, color, max_width):
 
 
 color_codes = {
-    "k" : const.BLACK,
-    "r" : const.AMBULANCE_RED,
-    "o" : const.ORANGE_TEXT,
+    "k" : colors.BLACK,
+    "r" : colors.AMBULANCE_RED,
+    "o" : colors.ORANGE_TEXT,
 }
 
 
@@ -105,10 +106,10 @@ def text_block_color_codes(text, font, max_width):
     height = len(lines) * line_height
 
     surface = new_surface((max_width, height))
-    surface.fill(const.TRANSPARENT)
+    surface.fill(colors.TRANSPARENT)
 
     # Renders all the lines
-    previous_color = const.BLACK
+    previous_color = colors.BLACK
     y = 0
     for text_line in lines:
 
@@ -136,7 +137,7 @@ class SpriteColumn:
     def __init__(self, path, sprite_count):
         image = pygame.image.load(path)
         image.convert()
-        image.set_colorkey(const.TRANSPARENT)
+        image.set_colorkey(colors.TRANSPARENT)
 
         self.surface = image
         self.path = path

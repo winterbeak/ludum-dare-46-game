@@ -2,6 +2,7 @@ import random
 import pygame
 
 import const
+import colors
 import graphics
 
 death_effects = [
@@ -192,7 +193,7 @@ PALETTES = [
     Palette((82, 56, 119), (65, 0, 99), (210, 185, 237)),  # Purple
     Palette((197, 197, 197), (187, 217, 225), (0, 204, 172)),  # Teal label
     ]
-TRANSPARENT_PALETTE = Palette(const.TRANSPARENT, const.TRANSPARENT, const.TRANSPARENT)
+TRANSPARENT_PALETTE = Palette(colors.TRANSPARENT, colors.TRANSPARENT, colors.TRANSPARENT)
 
 
 TOP_COUNT = 6
@@ -334,7 +335,7 @@ class Bottle:
             return graphics.text_block_color_codes(text, font, max_width - 10)
 
         else:
-            return graphics.text_block(text, font, const.BLACK, max_width - 10)
+            return graphics.text_block(text, font, colors.BLACK, max_width - 10)
 
     def render_textless(self):
         surface = graphics.new_surface(self.total_size)

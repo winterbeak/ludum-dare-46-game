@@ -10,6 +10,7 @@ import geometry
 import curves
 import graphics
 import const
+import colors
 import events
 import bottles
 import incidents
@@ -56,11 +57,6 @@ HOMUNCULUS_EAT = 1
 homunculus = graphics.Animation(homunculus_sprite_sheet)
 homunculus.set_frame_delay(HOMUNCULUS_IDLE, 3)
 homunculus.set_frame_delay(HOMUNCULUS_EAT, 3)
-
-TIME_ADDED_GREEN = (27, 255, 27)
-HOMUNCULUS_ORANGE = const.HOMUNCULUS_ORANGE
-AMBULANCE_RED = const.AMBULANCE_RED
-MENU_WHITE = (225, 225, 225)
 
 homunculus_text = graphics.SpriteColumn("images/homunculus_text.png", 1)
 ambulance_text = graphics.SpriteColumn("images/ambulance_text.png", 1)
@@ -123,11 +119,10 @@ lose_sound.set_volumes(0.4)
 def draw_debug_countdown(end_time, surface, position):
     """ Draws a primitive, unstylized countdown. """
     time = (end_time - pygame.time.get_ticks()) / 1000
-    text = graphics.tahoma.render(str(time), False, const.WHITE)
+    text = graphics.tahoma.render(str(time), False, colors.WHITE)
     surface.blit(text, position)
 
 
-TEXT_PLACEHOLDER_COLOR = (160, 160, 160)
 numbers = graphics.SpriteColumn("images/numbers.png", 11)
 numbers_small = graphics.SpriteColumn("images/numbers_small.png", 11)
 
@@ -157,7 +152,7 @@ def render_number(text, color, shake=0):
         x += numbers.single_width
 
     pixel_array = pygame.PixelArray(surface)
-    pixel_array.replace(TEXT_PLACEHOLDER_COLOR, color)
+    pixel_array.replace(colors.TEXT_PLACEHOLDER, color)
 
     return surface
 
@@ -184,7 +179,7 @@ def render_small_number(text, color, shake=0):
         x += numbers_small.single_width
 
     pixel_array = pygame.PixelArray(surface)
-    pixel_array.replace(TEXT_PLACEHOLDER_COLOR, color)
+    pixel_array.replace(colors.TEXT_PLACEHOLDER, color)
 
     return surface
 
@@ -572,7 +567,7 @@ class PlayScreen:
         else:
             time = time_math.min_sec_ms_time_to(self.ambulance_time)
         position = self.AMBULANCE_TIMER_POSITION
-        draw_countdown(surface, AMBULANCE_RED, time, position)
+        draw_countdown(surface, colors.AMBULANCE_RED, time, position)
 
         # Homunculus timer
         milliseconds = time_math.ms_time_to(self.death_time)
@@ -581,9 +576,9 @@ class PlayScreen:
         else:
             shake = max(0, (15000 - milliseconds) / 5000)
         if self.green_timer_frame > 0:
-            color = TIME_ADDED_GREEN
+            color = colors.TIME_ADDED_GREEN
         else:
-            color = HOMUNCULUS_ORANGE
+            color = colors.HOMUNCULUS_ORANGE
 
         if self.win:
             time = time_math.ms_to_min_sec_ms(self.death_anim_countdown)
@@ -645,7 +640,7 @@ class PlayScreen:
                     color = (circle_num * -20 + self.DEATH_CIRCLE_COUNT * 20 - 20, ) * 3
                     pygame.draw.circle(surface, color, (117, 229), circle)
 
-        # fps_text = graphics.tahoma.render(str(screen.clock.get_fps()), False, const.WHITE, const.BLACK)
+        # fps_text = graphics.tahoma.render(str(screen.clock.get_fps()), False, colors.WHITE, colors.BLACK)
         # surface.blit(fps_text, (10, 10))
 
 
@@ -828,7 +823,7 @@ class ResultScreen(MenuScreen):
         if self.win:
             self.background.draw(surface, (0, 0), 0)
         else:
-            surface.fill(const.BLACK)
+            surface.fill(colors.BLACK)
 
         self.draw_bottles(surface)
         if self.win:
@@ -837,11 +832,11 @@ class ResultScreen(MenuScreen):
         self.draw_controls(surface)
 
         # Draws return to menu text
-        text = graphics.tahoma.render("Press SPACE to return to level select.", False, const.BLACK)
+        text = graphics.tahoma.render("Press SPACE to return to level select.", False, colors.BLACK)
         text_x = (self.BOTTLE_SECTION_LEFT - text.get_width()) / 2
 
         rect = (text_x - 10, 250, text.get_width() + 20, text.get_height() + 20)
-        pygame.draw.rect(surface, const.WHITE, rect)
+        pygame.draw.rect(surface, colors.WHITE, rect)
 
         surface.blit(text, (text_x, 260))
 
@@ -859,7 +854,7 @@ class ResultScreen(MenuScreen):
         text_x = self.BOTTLE_SECTION[0] + 20
 
         rect = (text_x - 10, 310, text.get_width() + 20, text.get_height() + 20)
-        pygame.draw.rect(surface, const.WHITE, rect)
+        pygame.draw.rect(surface, colors.WHITE, rect)
 
         surface.blit(text, (text_x, 320))
 
@@ -1016,6 +1011,6 @@ while True:
 
     screen.scale_blit()
     screen.update(60)
-    screen.clear(const.WHITE)
+    screen.clear(colors.WHITE)
 
 pygame.quit()
