@@ -174,7 +174,7 @@ class PlayScreen:
         self.death_anim_frame = 0
         self.death_circles = []
 
-        self.in_animation = False
+        self.in_ending_cutscene = False
 
         self.ambulance_entrance = curves.SineOut(1000, -250, 80)
         self.ambulance_exit = curves.SineOut(-250, -1000, 80)
@@ -219,7 +219,7 @@ class PlayScreen:
 
     def update(self):
 
-        if not self.in_animation:
+        if not self.in_ending_cutscene:
             if events.keys.pressed_key == pygame.K_LEFT:
                 feed_press.play_random()
             elif events.keys.pressed_key == pygame.K_RIGHT:
@@ -241,7 +241,7 @@ class PlayScreen:
                 homunculus.col_num = HOMUNCULUS_EAT
 
         # Verdict of whether the bottle eaten was lethal or not
-        if not self.in_animation and homunculus.col_num == HOMUNCULUS_EAT:
+        if not self.in_ending_cutscene and homunculus.col_num == HOMUNCULUS_EAT:
             if homunculus.frame == 4 and homunculus.delay == 0:
                 eat.play_random()
 
@@ -282,7 +282,7 @@ class PlayScreen:
 
                     # If you won, this handles winning
                     if self.death_time > self.ambulance_time and not self.win:
-                        self.in_animation = True
+                        self.in_ending_cutscene = True
                         self.ambulance_anim_countdown = time_math.ms_time_to(self.ambulance_time)
                         self.death_anim_countdown = time_math.ms_time_to(self.death_time)
                         self.win = True
@@ -295,7 +295,7 @@ class PlayScreen:
                 else:
                     death.play_random()
                     self.game_over = True
-                    self.in_animation = True
+                    self.in_ending_cutscene = True
 
                     # Removes all bottles after the lethal bottle
                     while self.bottles[-1] is not bottle:
@@ -311,7 +311,7 @@ class PlayScreen:
 
         # Handles losing when time runs out
         if time_math.ms_time_to(self.death_time) < 0 and not self.game_over and not self.win:
-            self.in_animation = True
+            self.in_ending_cutscene = True
             self.game_over = True
             death.play_random()
 
@@ -333,7 +333,7 @@ class PlayScreen:
             self.homunculus_eat_delay = 0
 
         # Handles the timer ticking sound
-        if not self.in_animation:
+        if not self.in_ending_cutscene:
             prev_before = (self.death_time - self.previous_tick_time) % 1000 < 500
             next_after = time_math.ms_time_to(self.death_time) % 1000 > 500
             if prev_before and next_after:
@@ -379,7 +379,7 @@ class PlayScreen:
                     self.ambulance_exit.frame += 1
 
                     if self.ambulance_exit.frame > self.ambulance_exit.length:
-                        self.in_animation = False
+                        self.in_ending_cutscene = False
                     else:
                         self.ambulance_x = self.ambulance_exit.current_value
 
@@ -389,7 +389,7 @@ class PlayScreen:
                     self.death_circles.append(0)
                 else:
                     if self.death_circles[-1] >= 1000:
-                        self.in_animation = False
+                        self.in_ending_cutscene = False
 
             for index in range(len(self.death_circles)):
                 if self.death_circles[index] < 1000:
@@ -912,7 +912,7 @@ while True:
     elif current_screen == PLAY_SCREEN:
         play_screen.update()
 
-        if (play_screen.game_over or play_screen.win) and not play_screen.in_animation:
+        if (play_screen.game_over or play_screen.win) and not play_screen.in_ending_cutscene:
             play_result_transition(play_screen, result_screen)
 
             play_screen.game_over = False
