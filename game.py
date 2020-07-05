@@ -208,13 +208,13 @@ class PlayScreen:
         self.judgement_timers.append(self.JUDGEMENT_TIMER_LENGTH)
         self.current_bottle.eaten = True
 
-        self._start_tossing()
+        self._start_tossing_animation()
         self._next_bottle()
 
     def _skip_current_bottle(self):
         """ Skips a bottle, and doesn't feed it to the homunculus. """
         skip_release.play_random()
-        self._start_shifting()
+        self._start_shifting_animation()
         self._next_bottle()
 
     def update(self):
@@ -427,19 +427,19 @@ class PlayScreen:
             return True
         return False
 
-    def _start_tossing(self):
+    def _start_tossing_animation(self):
         self.toss_x.frame = 0
         self.toss_y.frame = 0
         self.toss_scale.frame = 0
         self.toss_rotate.frame = 0
-        self._start_shifting()
+        self._start_shifting_animation()
 
     def is_shifting(self):
         if self.shift.frame <= self.shift.last_frame:
             return True
         return False
 
-    def _start_shifting(self):
+    def _start_shifting_animation(self):
         self.shift.frame = 0
 
     def _draw_bottles_shifting(self, surface):
@@ -629,7 +629,7 @@ class MenuScreen(PlayScreen):
         self._current_level = incident_list[value]
         self.previous_bottle = self.current_bottle
         self.current_bottle = self._current_level.bottle
-        self._start_shifting()
+        self._start_shifting_animation()
 
     @property
     def current_level(self):
@@ -810,7 +810,7 @@ class ResultScreen(MenuScreen):
         self._bottle_num = value
         self.previous_bottle = self.current_bottle
         self.current_bottle = self.bottles[value]
-        self._start_shifting()
+        self._start_shifting_animation()
 
 
 def menu_play_transition(menu, play):
