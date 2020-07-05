@@ -36,7 +36,6 @@ def split_into_lines(text, font, max_width):
         if word == "<br>":
             lines.append(line)
             line = ""
-            first_word = True
 
             current_width = 0
 
