@@ -177,7 +177,8 @@ def generate_effects_incident():
 
     number = const.EFFECTS_INCIDENT
 
-    return Incident(number, bottle, text, ambulance_time, homunculus_time, bottle_time)
+    incident = Incident(number, bottle, text, ambulance_time, homunculus_time, bottle_time)
+    return incident
 
 
 def generate_fast_incident():
@@ -217,7 +218,8 @@ def generate_fast_incident():
 
     number = const.FAST_INCIDENT
 
-    return Incident(number, bottle, text, ambulance_time, homunculus_time, bottle_time)
+    incident = Incident(number, bottle, text, ambulance_time, homunculus_time, bottle_time)
+    return incident
 
 
 def generate_allergen_incident():
@@ -257,7 +259,8 @@ def generate_allergen_incident():
 
     number = const.ALLERGENS_INCIDENT
 
-    return Incident(number, bottle, text, ambulance_time, homunculus_time, bottle_time)
+    incident = Incident(number, bottle, text, ambulance_time, homunculus_time, bottle_time)
+    return incident
 
 
 def generate_effects_allergens_incident():
@@ -296,7 +299,8 @@ def generate_effects_allergens_incident():
 
     number = const.EFFECTS_ALLERGENS_INCIDENT
 
-    return Incident(number, bottle, text, ambulance_time, homunculus_time, bottle_time)
+    incident = Incident(number, bottle, text, ambulance_time, homunculus_time, bottle_time)
+    return incident
 
 
 def generate_effects_hard_incident():
@@ -318,7 +322,8 @@ def generate_effects_hard_incident():
 
     number = const.EFFECTS_HARD_INCIDENT
 
-    return Incident(number, bottle, text, ambulance_time, homunculus_time, bottle_time)
+    incident = Incident(number, bottle, text, ambulance_time, homunculus_time, bottle_time)
+    return incident
 
 
 def generate_effects_allergens_hard_incident():
@@ -340,7 +345,8 @@ def generate_effects_allergens_hard_incident():
 
     number = const.EFFECTS_ALLERGENS_HARD_INCIDENT
 
-    return Incident(number, bottle, text, ambulance_time, homunculus_time, bottle_time)
+    incident = Incident(number, bottle, text, ambulance_time, homunculus_time, bottle_time)
+    return incident
 
 
 def generate_faster_incident():
@@ -362,7 +368,8 @@ def generate_faster_incident():
 
     number = const.FASTER_INCIDENT
 
-    return Incident(number, bottle, text, ambulance_time, homunculus_time, bottle_time)
+    incident = Incident(number, bottle, text, ambulance_time, homunculus_time, bottle_time)
+    return incident
 
 
 def generate_effects_brands_incident():
@@ -387,7 +394,8 @@ def generate_effects_brands_incident():
 
     number = const.EFFECTS_BRANDS_INCIDENT
 
-    return Incident(number, bottle, text, ambulance_time, homunculus_time, bottle_time)
+    incident = Incident(number, bottle, text, ambulance_time, homunculus_time, bottle_time)
+    return incident
 
 
 def generate_effects_allergens_brands_incident():
@@ -409,7 +417,8 @@ def generate_effects_allergens_brands_incident():
 
     number = const.EFFECTS_ALLERGENS_BRANDS_INCIDENT
 
-    return Incident(number, bottle, text, ambulance_time, homunculus_time, bottle_time)
+    incident = Incident(number, bottle, text, ambulance_time, homunculus_time, bottle_time)
+    return incident
 
 
 def generate_effects_bootlegs_incident():
@@ -443,7 +452,8 @@ def generate_effects_bootlegs_incident():
 
     number = const.EFFECTS_BOOTLEGS_INCIDENT
 
-    return Incident(number, bottle, text, ambulance_time, homunculus_time, bottle_time)
+    incident = Incident(number, bottle, text, ambulance_time, homunculus_time, bottle_time)
+    return incident
 
 
 def generate_effects_verification_incident():
@@ -476,4 +486,5 @@ def generate_effects_verification_incident():
 
     number = const.EFFECTS_VERIFICATION_INCIDENT
 
-    return Incident(number, bottle, text, ambulance_time, homunculus_time, bottle_time)
+    incident = Incident(number, bottle, text, ambulance_time, homunculus_time, bottle_time)
+    return incident
