@@ -239,6 +239,59 @@ class PlayScreen:
         if time_math.crosses_interval(previous, current, interval):
             subtick.play_random()
 
+    def _update_win_cutscene(self):
+        # Plays ambulance sounds
+        if self.ambulance_entrance.frame == 1:
+            ambulance_arrive.play_random()
+        elif self.ambulance_exit.frame == 1:
+            ambulance_pickup.play_random()
+
+        # Speeds up the countdown if there is any time left
+        if self.ambulance_anim_countdown > 0:
+            self.ambulance_anim_countdown -= 400
+            self.death_anim_countdown -= 400
+
+            # Plays a tick every 4 frames
+            if self.ambulance_anim_countdown % 1600 < 400:
+                fast_tick.play_random()
+
+            # If the countdown reaches the end
+            if self.ambulance_anim_countdown <= 0:
+                self.death_time = self.death_time - self.ambulance_anim_countdown
+                self.ambulance_anim_countdown = 0
+
+        # Animates the ambulance
+        else:
+            if self.ambulance_entrance.frame < self.ambulance_entrance.length - 1:
+                self.ambulance_entrance.frame += 1
+                self.ambulance_x = self.ambulance_entrance.current_value
+            else:
+                self.ambulance_exit.frame += 1
+
+                if self.ambulance_exit.frame > self.ambulance_exit.length:
+                    self.in_ending_cutscene = False
+                else:
+                    self.ambulance_x = self.ambulance_exit.current_value
+
+    def _update_lose_cutscene(self):
+        # Every 10 frames
+        if self.death_anim_frame % 10 == 0:
+
+            # Spawn a new circle, if there are not already too many
+            if len(self.death_circles) < self.DEATH_CIRCLE_COUNT:
+                self.death_circles.append(0)
+
+            # Ends the cutscene when the last circle gets too big
+            elif self.death_circles[-1] >= 1000:
+                self.in_ending_cutscene = False
+
+        # Increases the radius of all the circles
+        for index in range(len(self.death_circles)):
+            if self.death_circles[index] < 1000:
+                self.death_circles[index] += 20
+
+        self.death_anim_frame += 1
+
     def update(self):
 
         if not self.in_ending_cutscene:
@@ -360,47 +413,11 @@ class PlayScreen:
 
         self.previous_time = pygame.time.get_ticks()
 
-        # Win animation
+        # Updates end of game cutscenes
         if self.win:
-            if self.ambulance_entrance.frame == 1:
-                ambulance_arrive.play_random()
-            elif self.ambulance_exit.frame == 1:
-                ambulance_pickup.play_random()
-
-            if self.ambulance_anim_countdown > 0:
-                self.ambulance_anim_countdown -= 400
-                if self.ambulance_anim_countdown % 1600 < 400:
-                    fast_tick.play_random()
-                if self.ambulance_anim_countdown <= 0:
-                    self.death_time = self.death_time - self.ambulance_anim_countdown
-                    self.ambulance_anim_countdown = 0
-                else:
-                    self.death_anim_countdown -= 400
-            else:
-                if self.ambulance_entrance.frame < self.ambulance_entrance.length - 1:
-                    self.ambulance_entrance.frame += 1
-                    self.ambulance_x = self.ambulance_entrance.current_value
-                else:
-                    self.ambulance_exit.frame += 1
-
-                    if self.ambulance_exit.frame > self.ambulance_exit.length:
-                        self.in_ending_cutscene = False
-                    else:
-                        self.ambulance_x = self.ambulance_exit.current_value
-
+            self._update_win_cutscene()
         elif self.game_over:
-            if self.death_anim_frame % 10 == 0:
-                if len(self.death_circles) < self.DEATH_CIRCLE_COUNT:
-                    self.death_circles.append(0)
-                else:
-                    if self.death_circles[-1] >= 1000:
-                        self.in_ending_cutscene = False
-
-            for index in range(len(self.death_circles)):
-                if self.death_circles[index] < 1000:
-                    self.death_circles[index] += 20
-
-            self.death_anim_frame += 1
+            self._update_lose_cutscene()
 
     def bottle_is_safe(self, bottle):
         # If it has any lethal side effects
