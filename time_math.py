@@ -20,3 +20,19 @@ def ms_time_to(end_time):
 def min_sec_ms_time_to(end_time):
     milliseconds = ms_time_to(end_time)
     return ms_to_min_sec_ms(milliseconds)
+
+
+def crosses_interval(x, y, i):
+    """ Returns whether there is a multiple of i between x and y.
+
+    x and y must be integers.
+    If x and y are both equal to the same multiple of i, this returns False.
+    If one of x or y is equal to a multiple of i, and no other multiples are
+    crossed between the two, this returns True only if the one on the interval
+    is the greater of the two.
+    """
+    if x == y:
+        return False
+    if x // i == y // i:
+        return False
+    return True

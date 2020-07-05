@@ -138,7 +138,7 @@ class PlayScreen:
     JUDGEMENT_TIMER_LENGTH = sum(homunculus.frame_lengths[HOMUNCULUS_EAT][:5])
 
     def __init__(self):
-        self.previous_tick_time = 0
+        self.previous_time = 0
 
         self.death_time = 0
         self.ambulance_time = 0
@@ -216,6 +216,28 @@ class PlayScreen:
         skip_release.play_random()
         self._start_shifting_animation()
         self._next_bottle()
+
+    def _play_timer_sounds(self):
+        """ Handles the playing of the timer ticks. """
+
+        # Plays a major tick every time the timer crosses a second.
+        previous = self.death_time - self.previous_time
+        current = time_math.ms_time_to(self.death_time)
+        if time_math.crosses_interval(previous, current, 1000):
+            tick.play_random()
+
+        # The amount of time between subticks depends on the time left.
+        if current > 30000:
+            interval = 1000
+        elif current > 15000:
+            interval = 500
+        elif current > 5000:
+            interval = 250
+        else:
+            interval = 125
+
+        if time_math.crosses_interval(previous, current, interval):
+            subtick.play_random()
 
     def update(self):
 
@@ -334,26 +356,9 @@ class PlayScreen:
 
         # Handles the timer ticking sound
         if not self.in_ending_cutscene:
-            prev_before = (self.death_time - self.previous_tick_time) % 1000 < 500
-            next_after = time_math.ms_time_to(self.death_time) % 1000 > 500
-            if prev_before and next_after:
-                tick.play_random()
+            self._play_timer_sounds()
 
-            time = time_math.ms_time_to(self.death_time)
-            if time > 30000:
-                interval = 1000
-            elif time > 15000:
-                interval = 500
-            elif time > 5000:
-                interval = 250
-            else:
-                interval = 125
-
-            if (self.death_time - self.previous_tick_time) % interval < interval / 2:
-                if time_math.ms_time_to(self.death_time) % interval > interval / 2:
-                    subtick.play_random()
-
-        self.previous_tick_time = pygame.time.get_ticks()
+        self.previous_time = pygame.time.get_ticks()
 
         # Win animation
         if self.win:
