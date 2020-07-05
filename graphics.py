@@ -251,23 +251,3 @@ class Animation:
 
     def draw(self, surface, position):
         self.sheet.draw(surface, position, self._col_num, self._frame)
-
-# import window
-# test_window = window.PixelWindow(10, (320, 180))
-#
-# test_column_tumble = SpriteColumn("images/tumble.png", 6)
-# test_column_run = SpriteColumn("images/run.png", 6)
-# test_sprite_sheet = SpriteSheet([test_column_tumble, test_column_run])
-# test_animation = Animation(test_sprite_sheet)
-# test_animation.set_frame_delay(0, 10)
-#
-# print(test_column_tumble.single_height)
-# for frame in range(150):
-#     test_animation.draw(test_window.unscaled, (0, 0))
-#     test_animation.update()
-#
-#     test_window.scale_blit()
-#     test_window.update(60)
-#     test_window.clear()
-#
-# pygame.quit()
