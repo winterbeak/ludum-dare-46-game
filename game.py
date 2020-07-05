@@ -292,6 +292,54 @@ class PlayScreen:
 
         self.death_anim_frame += 1
 
+    def _win(self):
+        self.in_ending_cutscene = True
+        self.win = True
+        self.ambulance_anim_countdown = time_math.ms_time_to(self.ambulance_time)
+        self.death_anim_countdown = time_math.ms_time_to(self.death_time)
+
+    def _lose(self):
+        self.in_ending_cutscene = True
+        self.game_over = True
+        death.play_random()
+
+    def _update_toss_animation(self):
+        self.toss_x.frame += 1
+        self.toss_y.frame += 1
+        self.toss_scale.frame += 1
+        self.toss_rotate.frame += 1
+
+    def _update_shift_animation(self):
+        self.shift.frame += 1
+
+    def _apply_allergies(self, bottle):
+        # Applies all allergies
+        for allergy in bottle.allergies:
+            if allergy not in self.allergies:
+                self.allergies.append(allergy)
+                bottle.adds_allergies.append(allergy)
+
+    def _does_this_kill_me(self, bottle):
+
+        # Typically, a safe bottle doesn't kill you and a deadly bottle does
+        if not self.alternating:
+            return not self.bottle_is_safe(bottle)
+
+        # However, some levels have an "alternation" gimmick
+        # First thing eaten when alternating is always safe
+        if not self.has_eaten:
+            return False
+
+        # Kills you if this and the last bottle were both safe or both
+        # deadly.  Otherwise, it doesn't.
+        else:
+            return self.bottle_is_safe(bottle) == self.last_eaten_is_safe
+
+    def _add_time(self):
+        self.death_time += self.bottle_time  # Adds time
+        self.green_timer_frame = 30  # Makes timer turn green
+        time_gain.play_random()  # Plays time-gain sound
+
     def update(self):
 
         if not self.in_ending_cutscene:
@@ -305,76 +353,45 @@ class PlayScreen:
             elif events.keys.released_key == pygame.K_RIGHT:
                 self._skip_current_bottle()
 
-        # If currently in tossing animation
+        # Updates bottle tossing animation
         if self.is_tossing():
-            self.toss_x.frame += 1
-            self.toss_y.frame += 1
-            self.toss_scale.frame += 1
-            self.toss_rotate.frame += 1
+            self._update_toss_animation()
             self.homunculus_eat_delay += 1
             if self.homunculus_eat_delay == self.HOMUNCULUS_EAT_DELAY_LENGTH:
                 homunculus.col_num = HOMUNCULUS_EAT
 
         # Verdict of whether the bottle eaten was lethal or not
         if not self.in_ending_cutscene and homunculus.col_num == HOMUNCULUS_EAT:
-            if homunculus.frame == 4 and homunculus.delay == 0:
-                eat.play_random()
 
             # Counts down timers
             for i in range(len(self.judgement_timers)):
                 self.judgement_timers[i] -= 1
 
-            # Judges bottle once their timer runs out
+            # Judges the first bottle in the list once its timer runs out
             if self.judgement_timers and self.judgement_timers[0] <= 0:
                 bottle = self.bottles_to_judge[0]
+                self._apply_allergies(bottle)
 
-                # Applies all allergies
-                for allergy in bottle.allergies:
-                    if allergy not in self.allergies:
-                        self.allergies.append(allergy)
-                        bottle.adds_allergies.append(allergy)
-
-                # If the level is alternating
-                if self.alternating:
-                    # First thing eaten when alternating is always safe
-                    if not self.has_eaten:
-                        safe = True
-
-                    # False if this and the last were both safe or both
-                    # deadly.  True otherwise.
-                    else:
-                        safe = self.bottle_is_safe(bottle) != self.last_eaten_is_safe
-
-                # Checks if bottle is safe in every other case
-                else:
-                    safe = self.bottle_is_safe(bottle)
-
-                if safe:
-                    self.previous_brand = bottle.brand  # Updates brand
-                    self.death_time += self.bottle_time  # Adds time to timer
-                    self.green_timer_frame = 30  # Makes timer turn green
-                    time_gain.play_random()  # Plays time-gain sound
-
-                    # If you won, this handles winning
-                    if self.death_time > self.ambulance_time and not self.win:
-                        self.in_ending_cutscene = True
-                        self.ambulance_anim_countdown = time_math.ms_time_to(self.ambulance_time)
-                        self.death_anim_countdown = time_math.ms_time_to(self.death_time)
-                        self.win = True
-
-                        # Removes all bottles after the winning bottle
-                        while self.bottles[-1] is not bottle:
-                            self.bottles.pop()
-
-                # If the bottle is deadly
-                else:
-                    death.play_random()
-                    self.game_over = True
-                    self.in_ending_cutscene = True
+                # Lose if you eat something that kills you
+                if self._does_this_kill_me(bottle):
+                    self._lose()
 
                     # Removes all bottles after the lethal bottle
                     while self.bottles[-1] is not bottle:
                         self.bottles.pop()
+
+                # Consume the bottle if you eat something that doesn't kill you
+                else:
+                    self._add_time()
+                    self.previous_brand = bottle.brand  # Updates brand
+
+                    # If you won, this handles winning
+                    if self.death_time > self.ambulance_time and not self.win:
+                        self._win()
+
+                        # Removes all bottles after the winning bottle
+                        while self.bottles[-1] is not bottle:
+                            self.bottles.pop()
 
                 # Updates some variables (mostly used for alternating stages)
                 self.has_eaten = True
@@ -384,11 +401,13 @@ class PlayScreen:
                 del self.judgement_timers[0]
                 del self.bottles_to_judge[0]
 
-        # Handles losing when time runs out
-        if time_math.ms_time_to(self.death_time) < 0 and not self.game_over and not self.win:
-            self.in_ending_cutscene = True
-            self.game_over = True
-            death.play_random()
+            # Plays the homunculus eating sound when it eats something
+            if homunculus.frame == 4 and homunculus.delay == 0:
+                eat.play_random()
+
+        # Lose if time runs out
+        if time_math.ms_time_to(self.death_time) < 0 and not self.in_ending_cutscene:
+            self._lose()
 
         # Handles turning the timer green when time is gained
         if self.green_timer_frame > 0:
@@ -400,7 +419,7 @@ class PlayScreen:
 
         # If currently in shifting animation
         if self.is_shifting():
-            self.shift.frame += 1
+            self._update_shift_animation()
 
         homunculus.update()
         if homunculus.col_num == HOMUNCULUS_EAT and homunculus.done:
