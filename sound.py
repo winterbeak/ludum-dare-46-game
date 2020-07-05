@@ -16,8 +16,6 @@ pygame.init()
 channels = [pygame.mixer.Channel(channel) for channel in range(CHANNEL_COUNT)]
 soundsets = []
 
-# import debug
-
 
 def update():
     for soundset in soundsets:
@@ -108,7 +106,7 @@ class VolumeControl:
             if self.volume < self.target_volume:
                 self.volume = self.target_volume
 
-        set_music_volume(self.volume * MUSIC_VOLUME)
+        set_music_volume(self.volume)
 
 
 volume_control = VolumeControl()
