@@ -85,9 +85,9 @@ def text_block(text, font, color, max_width):
 
 
 color_codes = {
-    "k" : colors.BLACK,
-    "r" : colors.AMBULANCE_RED,
-    "o" : colors.ORANGE_TEXT,
+    "k": colors.BLACK,
+    "r": colors.AMBULANCE_RED,
+    "o": colors.ORANGE_TEXT,
 }
 
 
