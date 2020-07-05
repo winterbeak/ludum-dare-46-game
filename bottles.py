@@ -469,7 +469,7 @@ class BottleGenerator:
     def next_item(self):
 
         # Fast level generator
-        if self.level == const.FAST_INCIDENT:
+        if self.level == const.INCIDENT_FAST:
             bottle = Bottle()
             bottle.add_benign(random.randint(3, 5))
 
@@ -481,7 +481,7 @@ class BottleGenerator:
                 bottle.add_lethal(1)
 
         # Faster level generator
-        elif self.level == const.FASTER_INCIDENT:
+        elif self.level == const.INCIDENT_FASTER:
             bottle = Bottle()
 
             # The more safes you get in a row, the less likely the next
@@ -500,13 +500,13 @@ class BottleGenerator:
                 bottle.add_lethal(1)
 
         # Allergen level generator
-        elif self.level == const.ALLERGENS_INCIDENT:
+        elif self.level == const.INCIDENT_ALLERGENS:
             bottle = Bottle()
             bottle.add_allergens(random.randint(1, 3))
             bottle.add_allergy(1)
 
         # Effects and allergens level generator
-        elif self.level == const.EFFECTS_ALLERGENS_INCIDENT or self.level == const.EFFECTS_ALLERGENS_HARD_INCIDENT:
+        elif self.level == const.INCIDENT_EFFECTS_ALLERGENS or self.level == const.INCIDENT_EFFECTS_ALLERGENS_HARD:
             bottle = Bottle()
             bottle.add_benign(random.randint(3, 5))
             bottle.add_allergens(random.randint(1, 4))
@@ -523,7 +523,7 @@ class BottleGenerator:
                 bottle.add_lethal(1)
 
         # Effects and brand level generator
-        elif self.level == const.EFFECTS_BRANDS_INCIDENT:
+        elif self.level == const.INCIDENT_EFFECTS_BRANDS:
             bottle = Bottle()
             bottle.add_benign(random.randint(3, 5))
             bottle.add_brand()
@@ -536,7 +536,7 @@ class BottleGenerator:
                 bottle.add_lethal(1)
 
         # Effects, allergens, and brands level generator
-        elif self.level == const.EFFECTS_ALLERGENS_BRANDS_INCIDENT:
+        elif self.level == const.INCIDENT_EFFECTS_ALLERGENS_BRANDS:
             bottle = Bottle()
             bottle.add_benign(random.randint(3, 5))
             bottle.add_allergens(random.randint(1, 2))
@@ -554,7 +554,7 @@ class BottleGenerator:
                 bottle.add_lethal(1)
 
         # Effects and bootlegs level generator
-        elif self.level == const.EFFECTS_BOOTLEGS_INCIDENT:
+        elif self.level == const.INCIDENT_EFFECTS_BOOTLEGS:
             bottle = Bottle()
             bottle.add_benign(random.randint(5, 8))
 
@@ -573,7 +573,7 @@ class BottleGenerator:
                     bottle.add_lethal(1)
 
         # Effects and verification level generator
-        elif self.level == const.EFFECTS_VERIFICATION_INCIDENT:
+        elif self.level == const.INCIDENT_EFFECTS_VERIFICATION:
             bottle = Bottle()
             bottle.add_benign(random.randint(3, 5))
 
@@ -594,7 +594,7 @@ class BottleGenerator:
                 bottle.add_verification()
 
         # Effects and alternation level generator
-        elif self.level == const.EFFECTS_ALTERNATION_INCIDENT:
+        elif self.level == const.INCIDENT_EFFECTS_ALTERNATION:
             bottle = Bottle()
             bottle.add_benign(random.randint(5, 8))
 

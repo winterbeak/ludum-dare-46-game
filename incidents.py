@@ -176,7 +176,7 @@ def generate_effects_incident():
     homunculus_time = time_math.min_sec_ms_to_ms((0, 30, 0))
     bottle_time = time_math.min_sec_ms_to_ms((0, 15, 0))
 
-    number = const.EFFECTS_INCIDENT
+    number = const.INCIDENT_EFFECTS
 
     incident = Incident(number, bottle, text, ambulance_time, homunculus_time, bottle_time)
     return incident
@@ -217,7 +217,7 @@ def generate_fast_incident():
     homunculus_time = time_math.min_sec_ms_to_ms((0, 15, 0))
     bottle_time = time_math.min_sec_ms_to_ms((0, 7, 0))
 
-    number = const.FAST_INCIDENT
+    number = const.INCIDENT_FAST
 
     incident = Incident(number, bottle, text, ambulance_time, homunculus_time, bottle_time)
     return incident
@@ -258,7 +258,7 @@ def generate_allergen_incident():
     homunculus_time = time_math.min_sec_ms_to_ms((0, 20, 0))
     bottle_time = time_math.min_sec_ms_to_ms((0, 10, 0))
 
-    number = const.ALLERGENS_INCIDENT
+    number = const.INCIDENT_ALLERGENS
 
     incident = Incident(number, bottle, text, ambulance_time, homunculus_time, bottle_time)
     return incident
@@ -298,7 +298,7 @@ def generate_effects_allergens_incident():
     homunculus_time = time_math.min_sec_ms_to_ms((0, 15, 0))
     bottle_time = time_math.min_sec_ms_to_ms((0, 15, 0))
 
-    number = const.EFFECTS_ALLERGENS_INCIDENT
+    number = const.INCIDENT_EFFECTS_ALLERGENS
 
     incident = Incident(number, bottle, text, ambulance_time, homunculus_time, bottle_time)
     return incident
@@ -321,7 +321,7 @@ def generate_effects_hard_incident():
     homunculus_time = time_math.min_sec_ms_to_ms((0, 18, 0))
     bottle_time = time_math.min_sec_ms_to_ms((0, 12, 0))
 
-    number = const.EFFECTS_HARD_INCIDENT
+    number = const.INCIDENT_EFFECTS_HARD
 
     incident = Incident(number, bottle, text, ambulance_time, homunculus_time, bottle_time)
     return incident
@@ -344,7 +344,7 @@ def generate_effects_allergens_hard_incident():
     homunculus_time = time_math.min_sec_ms_to_ms((0, 18, 0))
     bottle_time = time_math.min_sec_ms_to_ms((0, 12, 0))
 
-    number = const.EFFECTS_ALLERGENS_HARD_INCIDENT
+    number = const.INCIDENT_EFFECTS_ALLERGENS_HARD
 
     incident = Incident(number, bottle, text, ambulance_time, homunculus_time, bottle_time)
     return incident
@@ -367,7 +367,7 @@ def generate_faster_incident():
     homunculus_time = time_math.min_sec_ms_to_ms((0, 10, 0))
     bottle_time = time_math.min_sec_ms_to_ms((0, 3, 0))
 
-    number = const.FASTER_INCIDENT
+    number = const.INCIDENT_FASTER
 
     incident = Incident(number, bottle, text, ambulance_time, homunculus_time, bottle_time)
     return incident
@@ -394,7 +394,7 @@ def generate_effects_brands_incident():
     homunculus_time = time_math.min_sec_ms_to_ms((0, 15, 0))
     bottle_time = time_math.min_sec_ms_to_ms((0, 10, 0))
 
-    number = const.EFFECTS_BRANDS_INCIDENT
+    number = const.INCIDENT_EFFECTS_BRANDS
 
     incident = Incident(number, bottle, text, ambulance_time, homunculus_time, bottle_time)
     return incident
@@ -417,7 +417,7 @@ def generate_effects_allergens_brands_incident():
     homunculus_time = time_math.min_sec_ms_to_ms((0, 30, 0))
     bottle_time = time_math.min_sec_ms_to_ms((0, 15, 0))
 
-    number = const.EFFECTS_ALLERGENS_BRANDS_INCIDENT
+    number = const.INCIDENT_EFFECTS_ALLERGENS_BRANDS
 
     incident = Incident(number, bottle, text, ambulance_time, homunculus_time, bottle_time)
     return incident
@@ -452,7 +452,7 @@ def generate_effects_bootlegs_incident():
     homunculus_time = time_math.min_sec_ms_to_ms((0, 20, 0))
     bottle_time = time_math.min_sec_ms_to_ms((0, 12, 0))
 
-    number = const.EFFECTS_BOOTLEGS_INCIDENT
+    number = const.INCIDENT_EFFECTS_BOOTLEGS
 
     incident = Incident(number, bottle, text, ambulance_time, homunculus_time, bottle_time)
     return incident
@@ -486,7 +486,7 @@ def generate_effects_verification_incident():
     homunculus_time = time_math.min_sec_ms_to_ms((0, 20, 0))
     bottle_time = time_math.min_sec_ms_to_ms((0, 12, 0))
 
-    number = const.EFFECTS_VERIFICATION_INCIDENT
+    number = const.INCIDENT_EFFECTS_VERIFICATION
 
     incident = Incident(number, bottle, text, ambulance_time, homunculus_time, bottle_time)
     return incident
@@ -516,7 +516,7 @@ def generate_effects_alternating_incident():
     homunculus_time = time_math.min_sec_ms_to_ms((0, 20, 0))
     bottle_time = time_math.min_sec_ms_to_ms((0, 10, 0))
 
-    number = const.EFFECTS_ALTERNATION_INCIDENT
+    number = const.INCIDENT_EFFECTS_ALTERNATION
 
     incident = Incident(number, bottle, text, ambulance_time, homunculus_time, bottle_time)
     incident.alternating = True
