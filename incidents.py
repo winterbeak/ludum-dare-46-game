@@ -25,8 +25,8 @@ def effects_incident_bottle():
     bottle.label_y_offset = 20
 
     # Top and bottom curve of the bottle's body
-    bottle.top = bottles.tops[0]
-    bottle.bottom = bottles.bottoms[0]
+    bottle.top_num = 0
+    bottle.bottom_num = 0
 
     # Cap
     top_width = bottle.top.single_width
@@ -57,8 +57,8 @@ def fast_incident_bottle():
     bottle.label_y_offset = 20
 
     # Top and bottom curve of the bottle's body
-    bottle.top = bottles.tops[2]
-    bottle.bottom = bottles.bottoms[1]
+    bottle.top_num = 2
+    bottle.bottom_num = 1
 
     # Cap
     top_width = bottle.top.single_width
@@ -89,8 +89,8 @@ def allergen_incident_bottle():
     bottle.label_y_offset = 40
 
     # Top and bottom curve of the bottle's body
-    bottle.top = bottles.tops[5]
-    bottle.bottom = bottles.bottoms[1]
+    bottle.top_num = 5
+    bottle.bottom_num = 1
 
     # Cap
     top_width = bottle.top.single_width
@@ -121,8 +121,8 @@ def effects_allergens_incident_bottle():
     bottle.label_y_offset = 20
 
     # Top and bottom curve of the bottle's body
-    bottle.top = bottles.tops[1]
-    bottle.bottom = bottles.bottoms[0]
+    bottle.top_num = 1
+    bottle.bottom_num = 0
 
     # Cap
     top_width = bottle.top.single_width

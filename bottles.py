@@ -256,8 +256,8 @@ class Bottle:
         self.label_y_offset = random.randint(10, upper_bound)
 
         # Top and bottom curve of the bottle's body
-        self.top = random.choice(tops)
-        self.bottom = random.choice(bottoms)
+        self.top_num = random.randint(0, len(tops) - 1)
+        self.bottom_num = random.randint(0, len(bottoms) - 1)
 
         # Cap
         top_width = self.top.single_width
@@ -305,6 +305,42 @@ class Bottle:
         self._total_size = value
         self._total_width = value[0]
         self._total_height = value[1]
+
+    @property
+    def top_num(self):
+        return self._top_num
+
+    @top_num.setter
+    def top_num(self, value):
+        if value >= len(tops):
+            raise IndexError("The requested top number (%d) is greater than"
+                             " the maximum top number (%d)!"
+                             % (value, len(tops) - 1)
+                             )
+        self._top_num = value
+        self._top = tops[value]
+
+    @property
+    def bottom_num(self):
+        return self._bottom_num
+
+    @bottom_num.setter
+    def bottom_num(self, value):
+        if value >= len(bottoms):
+            raise IndexError("The requested bottom number (%d) is greater than"
+                             " the maximum bottom number (%d)!"
+                             % (value, len(bottoms) - 1)
+                             )
+        self._bottom_num = value
+        self._bottom = bottoms[value]
+
+    @property
+    def top(self):
+        return self._top
+
+    @property
+    def bottom(self):
+        return self._bottom
 
     def render_text(self, colored=False):
         text = ""
