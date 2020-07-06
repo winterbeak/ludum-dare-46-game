@@ -302,7 +302,7 @@ class Bottle:
 
     @property
     def total_width(self):
-        return self._total_height
+        return self._total_width
 
     @total_width.setter
     def total_width(self, value):
