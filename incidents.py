@@ -3,6 +3,14 @@ import bottles
 import time_math
 
 
+NUMBER = "number"
+BOTTLE = "bottle"
+TEXT = "text"
+AMBULANCE_TIME = "ambulance_time"
+HOMUNCULUS_TIME = "homunculus_time"
+BOTTLE_TIME = "bottle_time"
+
+
 class Incident:
     def __init__(self, number, bottle, text, ambulance_time, homunculus_time, bottle_time):
         self.number = number
@@ -12,6 +20,29 @@ class Incident:
         self.homunculus_time = homunculus_time
         self.bottle_time = bottle_time
         self.alternating = False
+
+    def to_dict(self):
+        d = {
+            NUMBER: self.number,
+            BOTTLE: self.bottle.to_dict(),
+            TEXT: self.text,
+            AMBULANCE_TIME: time_math.ms_to_min_sec_ms(self.ambulance_time),
+            HOMUNCULUS_TIME: time_math.ms_to_min_sec_ms(self.homunculus_time),
+            BOTTLE_TIME: time_math.ms_to_min_sec_ms(self.bottle_time)
+        }
+        return d
+
+
+def incident_from_dict(d):
+    number = d[NUMBER]
+    bottle = bottles.bottle_from_dict(d[BOTTLE])
+    text = d[TEXT]
+    ambulance_time = time_math.min_sec_ms_to_ms(d[AMBULANCE_TIME])
+    homunculus_time = time_math.min_sec_ms_to_ms(d[HOMUNCULUS_TIME])
+    bottle_time = time_math.min_sec_ms_to_ms(d[BOTTLE_TIME])
+
+    incident = Incident(number, bottle, text, ambulance_time, homunculus_time, bottle_time)
+    return incident
 
 
 def effects_incident_bottle():
