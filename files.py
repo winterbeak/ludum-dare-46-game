@@ -7,6 +7,9 @@ def json_read(path):
     return data
 
 
-def json_write(path, obj):
+def json_write(path, obj, formatted=True):
     with open(path, "w+") as file:
-        json.dump(obj, file)
+        if formatted:
+            json.dump(obj, file, indent=4)
+        else:
+            json.dump(obj, file)
