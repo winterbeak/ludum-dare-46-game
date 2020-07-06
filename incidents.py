@@ -41,7 +41,7 @@ def effects_incident_bottle():
     total_height += bottle.bottom.single_height
     bottle.total_height = total_height
 
-    bottle.palette = bottles.PALETTES[1]
+    bottle.palette_num = 1
 
     return bottle
 
@@ -73,7 +73,7 @@ def fast_incident_bottle():
     total_height += bottle.bottom.single_height
     bottle.total_height = total_height
 
-    bottle.palette = bottles.PALETTES[14]
+    bottle.palette_num = 14
 
     return bottle
 
@@ -105,7 +105,7 @@ def allergen_incident_bottle():
     total_height += bottle.bottom.single_height
     bottle.total_height = total_height
 
-    bottle.palette = bottles.PALETTES[7]
+    bottle.palette_num = 7
 
     return bottle
 
@@ -137,7 +137,7 @@ def effects_allergens_incident_bottle():
     total_height += bottle.bottom.single_height
     bottle.total_height = total_height
 
-    bottle.palette = bottles.PALETTES[6]
+    bottle.palette_num = 6
 
     return bottle
 

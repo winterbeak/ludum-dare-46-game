@@ -273,7 +273,7 @@ class Bottle:
         self._total_height = total_height
         self._total_size = (self._total_width, self._total_height)
 
-        self.palette = random.choice(PALETTES)
+        self.palette_num = random.randint(0, len(PALETTES) - 1)
 
         self.eaten = False
         self.adds_allergies = []
@@ -341,6 +341,24 @@ class Bottle:
     @property
     def bottom(self):
         return self._bottom
+
+    @property
+    def palette_num(self):
+        return self._palette_num
+
+    @palette_num.setter
+    def palette_num(self, value):
+        if value >= len(PALETTES):
+            raise IndexError("The requested palette number (%d) is greater than"
+                             " the maximum palette number (%d)!"
+                             % (value, len(PALETTES) - 1)
+                             )
+        self._palette_num = value
+        self._palette = PALETTES[self._palette_num]
+
+    @property
+    def palette(self):
+        return self._palette
 
     def render_text(self, colored=False):
         text = ""
@@ -492,7 +510,7 @@ class Bottle:
 
 
 ghost_bottle = Bottle()
-ghost_bottle.palette = TRANSPARENT_PALETTE
+ghost_bottle._palette = TRANSPARENT_PALETTE
 
 
 class BottleGenerator:
