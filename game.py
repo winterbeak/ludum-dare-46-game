@@ -904,20 +904,22 @@ def play_result_transition(play, result):
         lose_sound.play_random()
 
 
-incident_list = [
-    incidents.generate_effects_incident(),
-    incidents.generate_allergen_incident(),
-    incidents.generate_effects_allergens_incident(),
-    incidents.generate_fast_incident(),
-    incidents.generate_effects_hard_incident(),
-    incidents.generate_effects_allergens_hard_incident(),
-    incidents.generate_faster_incident(),
-    incidents.generate_effects_brands_incident(),
-    incidents.generate_effects_allergens_brands_incident(),
-    incidents.generate_effects_bootlegs_incident(),
-    incidents.generate_effects_verification_incident(),
-    incidents.generate_effects_alternating_incident(),
+INCIDENTS_PATH = "data\\incidents.json"
+INCIDENT_NAMES = [
+    incidents.EFFECTS,
+    incidents.ALLERGENS,
+    incidents.EFFECTS_ALLERGENS,
+    incidents.FAST,
+    incidents.EFFECTS_HARD,
+    incidents.EFFECTS_ALLERGENS_HARD,
+    incidents.FASTER,
+    incidents.EFFECTS_BRANDS,
+    incidents.EFFECTS_ALLERGENS_BRANDS,
+    incidents.EFFECTS_BOOTLEGS,
+    incidents.EFFECTS_VERIFICATION,
+    incidents.EFFECTS_ALTERNATION,
 ]
+incident_list = incidents.load_incidents(INCIDENTS_PATH, INCIDENT_NAMES)
 
 MENU_SCREEN = 0
 menu_screen = MenuScreen()
