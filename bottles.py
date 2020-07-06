@@ -166,6 +166,19 @@ TOP_ROUND_LARGE = 2
 TOP_BEVEL = 3
 TOP_INVERTED = 4
 
+EFFECTS = "effects"
+BODY_WIDTH = "body_width"
+BODY_HEIGHT = "body_height"
+LABEL_HEIGHT = "label_height"
+LABEL_Y_OFFSET = "label_y_offset"
+TOP_NUM = "top_num"
+BOTTOM_NUM = "bottom_num"
+CAP_X = "cap_x"
+CAP_HEIGHT = "cap_height"
+TOTAL_WIDTH = "total_width"
+TOTAL_HEIGHT = "total_height"
+PALETTE_NUM = "palette_num"
+
 
 class Palette:
     def __init__(self, cap_color, body_color, label_color):
@@ -507,6 +520,56 @@ class Bottle:
 
     def shuffle(self):
         random.shuffle(self.effects)
+
+    def to_dict(self):
+        d = {
+            EFFECTS: self.effects,
+
+            BODY_WIDTH: self.body_width,
+            BODY_HEIGHT: self.body_height,
+
+            LABEL_HEIGHT: self.label_height,
+            LABEL_Y_OFFSET: self.label_y_offset,
+
+            TOP_NUM: self.top_num,
+            BOTTOM_NUM: self.bottom_num,
+            PALETTE_NUM: self.palette_num,
+
+            CAP_X: self.cap_x,
+            CAP_HEIGHT: self.cap_height,
+
+            TOTAL_WIDTH: self.total_width,
+            TOTAL_HEIGHT: self.total_height,
+        }
+        return d
+
+
+def bottle_from_dict(d):
+    bottle = Bottle()
+
+    bottle.effects = d[EFFECTS]
+
+    bottle.body_width = d[BODY_WIDTH]
+    bottle.body_height = d[BODY_HEIGHT]
+
+    # Label
+    bottle.label_height = d[LABEL_HEIGHT]
+    bottle.label_y_offset = d[LABEL_Y_OFFSET]
+
+    # Top and bottom curve of the bottle's body
+    bottle.top_num = d[TOP_NUM]
+    bottle.bottom_num = d[BOTTOM_NUM]
+
+    # Cap
+    bottle.cap_x = d[CAP_X]
+    bottle.cap_height = d[CAP_HEIGHT]
+
+    bottle.total_width = d[TOTAL_WIDTH]
+    bottle.total_height = d[TOTAL_HEIGHT]
+
+    bottle.palette_num = d[PALETTE_NUM]
+
+    return bottle
 
 
 ghost_bottle = Bottle()
