@@ -9,6 +9,7 @@ TEXT = "text"
 AMBULANCE_TIME = "ambulance_time"
 HOMUNCULUS_TIME = "homunculus_time"
 BOTTLE_TIME = "bottle_time"
+ALTERNATING = "alternating"
 
 EFFECTS = "effects"
 ALLERGENS = "allergens"
@@ -41,7 +42,8 @@ class Incident:
             TEXT: self.text,
             AMBULANCE_TIME: time_math.ms_to_min_sec_ms(self.ambulance_time),
             HOMUNCULUS_TIME: time_math.ms_to_min_sec_ms(self.homunculus_time),
-            BOTTLE_TIME: time_math.ms_to_min_sec_ms(self.bottle_time)
+            BOTTLE_TIME: time_math.ms_to_min_sec_ms(self.bottle_time),
+            ALTERNATING: self.alternating,
         }
         return d
 
@@ -55,6 +57,8 @@ def incident_from_dict(d):
     bottle_time = time_math.min_sec_ms_to_ms(d[BOTTLE_TIME])
 
     incident = Incident(number, bottle, text, ambulance_time, homunculus_time, bottle_time)
+    incident.alternating = d[ALTERNATING]
+
     return incident
 
 

@@ -32,7 +32,8 @@
             0,
             15,
             0
-        ]
+        ],
+        "alternating": false
     },
     "allergens": {
         "number": 2,
@@ -67,7 +68,8 @@
             0,
             10,
             0
-        ]
+        ],
+        "alternating": false
     },
     "effects_allergens": {
         "number": 3,
@@ -102,7 +104,8 @@
             0,
             15,
             0
-        ]
+        ],
+        "alternating": false
     },
     "fast": {
         "number": 1,
@@ -137,7 +140,8 @@
             0,
             7,
             0
-        ]
+        ],
+        "alternating": false
     },
     "effects_hard": {
         "number": 4,
@@ -172,7 +176,8 @@
             0,
             12,
             0
-        ]
+        ],
+        "alternating": false
     },
     "effects_allergens_hard": {
         "number": 5,
@@ -207,7 +212,8 @@
             0,
             12,
             0
-        ]
+        ],
+        "alternating": false
     },
     "faster": {
         "number": 6,
@@ -242,7 +248,8 @@
             0,
             3,
             0
-        ]
+        ],
+        "alternating": false
     },
     "effects_brands": {
         "number": 7,
@@ -277,7 +284,8 @@
             0,
             10,
             0
-        ]
+        ],
+        "alternating": false
     },
     "effects_allergens_brands": {
         "number": 8,
@@ -312,7 +320,8 @@
             0,
             15,
             0
-        ]
+        ],
+        "alternating": false
     },
     "effects_bootlegs": {
         "number": 9,
@@ -347,7 +356,8 @@
             0,
             12,
             0
-        ]
+        ],
+        "alternating": false
     },
     "effects_verification": {
         "number": 10,
@@ -382,7 +392,8 @@
             0,
             12,
             0
-        ]
+        ],
+        "alternating": false
     },
     "effects_alternation": {
         "number": 11,
@@ -417,6 +428,7 @@
             0,
             10,
             0
-        ]
+        ],
+        "alternating": true
     }
 }
