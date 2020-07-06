@@ -78,3 +78,16 @@ def load_incidents(path, incident_names):
         incidents.append(incident)
 
     return incidents
+
+
+def incident_list_to_dict(incident_list, names):
+    data = {}
+    for incident, name in zip(incident_list, names):
+        data[name] = incident.to_dict()
+
+    return data
+
+
+def write_incidents(path, incident_list, names):
+    data = incident_list_to_dict(incident_list, names)
+    files.json_write(path, data)
