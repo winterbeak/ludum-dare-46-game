@@ -1,6 +1,6 @@
 import bottles
 import time_math
-import json
+import files
 
 
 NUMBER = "number"
@@ -59,17 +59,14 @@ def incident_from_dict(d):
 
 
 def load_incident(path, incident_name):
-    with open(path, "r") as file:
-        data = json.load(file)
-
+    data = files.json_read(path)
     incident = incident_from_dict(data[incident_name])
 
     return incident
 
 
 def load_incidents(path, incident_names):
-    with open(path, "r") as file:
-        data = json.load(file)
+    data = files.json_read(path)
 
     incidents = []
     for incident_name in incident_names:
