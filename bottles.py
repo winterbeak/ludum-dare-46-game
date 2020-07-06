@@ -4,114 +4,19 @@ import pygame
 import const
 import colors
 import graphics
+import files
 
-death_effects = [
-    "instant death",
-    "becoming dead",
-    "dying instantly",
-    "dying on the spot",
-    "loss of life",
-    "not living anymore",
-    "becoming a corpse",
-    "being killed immediately",
-    "stop being alive",
-    "death",
-    "becoming not alive",
-    "becoming deceased",
-    "perishing immediately",
-    "having your life end",
-    "becoming slain",
-    "end of life",
-    "termination of life",
-]
+DEATH_EFFECTS_PATH = "data\\death_effects.json"
+death_effects = files.json_read(DEATH_EFFECTS_PATH)
 
-benign_effects = [
-    "deafness",
-    "stomachache",
-    "loss of wife",
-    "not thriving",
-    "loss of excitement",
-    "loss of hearing",
-    "headache",
-    "desire to die",
-    "living the life",
-    "strange thoughts",
-    "hallucination",
-    "becoming deaf",
-    "becoming corporate",
-    "malnutrition",
-    "stomach pangs",
-    "attraction to death",
-    "liking killer whales",
-    "losing depth perception",
-    "weighing a kilogram less",
-    "feeling lively",
-    "feeling alive",
-    "dry throat",
-    "liking death metal",
-    "earning a dime",
-    "not lying anymore",
-    "not liking anyone",
-    "loss of lice",
-    "lice infection",
+BENIGN_EFFECTS_PATH = "data\\benign_effects.json"
+benign_effects = files.json_read(BENIGN_EFFECTS_PATH)
 
-    "smooth skin",
-    "better eyesight",
-    "worse eyesight",
-    "carrot addiction",
-    "golden hair",
-    "becoming bald",
+ALLERGENS_PATH = "data\\allergens.json"
+allergens = files.json_read(ALLERGENS_PATH)
 
-    "orange skin",
-    "shaking violently",
-
-    "straight lines look wonky",
-
-    "learning to drive",
-    "becoming dependable",
-
-    "hearing failure",
-    "heart beats faster",
-
-    "liver vibrations",
-
-    "getting lighter",
-    "nausea",
-    "becoming sick",
-    "becoming sane",
-    "liver mending",
-    "termination of wife",
-    "having your liver mend",
-    "instant dread",
-    "becoming dreary",
-    "instant debt",
-    "midlife crisis",
-]
-
-allergens = [
-    "milk",
-    "soy",
-    "fruit",
-    "wheat",
-    "cotton",
-    "tuna",
-    "trout",
-    "beef",
-    "chicken",
-    "flour",
-    "wood",
-    "celery",
-]
-
-brands = [
-    "Acetone",
-    "Terrible",
-    "Somewhat",
-    "Memory",
-    "Silk",
-    "Pharmacy",
-]
-
+BRANDS_PATH = "data\\brands.json"
+brands = files.json_read(BRANDS_PATH)
 
 letters = [chr(a) for a in range(ord('a'), ord('z'))]
 
