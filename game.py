@@ -783,7 +783,7 @@ class ResultScreen(MenuScreen):
             menu_press.play_random()
 
     def render_bottle(self, bottle):
-        return bottle.render_color_codes()
+        return bottle.render(text_color_codes=True)
 
     def draw(self, surface):
         if self.win:

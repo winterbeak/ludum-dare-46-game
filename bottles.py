@@ -340,24 +340,13 @@ class Bottle:
 
         return surface
 
-    def render(self):
+    def render(self, text_color_codes=False):
         surface = self.render_body()
 
         label_y = self.cap_height + self.top.single_height + self.label_y_offset
 
         # Applies text to the bottle
-        side_effects = self.render_text()
-        surface.blit(side_effects, (5, label_y + 3))
-
-        return surface
-
-    def render_color_codes(self):
-        surface = self.render_body()
-
-        label_y = self.cap_height + self.top.single_height + self.label_y_offset
-
-        # Applies text to the bottle
-        side_effects = self.render_text(True)
+        side_effects = self.render_text(text_color_codes)
         surface.blit(side_effects, (5, label_y + 3))
 
         return surface
