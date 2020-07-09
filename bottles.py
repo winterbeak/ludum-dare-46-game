@@ -304,7 +304,7 @@ class Bottle:
         else:
             return graphics.text_block(text, font, colors.BLACK, max_width - 10)
 
-    def render_textless(self):
+    def render_body(self):
         surface = graphics.new_surface(self.total_size)
 
         # Draws the cap of the bottle
@@ -341,7 +341,7 @@ class Bottle:
         return surface
 
     def render(self):
-        surface = self.render_textless()
+        surface = self.render_body()
 
         label_y = self.cap_height + self.top.single_height + self.label_y_offset
 
@@ -352,7 +352,7 @@ class Bottle:
         return surface
 
     def render_color_codes(self):
-        surface = self.render_textless()
+        surface = self.render_body()
 
         label_y = self.cap_height + self.top.single_height + self.label_y_offset
 
