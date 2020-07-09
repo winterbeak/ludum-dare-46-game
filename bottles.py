@@ -121,11 +121,6 @@ BOTTOM_COUNT = 2
 bottoms = graphics.load_multiple_columns("images/bottle_bottom_%d.png", BOTTOM_COUNT, 1)
 
 
-CAP_PLACEHOLDER_COLOR = (100, 100, 100)
-BODY_PLACEHOLDER_COLOR = (150, 150, 150)
-LABEL_PLACEHOLDER_COLOR = (200, 200, 200)
-
-
 def draw_wedge(surface, position, sprite, width, color):
     """ Draws two sprites on both sides of a rectangle.
 
@@ -315,32 +310,32 @@ class Bottle:
         # Draws the cap of the bottle
         cap_width = self.body_width - self.cap_x * 2
         cap_rect = (self.cap_x, 0, cap_width, self.cap_height)
-        pygame.draw.rect(surface, CAP_PLACEHOLDER_COLOR, cap_rect)
+        pygame.draw.rect(surface, colors.CAP_PLACEHOLDER, cap_rect)
 
         # Draws the top of the bottle (the part that curves into the cap)
         top_y = self.cap_height
-        color = BODY_PLACEHOLDER_COLOR
+        color = colors.BODY_PLACEHOLDER
         draw_wedge(surface, (0, top_y), self.top, self.body_width, color)
 
         # Draws the body of the bottle
         body_y = top_y + self.top.single_height
         body_rect = (0, body_y, self.body_width, self.body_height)
-        pygame.draw.rect(surface, BODY_PLACEHOLDER_COLOR, body_rect)
+        pygame.draw.rect(surface, colors.BODY_PLACEHOLDER, body_rect)
 
         label_y = body_y + self.label_y_offset
         label_rect = (0, label_y, self.body_width, self.label_height)
-        pygame.draw.rect(surface, LABEL_PLACEHOLDER_COLOR, label_rect)
+        pygame.draw.rect(surface, colors.LABEL_PLACEHOLDER, label_rect)
 
         # Draws the bottom of the bottle
         bottom_y = body_y + self.body_height
-        color = BODY_PLACEHOLDER_COLOR
+        color = colors.BODY_PLACEHOLDER
         draw_wedge(surface, (0, bottom_y), self.bottom, self.body_width, color)
 
         # Colors in the bottle
         pixel_array = pygame.PixelArray(surface)
-        pixel_array.replace(CAP_PLACEHOLDER_COLOR, self.palette.cap_color)
-        pixel_array.replace(BODY_PLACEHOLDER_COLOR, self.palette.body_color)
-        pixel_array.replace(LABEL_PLACEHOLDER_COLOR, self.palette.label_color)
+        pixel_array.replace(colors.CAP_PLACEHOLDER, self.palette.cap_color)
+        pixel_array.replace(colors.BODY_PLACEHOLDER, self.palette.body_color)
+        pixel_array.replace(colors.LABEL_PLACEHOLDER, self.palette.label_color)
         pixel_array.close()
 
         return surface
