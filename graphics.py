@@ -137,13 +137,29 @@ class SpriteColumn:
         image.convert()
         image.set_colorkey(colors.TRANSPARENT)
 
-        self.surface = image
-        self.path = path
-        self.sprite_count = sprite_count
+        self._surface = image
+        self._path = path
+        self._sprite_count = sprite_count
 
-        self.single_width = image.get_width()
-        self.single_height = int(image.get_height() / sprite_count)
-        self.single_size = (self.single_width, self.single_height)
+        self._single_width = image.get_width()
+        self._single_height = int(image.get_height() / sprite_count)
+        self._single_size = (self.single_width, self.single_height)
+
+    @property
+    def single_width(self):
+        return self._single_width
+
+    @property
+    def single_height(self):
+        return self._single_height
+
+    @property
+    def single_size(self):
+        return self._single_size
+
+    @property
+    def sprite_count(self):
+        return self._sprite_count
 
     def draw(self, surface, position, sprite_num):
         width = self.single_width
@@ -151,7 +167,7 @@ class SpriteColumn:
 
         y = height * sprite_num
 
-        surface.blit(self.surface, position, (0, y, width, height))
+        surface.blit(self._surface, position, (0, y, width, height))
 
     def render(self, sprite_num):
         width = self.single_width
@@ -159,7 +175,7 @@ class SpriteColumn:
 
         y = height * sprite_num
 
-        return self.surface.subsurface((0, y, width, height))
+        return self._surface.subsurface((0, y, width, height))
 
 
 def load_multiple_columns(template_string, column_count, sprite_count):
@@ -173,22 +189,22 @@ def load_multiple_columns(template_string, column_count, sprite_count):
 
 class SpriteSheet:
     def __init__(self, column_list):
-        self.column_x = []  # x position of each column on the surface
-        self.columns = column_list
+        self._column_x = []  # x position of each column on the surface
+        self._columns = column_list
 
         width = 0
         height = 0
         for column in column_list:
-            self.column_x.append(width)
+            self._column_x.append(width)
             width += column.surface.get_width()
             height = max(height, column.surface.get_height())
 
     def draw(self, surface, position, column_num, sprite_num):
-        column = self.columns[column_num]
+        column = self._columns[column_num]
         column.draw(surface, position, sprite_num)
 
     def render(self, column_num, sprite_num):
-        column = self.columns[column_num]
+        column = self._columns[column_num]
         return column.render(sprite_num)
 
 
@@ -202,9 +218,9 @@ class Animation:
         self._delay = 0
         self._frame = 0
         self._col_num = 0
-        self.sheet = sprite_sheet
+        self._sheet = sprite_sheet
 
-        self.done = False
+        self._done = False
 
     @property
     def frame(self):
@@ -213,9 +229,9 @@ class Animation:
     @frame.setter
     def frame(self, value):
         # Automatically loops around when frame reaches end
-        if value >= self.sheet.columns[self._col_num].sprite_count:
-            value %= self.sheet.columns[self._col_num].sprite_count
-            self.done = True
+        if value >= self._sheet.columns[self._col_num].sprite_count:
+            value %= self._sheet.columns[self._col_num].sprite_count
+            self._done = True
         self._frame = value
 
     @property
@@ -224,23 +240,27 @@ class Animation:
 
     @col_num.setter
     def col_num(self, value):
-        if value >= len(self.sheet.columns):
+        if value >= len(self._sheet.columns):
             print("Tried to set to an invalid animation " +
-                  "(%d when %d is the max)" % (value, len(self.sheet.columns)))
+                  "(%d when %d is the max)" % (value, len(self._sheet.columns)))
         elif value < 0:
             print("Tried to set to an invalid animation " +
                   "(%d when 0 is the min)" % value)
         else:
             self._col_num = value
             self._frame = 0
-            self.done = False
+            self._done = False
 
     @property
     def delay(self):
         return self._delay
 
+    @property
+    def done(self):
+        return self._done
+
     def set_frame_delay(self, col_num, delay):
-        frames = self.sheet.columns[col_num].sprite_count
+        frames = self._sheet.columns[col_num].sprite_count
         self._frame_lengths[col_num] = [delay] * frames
 
     def set_frame_delays(self, col_num, delays):
@@ -262,7 +282,7 @@ class Animation:
             self._delay = 0
 
     def draw(self, surface, position):
-        self.sheet.draw(surface, position, self._col_num, self._frame)
+        self._sheet.draw(surface, position, self._col_num, self._frame)
 
     def render(self):
-        return self.sheet.render(self._col_num, self._frame)
+        return self._sheet.render(self._col_num, self._frame)
