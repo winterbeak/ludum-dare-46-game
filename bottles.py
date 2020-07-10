@@ -339,6 +339,59 @@ class Bottle:
 
         return surface
 
+    def render_downscaled_body(self, scale):
+        total_width = self.total_width // scale
+        total_height = self.total_height // scale
+        surface = graphics.new_surface((total_width, total_height))
+
+        # Draws cap
+        cap_x = self.cap_x // scale
+        cap_width = total_width - (cap_x * 2)
+        cap_height = self.cap_height // scale
+        cap_rect = (cap_x, 0, cap_width, cap_height)
+        pygame.draw.rect(surface, colors.CAP_PLACEHOLDER, cap_rect)
+
+        # Draws the top of the bottle (the part that curves into the cap)
+        top_y = cap_height
+        top_width = self.top.single_width // scale
+        top_height = self.top.single_height // scale
+        top_sprite = self.top.render(0)
+        top_scaled = pygame.transform.scale(top_sprite, (top_width, top_height))
+        color = colors.BODY_PLACEHOLDER
+        draw_wedge(surface, (0, top_y), top_scaled, total_width, color)
+
+        # Draws the body of the bottle
+        body_y = top_y + top_height
+        body_height = (self.body_height + self.bottom.single_height) // scale
+        body_rect = (0, body_y, total_width, body_height)
+        pygame.draw.rect(surface, colors.BODY_PLACEHOLDER, body_rect)
+
+        # Draws the label
+        label_y = body_y + (self.label_y_offset) // scale
+        label_height = self.label_height // scale
+        label_rect = (0, label_y, total_width, label_height)
+        pygame.draw.rect(surface, colors.LABEL_PLACEHOLDER, label_rect)
+
+        # Note that the bottom of the bottle does not need to be drawn
+        # It is too small, so when scaled down, you can't really see it
+
+        # bottom_y = body_y + body_height
+        # bottom_width = self.bottom.single_width // scale
+        # bottom_height = self.bottom.single_height
+        # bottom_sprite = self.bottom.render(0)
+        # bottom_scaled = pygame.transform.scale(bottom_sprite, (bottom_width, bottom_height))
+        # color = colors.LABEL_PLACEHOLDER
+        # draw_wedge(surface, (0, bottom_y), bottom_scaled, total_width, color)
+
+        # Colors in the bottle
+        pixel_array = pygame.PixelArray(surface)
+        pixel_array.replace(colors.CAP_PLACEHOLDER, self.palette.cap_color)
+        pixel_array.replace(colors.BODY_PLACEHOLDER, self.palette.body_color)
+        pixel_array.replace(colors.LABEL_PLACEHOLDER, self.palette.label_color)
+        pixel_array.close()
+
+        return surface
+
     def render(self, text_color_codes=False):
         surface = self.render_body()
 
