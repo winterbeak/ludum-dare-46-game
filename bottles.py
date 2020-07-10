@@ -122,29 +122,26 @@ bottoms = graphics.load_multiple_columns("images/bottle_bottom_%d.png", BOTTOM_C
 
 
 def draw_wedge(surface, position, sprite, width, color):
-    """ Draws two sprites on both sides of a rectangle.
+    """ Draws a sprite on both sides of a rectangle.
 
-    sprite is a SpriteColumn with 2 sprites in it, the first which will be
-    on the left side of the rectangle, and the second which will be on the
-    right.
+    sprite is a pygame surface.  It will be drawn once on the left, then
+    flipped to be drawn on the right.
     """
 
     # Draws left sprite
-    sprite.draw(surface, position, 0)
+    surface.blit(sprite, position)
 
     # Flips left sprite to make right sprite
-    temp_surface = graphics.new_surface(sprite.single_size)
-    sprite.draw(temp_surface, (0, 0), 0)
-    flip_sprite = pygame.transform.flip(temp_surface, True, False)
+    flip_sprite = pygame.transform.flip(sprite, True, False)
 
     # Draws right sprite
-    right_x = position[0] + width - sprite.single_width
+    right_x = position[0] + width - sprite.get_width()
     surface.blit(flip_sprite, (right_x, position[1]))
 
     # Draws middle rect
-    middle_x = position[0] + sprite.single_width
-    middle_width = position[0] + width - sprite.single_width * 2
-    top_rect = (middle_x, position[1], middle_width, sprite.single_height)
+    middle_x = position[0] + sprite.get_width()
+    middle_width = position[0] + width - sprite.get_width() * 2
+    top_rect = (middle_x, position[1], middle_width, sprite.get_height())
     pygame.draw.rect(surface, color, top_rect)
 
 
@@ -315,7 +312,8 @@ class Bottle:
         # Draws the top of the bottle (the part that curves into the cap)
         top_y = self.cap_height
         color = colors.BODY_PLACEHOLDER
-        draw_wedge(surface, (0, top_y), self.top, self.body_width, color)
+        top_sprite = self.top.render(0)
+        draw_wedge(surface, (0, top_y), top_sprite, self.body_width, color)
 
         # Draws the body of the bottle
         body_y = top_y + self.top.single_height
@@ -329,7 +327,8 @@ class Bottle:
         # Draws the bottom of the bottle
         bottom_y = body_y + self.body_height
         color = colors.BODY_PLACEHOLDER
-        draw_wedge(surface, (0, bottom_y), self.bottom, self.body_width, color)
+        bottom_sprite = self.bottom.render(0)
+        draw_wedge(surface, (0, bottom_y), bottom_sprite, self.body_width, color)
 
         # Colors in the bottle
         pixel_array = pygame.PixelArray(surface)
