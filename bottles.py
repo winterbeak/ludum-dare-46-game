@@ -340,8 +340,8 @@ class Bottle:
         return surface
 
     def render_downscaled_body(self, scale):
-        total_width = self.total_width // scale
-        total_height = self.total_height // scale
+        total_width = self.downscaled_total_width(scale)
+        total_height = self.downscaled_total_height(scale)
         surface = graphics.new_surface((total_width, total_height))
 
         # Draws cap
@@ -391,6 +391,16 @@ class Bottle:
         pixel_array.close()
 
         return surface
+
+    def downscaled_total_width(self, scale):
+        return self.total_width // scale
+
+    def downscaled_total_height(self, scale):
+        height = self.cap_height // scale
+        height += self.top.single_height // scale
+        height += self.body_height // scale
+        height += self.bottom.single_height // scale
+        return height
 
     def render(self, text_color_codes=False):
         surface = self.render_body()
