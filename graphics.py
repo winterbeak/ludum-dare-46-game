@@ -161,6 +161,10 @@ class SpriteColumn:
     def sprite_count(self):
         return self._sprite_count
 
+    @property
+    def surface(self):
+        return self._surface
+
     def draw(self, surface, position, sprite_num):
         width = self.single_width
         height = self.single_height
@@ -198,6 +202,10 @@ class SpriteSheet:
             self._column_x.append(width)
             width += column.surface.get_width()
             height = max(height, column.surface.get_height())
+
+    @property
+    def columns(self):
+        return self._columns
 
     def draw(self, surface, position, column_num, sprite_num):
         column = self._columns[column_num]
