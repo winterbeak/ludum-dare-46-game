@@ -624,6 +624,8 @@ class MenuScreen(PlayScreen):
         self._current_level_number = 0
         self._shift_direction = const.LEFT
 
+        self._bottle_icon_row_scroll = 0
+
         self.selected = False
         self.quit = False
 
@@ -660,6 +662,14 @@ class MenuScreen(PlayScreen):
             menu_press.play_random()
         elif events.keys.pressed_key == pygame.K_RIGHT:
             menu_press.play_random()
+
+        self._scroll_to_bottle(self._current_level_number)
+
+    def _scroll_to_bottle(self, bottle_num):
+        target = self._center_of_bottle_icon_in_row(bottle_num)
+        diff = target - self._bottle_icon_row_scroll
+        if abs(diff) > 0.001:
+            self._bottle_icon_row_scroll += diff / 5
 
     @property
     def current_level_number(self):
@@ -710,7 +720,7 @@ class MenuScreen(PlayScreen):
         super().draw(surface)
 
         # Draws the row of bottle icons
-        offset = self._center_of_bottle_icon_in_row(self._current_level_number)
+        offset = self._bottle_icon_row_scroll
         bottle_icon_row = self.render_bottle_icon_row(200, offset - 100)
         surface.blit(bottle_icon_row, (370, 16))
 
@@ -827,6 +837,8 @@ class ResultScreen(MenuScreen):
         elif events.keys.pressed_key == pygame.K_RIGHT:
             menu_press.play_random()
 
+        self._scroll_to_bottle(self._bottle_num)
+
     def render_bottle(self, bottle):
         return bottle.render(text_color_codes=True)
 
@@ -843,7 +855,7 @@ class ResultScreen(MenuScreen):
         self.draw_controls(surface)
 
         # Draws the row of bottle icons
-        offset = self._center_of_bottle_icon_in_row(self._bottle_num)
+        offset = self._bottle_icon_row_scroll
         bottle_icon_row = self.render_bottle_icon_row(200, offset - 100)
         surface.blit(bottle_icon_row, (366, 16))
 
