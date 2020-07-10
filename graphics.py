@@ -220,7 +220,7 @@ class Animation:
         self._col_num = 0
         self._sheet = sprite_sheet
 
-        self._done = False
+        self._finished_once = False
 
     @property
     def frame(self):
@@ -231,7 +231,7 @@ class Animation:
         # Automatically loops around when frame reaches end
         if value >= self._sheet.columns[self._col_num].sprite_count:
             value %= self._sheet.columns[self._col_num].sprite_count
-            self._done = True
+            self._finished_once = True
         self._frame = value
 
     @property
@@ -249,15 +249,15 @@ class Animation:
         else:
             self._col_num = value
             self._frame = 0
-            self._done = False
+            self._finished_once = False
 
     @property
     def delay(self):
         return self._delay
 
     @property
-    def done(self):
-        return self._done
+    def finished_once(self):
+        return self._finished_once
 
     def set_frame_delay(self, col_num, delay):
         frames = self._sheet.columns[col_num].sprite_count

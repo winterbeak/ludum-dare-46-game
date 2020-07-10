@@ -422,7 +422,7 @@ class PlayScreen:
             self._update_shift_animation()
 
         homunculus.update()
-        if homunculus.col_num == HOMUNCULUS_EAT and homunculus.done:
+        if homunculus.col_num == HOMUNCULUS_EAT and homunculus.finished_once:
             homunculus.col_num = HOMUNCULUS_IDLE
             self.homunculus_eat_delay = 0
 
@@ -623,7 +623,7 @@ class MenuScreen(PlayScreen):
     def update(self):
         homunculus.update()
 
-        if homunculus.col_num == HOMUNCULUS_EAT and homunculus.done:
+        if homunculus.col_num == HOMUNCULUS_EAT and homunculus.finished_once:
             homunculus.col_num = HOMUNCULUS_IDLE
             self.homunculus_eat_delay = 0
 
