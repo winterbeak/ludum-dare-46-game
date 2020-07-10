@@ -611,12 +611,19 @@ class PlayScreen:
 
 
 class MenuScreen(PlayScreen):
+    BOTTLE_ICON_SPACING = 12
+    BOTTLE_ICON_SCALE = 10
+
     def __init__(self):
         super().__init__()
-        self._current_level = incident_list[0]
+        self._incidents = incident_list
+        self.bottles = [incident.bottle for incident in self._incidents]
+        self.current_bottle = self.bottles[0]
+
+        self._current_level = self._incidents[0]
         self._current_level_number = 0
         self._shift_direction = const.LEFT
-        self.current_bottle = incident_list[0].bottle
+
         self.selected = False
         self.quit = False
 
@@ -641,7 +648,7 @@ class MenuScreen(PlayScreen):
 
         elif events.keys.released_key == pygame.K_RIGHT:
             menu_release.play_random()
-            if self.current_level_number < len(incident_list) - 1:
+            if self.current_level_number < len(self._incidents) - 1:
                 self.current_level_number += 1
 
         if events.keys.pressed_key == pygame.K_ESCAPE:
@@ -667,7 +674,7 @@ class MenuScreen(PlayScreen):
         else:
             return
         self._current_level_number = value
-        self._current_level = incident_list[value]
+        self._current_level = self._incidents[value]
         self.previous_bottle = self.current_bottle
         self.current_bottle = self._current_level.bottle
         self._start_shifting_animation()
@@ -702,6 +709,11 @@ class MenuScreen(PlayScreen):
     def draw(self, surface):
         super().draw(surface)
 
+        # Draws the row of bottle icons
+        offset = self._center_of_bottle_icon_in_row(self._current_level_number)
+        bottle_icon_row = self.render_bottle_icon_row(200, offset - 100)
+        surface.blit(bottle_icon_row, (370, 16))
+
         # Handles the level description text
         text = self.current_level.text
         font = graphics.tahoma
@@ -719,17 +731,50 @@ class MenuScreen(PlayScreen):
         surface.blit(text_surface, (30, 30))
 
     def draw_controls(self, surface):
-        # Prev text
-        x = 338
-        if pygame.K_LEFT in events.keys.queue:
-            x -= 10
-        prev_text.draw(surface, (x, 10), 0)
+        pass
 
-        # Next text
-        x = 481
-        if pygame.K_RIGHT in events.keys.queue:
-            x += 10
-        next_text.draw(surface, (x, 10), 0)
+    def render_bottle_icon_row(self, width, offset):
+        scale = self.BOTTLE_ICON_SCALE
+
+        height = self._max_bottle_icon_height()
+        surface = graphics.new_surface((width, height))
+
+        x = -offset
+        for bottle in self.bottles:
+            bottle_width = bottle.downscaled_total_width(scale)
+
+            # Skips any bottle that isn't rendered due to the offset
+            if x + bottle_width > 0:
+                y = (height - bottle.downscaled_total_height(scale)) // 2
+                sprite = bottle.render_downscaled_body(scale)
+                surface.blit(sprite, (x, y))
+
+            x += bottle_width + self.BOTTLE_ICON_SPACING
+
+            # Stops rendering bottles if the end of the surface is reached
+            if x > width:
+                break
+
+        return surface
+
+    def _center_of_bottle_icon_in_row(self, bottle_num):
+        scale = self.BOTTLE_ICON_SCALE
+
+        x = 0
+        for i in range(bottle_num):
+            x += self.bottles[i].downscaled_total_width(scale)
+            x += self.BOTTLE_ICON_SPACING
+        x += self.bottles[bottle_num].downscaled_total_width(scale) // 2
+        return x
+
+    def _max_bottle_icon_height(self):
+        scale = self.BOTTLE_ICON_SCALE
+        height = 0
+        for bottle in self.bottles:
+            bottle_height = bottle.downscaled_total_height(scale)
+            height = max(height, bottle_height)
+
+        return height
 
 
 class ResultScreen(MenuScreen):
@@ -796,6 +841,11 @@ class ResultScreen(MenuScreen):
             ui.draw(surface, (0, 0), 0)
 
         self.draw_controls(surface)
+
+        # Draws the row of bottle icons
+        offset = self._center_of_bottle_icon_in_row(self._bottle_num)
+        bottle_icon_row = self.render_bottle_icon_row(200, offset - 100)
+        surface.blit(bottle_icon_row, (366, 16))
 
         # Draws return to menu text
         text = graphics.tahoma.render("Press SPACE to return to level select.", False, colors.BLACK)
