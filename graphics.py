@@ -153,6 +153,14 @@ class SpriteColumn:
 
         surface.blit(self.surface, position, (0, y, width, height))
 
+    def render(self, sprite_num):
+        width = self.single_width
+        height = self.single_height
+
+        y = height * sprite_num
+
+        return self.surface.subsurface((0, y, width, height))
+
 
 def load_multiple_columns(template_string, column_count, sprite_count):
     columns = []
@@ -178,6 +186,10 @@ class SpriteSheet:
     def draw(self, surface, position, column_num, sprite_num):
         column = self.columns[column_num]
         column.draw(surface, position, sprite_num)
+
+    def render(self, column_num, sprite_num):
+        column = self.columns[column_num]
+        return column.render(sprite_num)
 
 
 class Animation:
@@ -251,3 +263,6 @@ class Animation:
 
     def draw(self, surface, position):
         self.sheet.draw(surface, position, self._col_num, self._frame)
+
+    def render(self):
+        return self.sheet.render(self._col_num, self._frame)
