@@ -555,18 +555,21 @@ class PlayScreen:
         position = self.HOMUNCULUS_TIMER_POSITION
         countdowns.draw(surface, color, time, position, shake)
 
-    def draw_controls(self, surface):
+    def draw_controls(self, surface, position):
+
         # Feed text
-        x = 338
+        x = position[0] + 10
+        y = position[1]
         if pygame.K_LEFT in events.keys.queue:
             x -= 10
-        feed_text.draw(surface, (x, 322), 0)
+        feed_text.draw(surface, (x, y), 0)
 
         # Skip text
-        x = 481
+        x = position[0] + 153
+        y = position[1] + 2
         if pygame.K_RIGHT in events.keys.queue:
             x += 10
-        skip_text.draw(surface, (x, 324), 0)
+        skip_text.draw(surface, (x, y), 0)
 
     def draw_ui_text(self, surface):
         self.draw_countdowns(surface)
@@ -575,7 +578,7 @@ class PlayScreen:
         ambulance_text.draw(surface, (5, 7), 0)
         homunculus_text.draw(surface, (5, 88), 0)
 
-        self.draw_controls(surface)
+        self.draw_controls(surface, (328, 322))
 
     def draw_homunculus(self, surface):
         y = screen.unscaled.get_height() - homunculus_idle.single_height
@@ -694,7 +697,7 @@ class MenuScreen(PlayScreen):
         return self._current_level
 
     def draw_ui_text(self, surface):
-        self.draw_controls(surface)
+        self.draw_controls(surface, (0, 0))
 
     def draw_homunculus(self, surface):
         pass
@@ -738,7 +741,7 @@ class MenuScreen(PlayScreen):
         pygame.draw.rect(surface, color, text_rect)
         surface.blit(text_surface, (30, 30))
 
-    def draw_controls(self, surface):
+    def draw_controls(self, surface, position):
         pass
 
     def _draw_bottle_select(self, surface, position):
@@ -855,7 +858,7 @@ class ResultScreen(MenuScreen):
         if self.win:
             ui.draw(surface, (0, 0), 0)
 
-        self.draw_controls(surface)
+        self.draw_controls(surface, (0, 0))
 
         # Draws the row of bottle icons
         self._draw_bottle_select(surface, (366, 16))
