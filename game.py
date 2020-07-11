@@ -74,50 +74,34 @@ ambulance = graphics.Sprite("images/ambulance.png")
 
 
 # Sound loading
-menu_press = sound.load_numbers("menu_press%d", 1)
-menu_release = sound.load_numbers("menu_release%d", 1)
-menu_press.set_volumes(0.5)
-menu_release.set_volumes(0.5)
+menu_press = sound.load_numbers("menu_press%d", 1, volumes=0.5)
+menu_release = sound.load_numbers("menu_release%d", 1, volumes=0.5)
 
-feed_press = sound.load_numbers("feed_press%d", 3)
+feed_press = sound.load_numbers("feed_press%d", 3, volumes=0.3)
 feed_release = sound.load_numbers("feed_release%d", 3)
-feed_press.set_volumes(0.3)
 
-skip_press = sound.load_numbers("skip_press%d", 3)
+skip_press = sound.load_numbers("skip_press%d", 3, volumes=0.3)
 skip_release = sound.load_numbers("skip_release%d", 3)
-skip_press.set_volumes(0.3)
 
-tick = sound.load_numbers("tick%d", 1)
-tick.set_volumes(0.3)
-subtick = sound.load_numbers("subtick%d", 1)
-subtick.set_volumes(0.3)
+tick = sound.load_numbers("tick%d", 1, volumes=0.3)
+subtick = sound.load_numbers("subtick%d", 1, volumes=0.3)
 
-death = sound.load_numbers("death%d", 1)
-death.set_volumes(0.5)
+death = sound.load_numbers("death%d", 1, volumes=0.5)
 
-start_release = sound.load_numbers("start_release%d", 1)
-start_press = sound.load_numbers("start_press%d", 1)
-start_release.set_volumes(0.8)
-start_press.set_volumes(0.8)
+start_release = sound.load_numbers("start_release%d", 1, volumes=0.8)
+start_press = sound.load_numbers("start_press%d", 1, volumes=0.8)
 
-time_gain = sound.load_numbers("time_gain%d", 1)
-time_gain.set_volumes(0.6)
+time_gain = sound.load_numbers("time_gain%d", 1, volumes=0.6)
 
-ambulance_arrive = sound.load_numbers("ambulance%d", 1)
-ambulance_arrive.set_volumes(0.5)
+ambulance_arrive = sound.load_numbers("ambulance%d", 1, volumes=0.5)
 
-fast_tick = sound.load_numbers("fast_tick%d", 1)
-fast_tick.set_volumes(0.3)
-ambulance_pickup = sound.load_numbers("ambulance_pickup_%d", 1)
-ambulance_pickup.set_volumes(0.5)
+fast_tick = sound.load_numbers("fast_tick%d", 1, volumes=0.3)
+ambulance_pickup = sound.load_numbers("ambulance_pickup_%d", 1, volumes=0.5)
 
-eat = sound.load_numbers("eat%d", 1)
-eat.set_volumes(0.8)
+eat = sound.load_numbers("eat%d", 1, volumes=0.8)
 
-win_sound = sound.load_numbers("win%d", 1)
-win_sound.set_volumes(0.5)
-lose_sound = sound.load_numbers("lose%d", 1)
-lose_sound.set_volumes(0.4)
+win_sound = sound.load_numbers("win%d", 1, volumes=0.5)
+lose_sound = sound.load_numbers("lose%d", 1, volumes=0.4)
 
 
 class PlayScreen:
