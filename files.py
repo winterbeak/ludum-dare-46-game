@@ -1,4 +1,7 @@
 import json
+import os
+
+import graphics
 
 
 def json_read(path):
@@ -13,3 +16,15 @@ def json_write(path, obj, formatted=True):
             json.dump(obj, file, indent=4)
         else:
             json.dump(obj, file)
+
+
+def png_path(string):
+    return os.path.join("images", string + ".png")
+
+
+def load_png_sprite(string):
+    return graphics.Sprite(png_path(string))
+
+
+def load_png_column(string, sprite_count):
+    return graphics.SpriteColumn(png_path(string), sprite_count)
