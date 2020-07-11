@@ -367,7 +367,7 @@ class Bottle:
         pygame.draw.rect(surface, colors.BODY_PLACEHOLDER, body_rect)
 
         # Draws the label
-        label_y = body_y + (self.label_y_offset) // scale
+        label_y = body_y + (self.label_y_offset // scale)
         label_height = self.label_height // scale
         label_rect = (0, label_y, total_width, label_height)
         pygame.draw.rect(surface, colors.LABEL_PLACEHOLDER, label_rect)
