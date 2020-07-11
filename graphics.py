@@ -131,12 +131,16 @@ def text_block_color_codes(text, font, max_width):
     return surface
 
 
+def load_image(path):
+    image = pygame.image.load(path)
+    image.convert()
+    image.set_colorkey(colors.TRANSPARENT)
+    return image
+
+
 class SpriteColumn:
     def __init__(self, path, sprite_count):
-        image = pygame.image.load(path)
-        image.convert()
-        image.set_colorkey(colors.TRANSPARENT)
-
+        image = load_image(path)
         self._surface = image
         self._path = path
         self._sprite_count = sprite_count
