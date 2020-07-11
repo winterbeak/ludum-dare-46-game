@@ -138,7 +138,7 @@ def load_image(path):
     return image
 
 
-def load_multiple_sprites(template_string, sprite_count):
+def load_numbered_sprites(template_string, sprite_count):
     sprites = []
     for x in range(sprite_count):
         sprite = Sprite(template_string % x)
@@ -226,7 +226,7 @@ class SpriteColumn:
         return self._surface.subsurface((0, y, width, height))
 
 
-def load_multiple_columns(template_string, column_count, sprite_count):
+def load_numbered_columns(template_string, column_count, sprite_count):
     columns = []
     for x in range(column_count):
         column = SpriteColumn(template_string % x, sprite_count)

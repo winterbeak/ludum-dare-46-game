@@ -115,10 +115,10 @@ TRANSPARENT_PALETTE = Palette(colors.TRANSPARENT, colors.TRANSPARENT, colors.TRA
 
 
 TOP_COUNT = 6
-tops = graphics.load_multiple_sprites("images/bottle_top_%d.png", TOP_COUNT)
+tops = graphics.load_numbered_sprites("images/bottle_top_%d.png", TOP_COUNT)
 
 BOTTOM_COUNT = 2
-bottoms = graphics.load_multiple_sprites("images/bottle_bottom_%d.png", BOTTOM_COUNT)
+bottoms = graphics.load_numbered_sprites("images/bottle_bottom_%d.png", BOTTOM_COUNT)
 
 
 def draw_wedge(surface, position, sprite, width, color):
