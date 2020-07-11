@@ -1,6 +1,7 @@
 import pygame
 import random
 
+import files
 import graphics
 import colors
 
@@ -13,8 +14,8 @@ def draw_debug(end_time, surface, position):
     surface.blit(text, position)
 
 
-numbers = graphics.SpriteColumn("images/numbers.png", 11)
-numbers_small = graphics.SpriteColumn("images/numbers_small.png", 11)
+numbers = files.load_png_column("numbers", 11)
+numbers_small = files.load_png_column("numbers_small", 11)
 
 
 def render_number(text, color, shake=0):

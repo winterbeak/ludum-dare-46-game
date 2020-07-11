@@ -7,6 +7,7 @@ import window
 import geometry
 import curves
 import graphics
+import files
 import time_math
 
 import const
@@ -34,25 +35,25 @@ else:
 
 # Caption and image of the game window
 pygame.display.set_caption("READ THE LABEL")
-pygame.display.set_icon(pygame.image.load("images/icon_large.png"))
+pygame.display.set_icon(pygame.image.load(files.png_path("icon_large")))
 
 
 # Graphics loading
-background = graphics.Sprite("images/background.png")
-ui = graphics.Sprite("images/test.png")
+background = files.load_png_sprite("background")
+ui = files.load_png_sprite("test")
 
-feed_text = graphics.Sprite("images/feed_text.png")
-skip_text = graphics.Sprite("images/skip_text.png")
+feed_text = files.load_png_sprite("feed_text")
+skip_text = files.load_png_sprite("skip_text")
 
-key_left = graphics.Sprite("images/key_left.png")
-key_right = graphics.Sprite("images/key_right.png")
+key_left = files.load_png_sprite("key_left")
+key_right = files.load_png_sprite("key_right")
 
-row_cap_left = graphics.Sprite("images/row_cap_left.png")
-row_cap_right = graphics.Sprite("images/row_cap_right.png")
-row_pointer = graphics.Sprite("images/row_pointer.png")
+row_cap_left = files.load_png_sprite("row_cap_left")
+row_cap_right = files.load_png_sprite("row_cap_right")
+row_pointer = files.load_png_sprite("row_pointer")
 
-homunculus_idle = graphics.SpriteColumn("images/homunculus.png", 4)
-homunculus_eat = graphics.SpriteColumn("images/homunculus_eat.png", 8)
+homunculus_idle = files.load_png_column("homunculus", 4)
+homunculus_eat = files.load_png_column("homunculus_eat", 8)
 homunculus_sprite_sheet = graphics.SpriteSheet([homunculus_idle,
                                                 homunculus_eat
                                                 ])
@@ -63,14 +64,14 @@ homunculus = graphics.Animation(homunculus_sprite_sheet)
 homunculus.set_frame_delay(HOMUNCULUS_IDLE, 3)
 homunculus.set_frame_delay(HOMUNCULUS_EAT, 3)
 
-homunculus_text = graphics.Sprite("images/homunculus_text.png")
-ambulance_text = graphics.Sprite("images/ambulance_text.png")
+homunculus_text = files.load_png_sprite("homunculus_text")
+ambulance_text = files.load_png_sprite("ambulance_text")
 
-one_more_text = graphics.Sprite("images/one_more_text.png")
-win_text = graphics.Sprite("images/win.png")
-lose_text = graphics.Sprite("images/lose.png")
+one_more_text = files.load_png_sprite("one_more_text")
+win_text = files.load_png_sprite("win")
+lose_text = files.load_png_sprite("lose")
 
-ambulance = graphics.Sprite("images/ambulance.png")
+ambulance = files.load_png_sprite("ambulance")
 
 
 # Sound loading
