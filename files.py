@@ -18,6 +18,10 @@ def json_write(path, obj, formatted=True):
             json.dump(obj, file)
 
 
+def json_path(string):
+    return os.path.join("data", string + ".json")
+
+
 def png_path(string):
     return os.path.join("images", string + ".png")
 
