@@ -870,7 +870,7 @@ class ResultScreen(MenuScreen):
 
     def draw(self, surface):
         if self.win:
-            self.background.draw(surface, (0, 0), 0)
+            self.background.draw(surface, (0, 0))
         else:
             surface.fill(colors.BLACK)
 
