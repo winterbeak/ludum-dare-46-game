@@ -44,8 +44,12 @@ ui = graphics.SpriteColumn("images/test.png", 1)
 feed_text = graphics.SpriteColumn("images/feed_text.png", 1)
 skip_text = graphics.SpriteColumn("images/skip_text.png", 1)
 
-prev_text = graphics.SpriteColumn("images/prev_text.png", 1)
-next_text = graphics.SpriteColumn("images/next_text.png", 1)
+key_left = graphics.SpriteColumn("images/key_left.png", 1)
+key_right = graphics.SpriteColumn("images/key_right.png", 1)
+
+row_cap_left = graphics.SpriteColumn("images/row_cap_left.png", 1)
+row_cap_right = graphics.SpriteColumn("images/row_cap_right.png", 1)
+row_pointer = graphics.SpriteColumn("images/row_pointer.png", 1)
 
 homunculus_idle = graphics.SpriteColumn("images/homunculus.png", 4)
 homunculus_eat = graphics.SpriteColumn("images/homunculus_eat.png", 8)
@@ -697,7 +701,7 @@ class MenuScreen(PlayScreen):
         return self._current_level
 
     def draw_ui_text(self, surface):
-        self.draw_controls(surface, (0, 0))
+        self.draw_controls(surface, (334, 18))
 
     def draw_homunculus(self, surface):
         pass
@@ -723,7 +727,7 @@ class MenuScreen(PlayScreen):
         super().draw(surface)
 
         # Draws the row of bottle icons
-        self._draw_bottle_select(surface, (370, 16))
+        self._draw_bottle_select(surface, (368, 13), self._current_level_number)
 
         # Handles the level description text
         text = self.current_level.text
@@ -742,12 +746,43 @@ class MenuScreen(PlayScreen):
         surface.blit(text_surface, (30, 30))
 
     def draw_controls(self, surface, position):
-        pass
 
-    def _draw_bottle_select(self, surface, position):
+        x = position[0] + 10
+        y = position[1]
+        if pygame.K_LEFT in events.keys.queue:
+            x -= 6
+        key_left.draw(surface, (x, y), 0)
+
+        x = position[0] + 243
+        if pygame.K_RIGHT in events.keys.queue:
+            x += 6
+        key_right.draw(surface, (x, y), 0)
+
+    def _draw_bottle_select(self, surface, position, selected_bottle_num):
+
+        # Draws the bottles
         offset = self._bottle_icon_row_scroll
         bottle_icon_row = self.render_bottle_icon_row(200, offset - 100)
-        surface.blit(bottle_icon_row, position)
+        x = position[0] + 2
+        y = position[1] + 3
+        surface.blit(bottle_icon_row, (x, y))
+
+        # Draws the left cap
+        surface.blit(row_cap_left.render(0), position)
+
+        # Draws the pointer
+        x = position[0] + 98
+        x += self._center_of_bottle_icon_in_row(selected_bottle_num) - offset
+
+        bottle = self.bottles[selected_bottle_num]
+        y = position[1] + 6
+        y -= bottle.downscaled_total_height(self.BOTTLE_ICON_SCALE) // 2
+        surface.blit(row_pointer.render(0), (x, y))
+
+        # Draws the right cap
+        x = position[0] + 200
+        y = position[1]
+        surface.blit(row_cap_right.render(0), (x, y))
 
     def render_bottle_icon_row(self, width, offset):
         scale = self.BOTTLE_ICON_SCALE
@@ -858,10 +893,10 @@ class ResultScreen(MenuScreen):
         if self.win:
             ui.draw(surface, (0, 0), 0)
 
-        self.draw_controls(surface, (0, 0))
+        self.draw_controls(surface, (330, 18))
 
         # Draws the row of bottle icons
-        self._draw_bottle_select(surface, (366, 16))
+        self._draw_bottle_select(surface, (364, 13), self._bottle_num)
 
         # Draws return to menu text
         text = graphics.tahoma.render("Press SPACE to return to level select.", False, colors.BLACK)
