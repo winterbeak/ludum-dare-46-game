@@ -990,7 +990,7 @@ def play_result_transition(play, result):
         lose_sound.play_random()
 
 
-INCIDENTS_PATH = "data\\incidents.json"
+INCIDENTS_PATH = files.json_path("incidents")
 INCIDENT_NAMES = [
     incidents.EFFECTS,
     incidents.ALLERGENS,

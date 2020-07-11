@@ -6,16 +6,16 @@ import colors
 import graphics
 import files
 
-DEATH_EFFECTS_PATH = "data\\death_effects.json"
+DEATH_EFFECTS_PATH = files.json_path("death_effects")
 death_effects = files.json_read(DEATH_EFFECTS_PATH)
 
-BENIGN_EFFECTS_PATH = "data\\benign_effects.json"
+BENIGN_EFFECTS_PATH = files.json_path("benign_effects")
 benign_effects = files.json_read(BENIGN_EFFECTS_PATH)
 
-ALLERGENS_PATH = "data\\allergens.json"
+ALLERGENS_PATH = files.json_path("allergens")
 allergens = files.json_read(ALLERGENS_PATH)
 
-BRANDS_PATH = "data\\brands.json"
+BRANDS_PATH = files.json_path("brands")
 brands = files.json_read(BRANDS_PATH)
 
 letters = [chr(a) for a in range(ord('a'), ord('z'))]
