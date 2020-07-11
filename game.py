@@ -893,10 +893,10 @@ class ResultScreen(MenuScreen):
         if self.win:
             ui.draw(surface, (0, 0), 0)
 
-        self.draw_controls(surface, (330, 18))
+        self.draw_controls(surface, (334, 18))
 
         # Draws the row of bottle icons
-        self._draw_bottle_select(surface, (364, 13), self._bottle_num)
+        self._draw_bottle_select(surface, (368, 13), self._bottle_num)
 
         # Draws return to menu text
         text = graphics.tahoma.render("Press SPACE to return to level select.", False, colors.BLACK)
