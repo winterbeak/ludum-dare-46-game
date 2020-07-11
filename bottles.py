@@ -115,10 +115,10 @@ TRANSPARENT_PALETTE = Palette(colors.TRANSPARENT, colors.TRANSPARENT, colors.TRA
 
 
 TOP_COUNT = 6
-tops = graphics.load_multiple_columns("images/bottle_top_%d.png", TOP_COUNT, 1)
+tops = graphics.load_multiple_sprites("images/bottle_top_%d.png", TOP_COUNT)
 
 BOTTOM_COUNT = 2
-bottoms = graphics.load_multiple_columns("images/bottle_bottom_%d.png", BOTTOM_COUNT, 1)
+bottoms = graphics.load_multiple_sprites("images/bottle_bottom_%d.png", BOTTOM_COUNT)
 
 
 def draw_wedge(surface, position, sprite, width, color):
@@ -170,7 +170,7 @@ class Bottle:
         self.bottom_num = random.randint(0, len(bottoms) - 1)
 
         # Cap
-        top_width = self.top.single_width
+        top_width = self.top.width
         self.cap_x = random.randint(top_width - 15, top_width - 2)
         self.cap_height = random.randint(20, 30)
 
@@ -178,8 +178,8 @@ class Bottle:
         total_height = 0
         total_height += self.cap_height
         total_height += self.body_height
-        total_height += self.top.single_height
-        total_height += self.bottom.single_height
+        total_height += self.top.height
+        total_height += self.bottom.height
         self._total_height = total_height
         self._total_size = (self._total_width, self._total_height)
 
@@ -312,11 +312,11 @@ class Bottle:
         # Draws the top of the bottle (the part that curves into the cap)
         top_y = self.cap_height
         color = colors.BODY_PLACEHOLDER
-        top_sprite = self.top.render(0)
+        top_sprite = self.top.render()
         draw_wedge(surface, (0, top_y), top_sprite, self.body_width, color)
 
         # Draws the body of the bottle
-        body_y = top_y + self.top.single_height
+        body_y = top_y + self.top.height
         body_rect = (0, body_y, self.body_width, self.body_height)
         pygame.draw.rect(surface, colors.BODY_PLACEHOLDER, body_rect)
 
@@ -327,7 +327,7 @@ class Bottle:
         # Draws the bottom of the bottle
         bottom_y = body_y + self.body_height
         color = colors.BODY_PLACEHOLDER
-        bottom_sprite = self.bottom.render(0)
+        bottom_sprite = self.bottom.render()
         draw_wedge(surface, (0, bottom_y), bottom_sprite, self.body_width, color)
 
         # Colors in the bottle
@@ -353,16 +353,16 @@ class Bottle:
 
         # Draws the top of the bottle (the part that curves into the cap)
         top_y = cap_height
-        top_width = self.top.single_width // scale
-        top_height = self.top.single_height // scale
-        top_sprite = self.top.render(0)
+        top_width = self.top.width // scale
+        top_height = self.top.height // scale
+        top_sprite = self.top.render()
         top_scaled = pygame.transform.scale(top_sprite, (top_width, top_height))
         color = colors.BODY_PLACEHOLDER
         draw_wedge(surface, (0, top_y), top_scaled, total_width, color)
 
         # Draws the body of the bottle
         body_y = top_y + top_height
-        body_height = (self.body_height + self.bottom.single_height) // scale
+        body_height = (self.body_height + self.bottom.height) // scale
         body_rect = (0, body_y, total_width, body_height)
         pygame.draw.rect(surface, colors.BODY_PLACEHOLDER, body_rect)
 
@@ -378,7 +378,7 @@ class Bottle:
         # bottom_y = body_y + body_height
         # bottom_width = self.bottom.single_width // scale
         # bottom_height = self.bottom.single_height
-        # bottom_sprite = self.bottom.render(0)
+        # bottom_sprite = self.bottom.render()
         # bottom_scaled = pygame.transform.scale(bottom_sprite, (bottom_width, bottom_height))
         # color = colors.LABEL_PLACEHOLDER
         # draw_wedge(surface, (0, bottom_y), bottom_scaled, total_width, color)
@@ -397,15 +397,15 @@ class Bottle:
 
     def downscaled_total_height(self, scale):
         height = self.cap_height // scale
-        height += self.top.single_height // scale
+        height += self.top.height // scale
         height += self.body_height // scale
-        height += self.bottom.single_height // scale
+        height += self.bottom.height // scale
         return height
 
     def render(self, text_color_codes=False):
         surface = self.render_body()
 
-        label_y = self.cap_height + self.top.single_height + self.label_y_offset
+        label_y = self.cap_height + self.top.height + self.label_y_offset
 
         # Applies text to the bottle
         side_effects = self.render_text(text_color_codes)

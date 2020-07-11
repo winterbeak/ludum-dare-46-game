@@ -138,6 +138,15 @@ def load_image(path):
     return image
 
 
+def load_multiple_sprites(template_string, sprite_count):
+    sprites = []
+    for x in range(sprite_count):
+        sprite = Sprite(template_string % x)
+        sprites.append(sprite)
+
+    return sprites
+
+
 class Sprite:
     def __init__(self, path):
         self._surface = load_image(path)

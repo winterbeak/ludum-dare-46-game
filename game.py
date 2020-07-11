@@ -38,18 +38,18 @@ pygame.display.set_icon(pygame.image.load("images/icon_large.png"))
 
 
 # Graphics loading
-background = graphics.SpriteColumn("images/background.png", 1)
-ui = graphics.SpriteColumn("images/test.png", 1)
+background = graphics.Sprite("images/background.png")
+ui = graphics.Sprite("images/test.png")
 
-feed_text = graphics.SpriteColumn("images/feed_text.png", 1)
-skip_text = graphics.SpriteColumn("images/skip_text.png", 1)
+feed_text = graphics.Sprite("images/feed_text.png")
+skip_text = graphics.Sprite("images/skip_text.png")
 
-key_left = graphics.SpriteColumn("images/key_left.png", 1)
-key_right = graphics.SpriteColumn("images/key_right.png", 1)
+key_left = graphics.Sprite("images/key_left.png")
+key_right = graphics.Sprite("images/key_right.png")
 
-row_cap_left = graphics.SpriteColumn("images/row_cap_left.png", 1)
-row_cap_right = graphics.SpriteColumn("images/row_cap_right.png", 1)
-row_pointer = graphics.SpriteColumn("images/row_pointer.png", 1)
+row_cap_left = graphics.Sprite("images/row_cap_left.png")
+row_cap_right = graphics.Sprite("images/row_cap_right.png")
+row_pointer = graphics.Sprite("images/row_pointer.png")
 
 homunculus_idle = graphics.SpriteColumn("images/homunculus.png", 4)
 homunculus_eat = graphics.SpriteColumn("images/homunculus_eat.png", 8)
@@ -63,14 +63,14 @@ homunculus = graphics.Animation(homunculus_sprite_sheet)
 homunculus.set_frame_delay(HOMUNCULUS_IDLE, 3)
 homunculus.set_frame_delay(HOMUNCULUS_EAT, 3)
 
-homunculus_text = graphics.SpriteColumn("images/homunculus_text.png", 1)
-ambulance_text = graphics.SpriteColumn("images/ambulance_text.png", 1)
+homunculus_text = graphics.Sprite("images/homunculus_text.png")
+ambulance_text = graphics.Sprite("images/ambulance_text.png")
 
-one_more_text = graphics.SpriteColumn("images/one_more_text.png", 1)
-win_text = graphics.SpriteColumn("images/win.png", 1)
-lose_text = graphics.SpriteColumn("images/lose.png", 1)
+one_more_text = graphics.Sprite("images/one_more_text.png")
+win_text = graphics.Sprite("images/win.png")
+lose_text = graphics.Sprite("images/lose.png")
 
-ambulance = graphics.SpriteColumn("images/ambulance.png", 1)
+ambulance = graphics.Sprite("images/ambulance.png")
 
 
 # Sound loading
@@ -566,21 +566,21 @@ class PlayScreen:
         y = position[1]
         if pygame.K_LEFT in events.keys.queue:
             x -= 10
-        feed_text.draw(surface, (x, y), 0)
+        feed_text.draw(surface, (x, y))
 
         # Skip text
         x = position[0] + 153
         y = position[1] + 2
         if pygame.K_RIGHT in events.keys.queue:
             x += 10
-        skip_text.draw(surface, (x, y), 0)
+        skip_text.draw(surface, (x, y))
 
     def draw_ui_text(self, surface):
         self.draw_countdowns(surface)
 
         # Homunculus and ambulance timer labels
-        ambulance_text.draw(surface, (5, 7), 0)
-        homunculus_text.draw(surface, (5, 88), 0)
+        ambulance_text.draw(surface, (5, 7))
+        homunculus_text.draw(surface, (5, 88))
 
         self.draw_controls(surface, (328, 322))
 
@@ -589,12 +589,12 @@ class PlayScreen:
         homunculus.draw(surface, (0, y))
 
     def draw(self, surface):
-        background.draw(surface, (0, 0), 0)
+        background.draw(surface, (0, 0))
 
         # Bottles that are not tossed appear below UI
         self.draw_bottles(surface)
 
-        ui.draw(surface, (0, 0), 0)
+        ui.draw(surface, (0, 0))
         self.draw_ui_text(surface)
 
         # Bottles that are tossed appear above UI
@@ -605,7 +605,7 @@ class PlayScreen:
             self.draw_homunculus(surface)
 
         if self.win:
-            ambulance.draw(surface, (self.ambulance_x, 162), 0)
+            ambulance.draw(surface, (self.ambulance_x, 162))
 
         if self.game_over:
             for circle_num, circle in enumerate(self.death_circles):
@@ -751,12 +751,12 @@ class MenuScreen(PlayScreen):
         y = position[1]
         if pygame.K_LEFT in events.keys.queue:
             x -= 6
-        key_left.draw(surface, (x, y), 0)
+        key_left.draw(surface, (x, y))
 
         x = position[0] + 243
         if pygame.K_RIGHT in events.keys.queue:
             x += 6
-        key_right.draw(surface, (x, y), 0)
+        key_right.draw(surface, (x, y))
 
     def _draw_bottle_select(self, surface, position, selected_bottle_num):
 
@@ -768,7 +768,7 @@ class MenuScreen(PlayScreen):
         surface.blit(bottle_icon_row, (x, y))
 
         # Draws the left cap
-        surface.blit(row_cap_left.render(0), position)
+        surface.blit(row_cap_left.render(), position)
 
         # Draws the pointer
         x = position[0] + 98
@@ -777,12 +777,12 @@ class MenuScreen(PlayScreen):
         bottle = self.bottles[selected_bottle_num]
         y = position[1] + 6
         y -= bottle.downscaled_total_height(self.BOTTLE_ICON_SCALE) // 2
-        surface.blit(row_pointer.render(0), (x, y))
+        surface.blit(row_pointer.render(), (x, y))
 
         # Draws the right cap
         x = position[0] + 200
         y = position[1]
-        surface.blit(row_cap_right.render(0), (x, y))
+        surface.blit(row_cap_right.render(), (x, y))
 
     def render_bottle_icon_row(self, width, offset):
         scale = self.BOTTLE_ICON_SCALE
@@ -891,7 +891,7 @@ class ResultScreen(MenuScreen):
 
         self.draw_bottles(surface)
         if self.win:
-            ui.draw(surface, (0, 0), 0)
+            ui.draw(surface, (0, 0))
 
         self.draw_controls(surface, (334, 18))
 
@@ -928,14 +928,14 @@ class ResultScreen(MenuScreen):
         # Draws win/lose text
         if self.win:
             sprite = win_text
-            sprite.draw(surface, (48, 50), 0)
+            sprite.draw(surface, (48, 50))
         else:
             sprite = lose_text
 
-            size = (sprite.single_width, sprite.single_height)
+            size = sprite.size
             x, y = geometry.centered(self.TEXT_SECTION, size)
             y -= 50
-            sprite.draw(surface, (x, y), 0)
+            sprite.draw(surface, (x, y))
 
     @property
     def bottle_num(self):
