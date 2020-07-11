@@ -49,8 +49,10 @@ def pathify(string):
     return os.path.join("sounds", string + ".wav")
 
 
-def load(string):
-    return pygame.mixer.Sound(pathify(string))
+def load(string, volume=1.0):
+    sound = pygame.mixer.Sound(pathify(string))
+    sound.set_volume(volume)
+    return sound
 
 
 def play(sound, volume=1.0):
@@ -60,24 +62,30 @@ def play(sound, volume=1.0):
         channel.play(sound)
 
 
-def load_numbers(path, count):
+def load_numbers(path, count, volumes=1.0):
     """Loads a set of sounds whose filenames are the same except they
     contain incrementing numbers.
     path is a string which should contain a %i representing where the number is.
     count is the amount of sounds.
+    volumes is the initial volumes of all the sounds.
     """
     paths = [path % (number + 1) for number in range(count)]
-    return SoundSet(paths)
+    soundset = SoundSet(paths)
+    soundset.set_volumes(volumes)
+    return soundset
 
 
-def load_strings(path, strings):
+def load_strings(path, strings, volumes=1.0):
     """Loads a set of sounds whose filenames are the same, except they
     all have one part that varies.
     path is the part of the string that stays the same.  must contain a %s
     strings is a list of strings, containing all the differences.
+    volumes is the initial volumes of all the sounds.
     """
     paths = [path % string for string in strings]
-    return SoundSet(paths)
+    soundset = SoundSet(paths)
+    soundset.set_volumes(volumes)
+    return soundset
 
 
 class VolumeControl:
