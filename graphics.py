@@ -139,6 +139,16 @@ def load_image(path):
 
 
 def load_numbered_sprites(template_string, sprite_count):
+    """ Loads a list of columns with numbered file names.
+
+    This method loads a list of images.  The file paths are given by
+    template_string, which must contain a %d, and column_count.
+    Every number from 0 to column_count - 1 will be looped through, each
+    in turn replacing the %d in template_string.
+
+    For example, template_string = "test_image%d" column_count = 3 will load
+    "test_image0", "test_image1", and "test_image2".
+    """
     sprites = []
     for x in range(sprite_count):
         sprite = Sprite(template_string % x)
@@ -227,6 +237,16 @@ class SpriteColumn:
 
 
 def load_numbered_columns(template_string, column_count, sprite_count):
+    """ Loads a list of columns with numbered file names.
+
+    This method loads a list of images.  The file paths are given by
+    template_string, which must contain a %d, and column_count.
+    Every number from 0 to column_count - 1 will be looped through, each
+    in turn replacing the %d in template_string.
+
+    For example, template_string = "test_image%d" column_count = 3 will load
+    "test_image0", "test_image1", and "test_image2".
+    """
     columns = []
     for x in range(column_count):
         column = SpriteColumn(template_string % x, sprite_count)
