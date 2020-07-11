@@ -720,9 +720,7 @@ class MenuScreen(PlayScreen):
         super().draw(surface)
 
         # Draws the row of bottle icons
-        offset = self._bottle_icon_row_scroll
-        bottle_icon_row = self.render_bottle_icon_row(200, offset - 100)
-        surface.blit(bottle_icon_row, (370, 16))
+        self._draw_bottle_select(surface, (370, 16))
 
         # Handles the level description text
         text = self.current_level.text
@@ -742,6 +740,11 @@ class MenuScreen(PlayScreen):
 
     def draw_controls(self, surface):
         pass
+
+    def _draw_bottle_select(self, surface, position):
+        offset = self._bottle_icon_row_scroll
+        bottle_icon_row = self.render_bottle_icon_row(200, offset - 100)
+        surface.blit(bottle_icon_row, position)
 
     def render_bottle_icon_row(self, width, offset):
         scale = self.BOTTLE_ICON_SCALE
@@ -855,9 +858,7 @@ class ResultScreen(MenuScreen):
         self.draw_controls(surface)
 
         # Draws the row of bottle icons
-        offset = self._bottle_icon_row_scroll
-        bottle_icon_row = self.render_bottle_icon_row(200, offset - 100)
-        surface.blit(bottle_icon_row, (366, 16))
+        self._draw_bottle_select(surface, (366, 16))
 
         # Draws return to menu text
         text = graphics.tahoma.render("Press SPACE to return to level select.", False, colors.BLACK)
