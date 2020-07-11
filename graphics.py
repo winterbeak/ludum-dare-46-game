@@ -181,14 +181,13 @@ class Sprite:
 
 class SpriteColumn:
     def __init__(self, path, sprite_count):
-        image = load_image(path)
-        self._surface = image
+        self._surface = load_image(path)
         self._path = path
         self._sprite_count = sprite_count
 
-        self._single_width = image.get_width()
-        self._single_height = int(image.get_height() / sprite_count)
-        self._single_size = (self.single_width, self.single_height)
+        self._single_width = self._surface.get_width()
+        self._single_height = self._surface.get_height() // sprite_count
+        self._single_size = (self._single_width, self._single_height)
 
     @property
     def single_width(self):
