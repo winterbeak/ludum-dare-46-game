@@ -138,6 +138,38 @@ def load_image(path):
     return image
 
 
+class Sprite:
+    def __init__(self, path):
+        self._surface = load_image(path)
+        self._path = path
+
+        self._width = self._surface.get_width()
+        self._height = self._surface.get_height()
+        self._size = (self._width, self._height)
+
+    @property
+    def width(self):
+        return self._width
+
+    @property
+    def height(self):
+        return self._height
+
+    @property
+    def size(self):
+        return self._size
+
+    @property
+    def surface(self):
+        return self._surface
+
+    def draw(self, surface, position):
+        surface.blit(self.surface, position)
+
+    def render(self):
+        return self.surface
+
+
 class SpriteColumn:
     def __init__(self, path, sprite_count):
         image = load_image(path)
