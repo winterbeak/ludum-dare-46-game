@@ -989,7 +989,9 @@ def play_result_transition(play, result):
     if play_screen.win:
         result.win = True
         win_sound.play_random()
+
         progressTracker.complete_level(play_screen.menu_level_num)
+        progressTracker.save_progress()
     else:
         result.win = False
         lose_sound.play_random()
@@ -1012,7 +1014,9 @@ INCIDENT_NAMES = [
 ]
 incident_list = incidents.load_incidents(INCIDENTS_PATH, INCIDENT_NAMES)
 
-progressTracker = save.ProgressTracker(len(incident_list))
+SAVE_FILE_PATH = files.json_path("save_file")
+progressTracker = save.ProgressTracker(len(incident_list), SAVE_FILE_PATH)
+progressTracker.load_progress()
 
 MENU_SCREEN = 0
 menu_screen = MenuScreen()
