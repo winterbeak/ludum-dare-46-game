@@ -180,6 +180,8 @@ class PlayScreen:
         self.has_eaten = False
         self.last_eaten_is_safe = False
 
+        self.menu_level_num = 0
+
     def _next_bottle(self):
         """ Generates the next bottle.
 
@@ -955,6 +957,7 @@ def menu_play_transition(menu, play):
     play.bottles = [play.current_bottle]
 
     play.alternating = menu.current_level.alternating
+    play.menu_level_num = menu.current_level_number
 
 
 def play_result_transition(play, result):
