@@ -1,4 +1,5 @@
 import files
+import misc
 
 
 class ProgressTracker:
@@ -22,6 +23,7 @@ class ProgressTracker:
 
     def load_progress(self):
         self._completed_levels = files.json_read(self._save_file_path)
+        misc.force_length(self.completed_levels, self._level_count, False)
 
     def clear_progress(self):
         self._completed_levels = [False] * self._level_count
