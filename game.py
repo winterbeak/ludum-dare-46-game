@@ -7,6 +7,7 @@ import window
 import geometry
 import curves
 import graphics
+import save
 import files
 import time_math
 
@@ -988,6 +989,7 @@ def play_result_transition(play, result):
     if play_screen.win:
         result.win = True
         win_sound.play_random()
+        progressTracker.complete_level(play_screen.menu_level_num)
     else:
         result.win = False
         lose_sound.play_random()
@@ -1009,6 +1011,8 @@ INCIDENT_NAMES = [
     incidents.EFFECTS_ALTERNATION,
 ]
 incident_list = incidents.load_incidents(INCIDENTS_PATH, INCIDENT_NAMES)
+
+progressTracker = save.ProgressTracker(len(incident_list))
 
 MENU_SCREEN = 0
 menu_screen = MenuScreen()
