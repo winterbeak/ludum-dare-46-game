@@ -921,7 +921,16 @@ class ResultScreen(MenuScreen):
         self.draw_controls(surface, (334, 18))
 
         # Draws the row of bottle icons
-        self._draw_bottle_select(surface, (368, 13), self._bottle_num)
+        symbols = []
+        for bottle in self.bottles:
+            if bottle.eaten and bottle.judged_lethal:
+                symbols.append(const.SYMBOL_CROSS)
+            elif bottle.eaten:
+                symbols.append(const.SYMBOL_CHECK)
+            else:
+                symbols.append(const.SYMBOL_NONE)
+
+        self._draw_bottle_select(surface, (368, 13), self._bottle_num, symbols)
 
         # Draws return to menu text
         text = graphics.tahoma.render("Press SPACE to return to level select.", False, colors.BLACK)
