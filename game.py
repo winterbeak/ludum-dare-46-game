@@ -718,8 +718,18 @@ class MenuScreen(PlayScreen):
     def draw(self, surface):
         super().draw(surface)
 
+        # Determines if a bottle should have a completion checkmark
+        symbols = []
+        for completed in progressTracker.completed_levels:
+            if completed:
+                symbols.append(const.SYMBOL_CHECK)
+            else:
+                symbols.append(const.SYMBOL_NONE)
+
         # Draws the row of bottle icons
-        self._draw_bottle_select(surface, (368, 13), self._current_level_number)
+        position = (368, 13)
+        selected_bottle = self._current_level_number
+        self._draw_bottle_select(surface, position, selected_bottle, symbols)
 
         # Handles the level description text
         text = self.current_level.text
@@ -750,11 +760,11 @@ class MenuScreen(PlayScreen):
             x += 6
         key_right.draw(surface, (x, y))
 
-    def _draw_bottle_select(self, surface, position, selected_bottle_num):
+    def _draw_bottle_select(self, surface, position, selected_bottle_num, symbols=None):
 
         # Draws the bottles
         offset = self._bottle_icon_row_scroll
-        bottle_icon_row = self.render_bottle_icon_row(200, offset - 100)
+        bottle_icon_row = self.render_bottle_icon_row(200, offset - 100, symbols)
         x = position[0] + 2
         y = position[1] + 3
         surface.blit(bottle_icon_row, (x, y))
