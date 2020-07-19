@@ -128,7 +128,10 @@ def load_palettes(path):
 
 PALETTES_PATH = files.json_path("bottle_palettes")
 PALETTES = load_palettes(PALETTES_PATH)
-TRANSPARENT_PALETTE = Palette(colors.TRANSPARENT, colors.TRANSPARENT, colors.TRANSPARENT, "Transparent")
+TRANSPARENT_PALETTE = Palette(colors.TRANSPARENT,
+                              colors.TRANSPARENT,
+                              colors.TRANSPARENT,
+                              "Transparent")
 
 
 TOP_COUNT = 6
