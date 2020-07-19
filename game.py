@@ -10,6 +10,7 @@ import graphics
 import save
 import files
 import time_math
+import misc
 
 import const
 import colors
@@ -73,6 +74,9 @@ win_text = files.load_png_sprite("win")
 lose_text = files.load_png_sprite("lose")
 
 ambulance = files.load_png_sprite("ambulance")
+
+checkmark = files.load_png_sprite("checkmark")
+cross = files.load_png_sprite("cross")
 
 
 # Sound loading
@@ -772,14 +776,19 @@ class MenuScreen(PlayScreen):
         y = position[1]
         surface.blit(row_cap_right.render(), (x, y))
 
-    def render_bottle_icon_row(self, width, offset):
+    def render_bottle_icon_row(self, width, offset, symbols=None):
+        if symbols:
+            misc.force_length(symbols, len(self.bottles), const.SYMBOL_NONE)
+        else:
+            symbols = [const.SYMBOL_NONE] * len(self.bottles)
+
         scale = self.BOTTLE_ICON_SCALE
 
-        height = self._max_bottle_icon_height()
+        height = self._max_bottle_icon_height() + 4
         surface = graphics.new_surface((width, height))
 
         x = -offset
-        for bottle in self.bottles:
+        for bottle, symbol in zip(self.bottles, symbols):
             bottle_width = bottle.downscaled_total_width(scale)
 
             # Skips any bottle that isn't rendered due to the offset
@@ -787,6 +796,16 @@ class MenuScreen(PlayScreen):
                 y = (height - bottle.downscaled_total_height(scale)) // 2
                 sprite = bottle.render_downscaled_body(scale)
                 surface.blit(sprite, (x, y))
+
+                if symbol == const.SYMBOL_CHECK:
+                    check_x = x + bottle_width - 8
+                    check_y = y + bottle.downscaled_total_height(scale) - 10
+                    checkmark.draw(surface, (check_x, check_y))
+
+                elif symbol == const.SYMBOL_CROSS:
+                    cross_x = x + bottle_width - 8
+                    cross_y = y + bottle.downscaled_total_height(scale) - 10
+                    cross.draw(surface, (cross_x, cross_y))
 
             x += bottle_width + self.BOTTLE_ICON_SPACING
 
