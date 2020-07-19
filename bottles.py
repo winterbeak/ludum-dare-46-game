@@ -148,7 +148,7 @@ def draw_wedge(surface, position, sprite, width, color):
 class Bottle:
     """ Defaults to not lethal with no effects. """
     def __init__(self):
-        self.lethal = False
+        self.has_deadly_effect = False
         self.effects = []
         self.allergens = []
         self.allergies = []
@@ -437,7 +437,7 @@ class Bottle:
             self.effects.append(allergen + " allergy")
 
     def add_lethal(self, count):
-        self.lethal = True
+        self.has_deadly_effect = True
         for _ in range(count):
             effect = random.choice(death_effects)
             while effect in self.effects:

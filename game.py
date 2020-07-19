@@ -436,7 +436,7 @@ class PlayScreen:
 
     def bottle_is_safe(self, bottle):
         # If it has any lethal side effects
-        if bottle.lethal:
+        if bottle.has_deadly_effect:
             return False
 
         # If it triggers an allergy
