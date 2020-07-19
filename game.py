@@ -728,7 +728,7 @@ class MenuScreen(PlayScreen):
 
         # Determines if a bottle should have a completion checkmark
         symbols = []
-        for completed in progressTracker.completed_levels:
+        for completed in progress_tracker.completed_levels:
             if completed:
                 symbols.append(const.SYMBOL_CHECK)
             else:
@@ -1036,8 +1036,8 @@ def play_result_transition(play, result):
         result.win = True
         win_sound.play_random()
 
-        progressTracker.complete_level(play_screen.menu_level_num)
-        progressTracker.save_progress()
+        progress_tracker.complete_level(play_screen.menu_level_num)
+        progress_tracker.save_progress()
     else:
         result.win = False
         lose_sound.play_random()
@@ -1061,8 +1061,8 @@ INCIDENT_NAMES = [
 incident_list = incidents.load_incidents(INCIDENTS_PATH, INCIDENT_NAMES)
 
 SAVE_FILE_PATH = files.json_path("save_file")
-progressTracker = save.ProgressTracker(len(incident_list), SAVE_FILE_PATH)
-progressTracker.load_progress()
+progress_tracker = save.ProgressTracker(len(incident_list), SAVE_FILE_PATH)
+progress_tracker.load_progress()
 
 MENU_SCREEN = 0
 menu_screen = MenuScreen()
