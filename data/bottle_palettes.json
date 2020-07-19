@@ -1,0 +1,308 @@
+[
+    {
+        "name": "Grayscale",
+        "cap_color": [
+            113,
+            113,
+            113
+        ],
+        "body_color": [
+            225,
+            225,
+            225
+        ],
+        "label_color": [
+            181,
+            181,
+            181
+        ]
+    },
+    {
+        "name": "Lime grey",
+        "cap_color": [
+            196,
+            196,
+            196
+        ],
+        "body_color": [
+            225,
+            225,
+            225
+        ],
+        "label_color": [
+            114,
+            238,
+            114
+        ]
+    },
+    {
+        "name": "Lime lime",
+        "cap_color": [
+            114,
+            238,
+            114
+        ],
+        "body_color": [
+            225,
+            225,
+            225
+        ],
+        "label_color": [
+            114,
+            238,
+            114
+        ]
+    },
+    {
+        "name": "Yellow grey",
+        "cap_color": [
+            196,
+            196,
+            196
+        ],
+        "body_color": [
+            225,
+            225,
+            225
+        ],
+        "label_color": [
+            251,
+            246,
+            114
+        ]
+    },
+    {
+        "name": "Tangerine",
+        "cap_color": [
+            255,
+            164,
+            38
+        ],
+        "body_color": [
+            255,
+            221,
+            85
+        ],
+        "label_color": [
+            234,
+            234,
+            234
+        ]
+    },
+    {
+        "name": "Strawberry Jam",
+        "cap_color": [
+            43,
+            43,
+            43
+        ],
+        "body_color": [
+            128,
+            10,
+            0
+        ],
+        "label_color": [
+            214,
+            193,
+            193
+        ]
+    },
+    {
+        "name": "Purple orange",
+        "cap_color": [
+            187,
+            187,
+            187
+        ],
+        "body_color": [
+            124,
+            0,
+            177
+        ],
+        "label_color": [
+            247,
+            208,
+            108
+        ]
+    },
+    {
+        "name": "Sky",
+        "cap_color": [
+            0,
+            156,
+            196
+        ],
+        "body_color": [
+            0,
+            182,
+            255
+        ],
+        "label_color": [
+            237,
+            237,
+            237
+        ]
+    },
+    {
+        "name": "Orange pink",
+        "cap_color": [
+            167,
+            72,
+            255
+        ],
+        "body_color": [
+            255,
+            221,
+            85
+        ],
+        "label_color": [
+            255,
+            112,
+            251
+        ]
+    },
+    {
+        "name": "Royal blue",
+        "cap_color": [
+            141,
+            138,
+            198
+        ],
+        "body_color": [
+            9,
+            0,
+            155
+        ],
+        "label_color": [
+            253,
+            241,
+            190
+        ]
+    },
+    {
+        "name": "Mahogany",
+        "cap_color": [
+            148,
+            148,
+            148
+        ],
+        "body_color": [
+            88,
+            36,
+            11
+        ],
+        "label_color": [
+            139,
+            110,
+            105
+        ]
+    },
+    {
+        "name": "Bright green",
+        "cap_color": [
+            16,
+            255,
+            0
+        ],
+        "body_color": [
+            150,
+            255,
+            144
+        ],
+        "label_color": [
+            218,
+            255,
+            216
+        ]
+    },
+    {
+        "name": "Watermelon",
+        "cap_color": [
+            33,
+            231,
+            0
+        ],
+        "body_color": [
+            255,
+            0,
+            96
+        ],
+        "label_color": [
+            205,
+            255,
+            202
+        ]
+    },
+    {
+        "name": "Toothpaste",
+        "cap_color": [
+            243,
+            255,
+            56
+        ],
+        "body_color": [
+            56,
+            255,
+            173
+        ],
+        "label_color": [
+            202,
+            255,
+            247
+        ]
+    },
+    {
+        "name": "Neapolitan",
+        "cap_color": [
+            179,
+            0,
+            255
+        ],
+        "body_color": [
+            0,
+            255,
+            227
+        ],
+        "label_color": [
+            219,
+            184,
+            255
+        ]
+    },
+    {
+        "name": "Purple",
+        "cap_color": [
+            82,
+            56,
+            119
+        ],
+        "body_color": [
+            65,
+            0,
+            99
+        ],
+        "label_color": [
+            210,
+            185,
+            237
+        ]
+    },
+    {
+        "name": "Teal label",
+        "cap_color": [
+            197,
+            197,
+            197
+        ],
+        "body_color": [
+            187,
+            217,
+            225
+        ],
+        "label_color": [
+            0,
+            204,
+            172
+        ]
+    }
+]
