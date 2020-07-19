@@ -86,32 +86,33 @@ PALETTE_NUM = "palette_num"
 
 
 class Palette:
-    def __init__(self, cap_color, body_color, label_color):
+    def __init__(self, cap_color, body_color, label_color, name):
         self.cap_color = cap_color
         self.body_color = body_color
         self.label_color = label_color
+        self._name = name
 
 
 PALETTES = [
-    Palette((113, 113, 113), (225, 225, 225), (181, 181, 181)),  # Grayscale
-    Palette((196, 196, 196), (225, 225, 225), (114, 238, 114)),  # Lime grey
-    Palette((114, 238, 114), (225, 225, 225), (114, 238, 114)),  # Lime lime
-    Palette((196, 196, 196), (225, 225, 225), (251, 246, 114)),  # Yellow grey
-    Palette((255, 164, 38), (255, 221, 85), (234, 234, 234)),  # Tangerine
-    Palette((43, 43, 43), (128, 10, 0), (214, 193, 193)),  # Strawberry Jam
-    Palette((187, 187, 187), (124, 0, 177), (247, 208, 108)),  # Purple orange
-    Palette((0, 156, 196), (0, 182, 255), (237, 237, 237)),  # Sky
-    Palette((167, 72, 255), (255, 221, 85), (255, 112, 251)),  # Orange pink
-    Palette((141, 138, 198), (9, 0, 155), (253, 241, 190)),  # Royal blue
-    Palette((148, 148, 148), (88, 36, 11), (139, 110, 105)),  # Mahogany
-    Palette((16, 255, 0), (150, 255, 144), (218, 255, 216)),  # Bright green
-    Palette((33, 231, 0), (255, 0, 96), (205, 255, 202)),  # Watermelon
-    Palette((243, 255, 56), (56, 255, 173), (202, 255, 247)),  # Toothpaste
-    Palette((179, 0, 255), (0, 255, 227), (219, 184, 255)),  # Neapolitan
-    Palette((82, 56, 119), (65, 0, 99), (210, 185, 237)),  # Purple
-    Palette((197, 197, 197), (187, 217, 225), (0, 204, 172)),  # Teal label
+    Palette((113, 113, 113), (225, 225, 225), (181, 181, 181), "Grayscale"),
+    Palette((196, 196, 196), (225, 225, 225), (114, 238, 114), "Lime grey"),
+    Palette((114, 238, 114), (225, 225, 225), (114, 238, 114), "Lime lime"),
+    Palette((196, 196, 196), (225, 225, 225), (251, 246, 114), "Yellow grey"),
+    Palette((255, 164, 38), (255, 221, 85), (234, 234, 234), "Tangerine"),
+    Palette((43, 43, 43), (128, 10, 0), (214, 193, 193), "Strawberry Jam"),
+    Palette((187, 187, 187), (124, 0, 177), (247, 208, 108), "Purple orange"),
+    Palette((0, 156, 196), (0, 182, 255), (237, 237, 237), "Sky"),
+    Palette((167, 72, 255), (255, 221, 85), (255, 112, 251), "Orange pink"),
+    Palette((141, 138, 198), (9, 0, 155), (253, 241, 190), "Royal blue"),
+    Palette((148, 148, 148), (88, 36, 11), (139, 110, 105), "Mahogany"),
+    Palette((16, 255, 0), (150, 255, 144), (218, 255, 216), "Bright green"),
+    Palette((33, 231, 0), (255, 0, 96), (205, 255, 202), "Watermelon"),
+    Palette((243, 255, 56), (56, 255, 173), (202, 255, 247), "Toothpaste"),
+    Palette((179, 0, 255), (0, 255, 227), (219, 184, 255), "Neapolitan"),
+    Palette((82, 56, 119), (65, 0, 99), (210, 185, 237), "Purple"),
+    Palette((197, 197, 197), (187, 217, 225), (0, 204, 172), "Teal label"),
     ]
-TRANSPARENT_PALETTE = Palette(colors.TRANSPARENT, colors.TRANSPARENT, colors.TRANSPARENT)
+TRANSPARENT_PALETTE = Palette(colors.TRANSPARENT, colors.TRANSPARENT, colors.TRANSPARENT, "Transparent")
 
 
 TOP_COUNT = 6
