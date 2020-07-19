@@ -155,6 +155,7 @@ class Bottle:
         self.brand = ""
         self._bootleg = False
         self.code = ""
+        self.judged_lethal = False
 
         # Main body
         self.body_width = random.randint(100, 230)

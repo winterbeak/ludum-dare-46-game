@@ -368,6 +368,14 @@ class PlayScreen:
                 bottle = self.bottles_to_judge[0]
                 self._apply_allergies(bottle)
 
+                # Stores whether the bottle was deadly or not
+                # Note: This detects whether the bottle is deadly, not
+                # whether you survive eating it.  Level specifics can
+                # make it so you survive a deadly bottle, for instance
+                # in alternating levels where you must switch between
+                # eating something not deadly and then deadly.
+                bottle.judged_lethal = not self.bottle_is_safe(bottle)
+
                 # Lose if you eat something that kills you
                 if self._does_this_kill_me(bottle):
                     self._lose()
