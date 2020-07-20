@@ -134,6 +134,50 @@ TRANSPARENT_PALETTE = Palette(colors.TRANSPARENT,
                               "Transparent")
 
 
+def draw_palette_test(surface, position, bottles_per_row):
+    start_x = position[0]
+    start_y = position[1]
+    x = start_x
+    y = start_y
+
+    width = 30
+    cap_height = 10
+    body_height = 30
+    body_y = start_y + cap_height
+    label_height = 15
+    label_y_offset = 5
+    label_y = start_y + cap_height + label_y_offset
+
+    for i, palette in enumerate(PALETTES):
+
+        # Cap
+        cap_rect = (x, y, width, cap_height)
+        pygame.draw.rect(surface, palette.cap_color, cap_rect)
+
+        # Body
+        body_rect = (x, body_y, width, body_height)
+        pygame.draw.rect(surface, palette.body_color, body_rect)
+
+        # Label
+        label_rect = (x, label_y, width, label_height)
+        pygame.draw.rect(surface, palette.label_color, label_rect)
+
+        # Text
+        text = graphics.tahoma.render("Test", False, colors.BLACK)
+        surface.blit(text, (x + 2, label_y))
+
+        # If the row reaches the last bottle, make a new row of bottles
+        if i % bottles_per_row == bottles_per_row - 1:
+            x = start_x
+            y += cap_height + body_height
+            body_y = y + cap_height
+            label_y = y + cap_height + label_y_offset
+
+        # Otherwise, move to the next bottle
+        else:
+            x += width
+
+
 TOP_COUNT = 6
 tops = graphics.load_numbered_sprites(files.png_path("bottle_top_%d"), TOP_COUNT)
 
