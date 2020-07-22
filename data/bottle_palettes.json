@@ -156,9 +156,9 @@
             85
         ],
         "label_color": [
-            255,
-            112,
-            251
+            250,
+            128,
+            246
         ]
     },
     {
@@ -182,9 +182,9 @@
     {
         "name": "Mahogany",
         "cap_color": [
-            148,
-            148,
-            148
+            125,
+            125,
+            125
         ],
         "body_color": [
             88,
@@ -223,9 +223,9 @@
             0
         ],
         "body_color": [
-            255,
-            0,
-            96
+            246,
+            42,
+            118
         ],
         "label_color": [
             205,
@@ -290,9 +290,9 @@
     {
         "name": "Teal Label",
         "cap_color": [
-            197,
-            197,
-            197
+            49,
+            94,
+            109
         ],
         "body_color": [
             187,
@@ -300,9 +300,441 @@
             225
         ],
         "label_color": [
+            75,
+            209,
+            187
+        ]
+    },
+    {
+        "name": "Familiar Blue",
+        "cap_color": [
+            46,
+            50,
+            93
+        ],
+        "body_color": [
+            104,
+            142,
+            222
+        ],
+        "label_color": [
+            223,
+            233,
+            242
+        ]
+    },
+    {
+        "name": "Corporate",
+        "cap_color": [
+            35,
+            35,
+            35
+        ],
+        "body_color": [
+            100,
+            100,
+            100
+        ],
+        "label_color": [
+            195,
+            195,
+            195
+        ]
+    },
+    {
+        "name": "Red Orange",
+        "cap_color": [
+            228,
+            95,
+            45
+        ],
+        "body_color": [
+            242,
+            212,
+            177
+        ],
+        "label_color": [
+            240,
+            175,
+            89
+        ]
+    },
+    {
+        "name": "Camo",
+        "cap_color": [
+            107,
+            132,
+            103
+        ],
+        "body_color": [
+            205,
+            255,
+            202
+        ],
+        "label_color": [
+            146,
+            205,
+            146
+        ]
+    },
+    {
+        "name": "Carrot Toothpaste",
+        "cap_color": [
+            53,
+            243,
+            215
+        ],
+        "body_color": [
+            244,
+            181,
+            153
+        ],
+        "label_color": [
+            202,
+            255,
+            247
+        ]
+    },
+    {
+        "name": "Lavender",
+        "cap_color": [
+            189,
+            122,
+            245
+        ],
+        "body_color": [
+            236,
+            212,
+            255
+        ],
+        "label_color": [
+            238,
+            153,
+            244
+        ]
+    },
+    {
+        "name": "Sewage",
+        "cap_color": [
+            59,
+            97,
+            51
+        ],
+        "body_color": [
+            60,
+            154,
+            107
+        ],
+        "label_color": [
+            170,
+            217,
+            199
+        ]
+    },
+    {
+        "name": "Demon",
+        "cap_color": [
+            145,
+            145,
+            145
+        ],
+        "body_color": [
+            70,
+            70,
+            70
+        ],
+        "label_color": [
+            247,
+            71,
+            71
+        ]
+    },
+    {
+        "name": "Ocean",
+        "cap_color": [
             0,
+            19,
+            134
+        ],
+        "body_color": [
+            138,
+            198,
+            220
+        ],
+        "label_color": [
+            134,
+            140,
+            235
+        ]
+    },
+    {
+        "name": "Grapevine",
+        "cap_color": [
+            159,
+            236,
+            66
+        ],
+        "body_color": [
+            179,
+            0,
+            255
+        ],
+        "label_color": [
+            185,
+            231,
+            197
+        ]
+    },
+    {
+        "name": "Ocean Pearl",
+        "cap_color": [
+            75,
+            222,
+            160
+        ],
+        "body_color": [
+            119,
+            217,
+            214
+        ],
+        "label_color": [
+            190,
+            229,
+            227
+        ]
+    },
+    {
+        "name": "Chocolate",
+        "cap_color": [
+            132,
+            94,
+            66
+        ],
+        "body_color": [
+            181,
+            135,
+            101
+        ],
+        "label_color": [
+            229,
+            208,
+            169
+        ]
+    },
+    {
+        "name": "Black Cap Red Label",
+        "cap_color": [
+            70,
+            70,
+            70
+        ],
+        "body_color": [
+            236,
+            236,
+            236
+        ],
+        "label_color": [
+            239,
+            109,
+            107
+        ]
+    },
+    {
+        "name": "Prisoner",
+        "cap_color": [
+            106,
+            102,
+            101
+        ],
+        "body_color": [
+            252,
+            153,
+            58
+        ],
+        "label_color": [
+            230,
+            230,
+            230
+        ]
+    },
+    {
+        "name": "Beach",
+        "cap_color": [
+            75,
+            209,
+            194
+        ],
+        "body_color": [
+            217,
+            250,
+            246
+        ],
+        "label_color": [
+            255,
+            244,
+            128
+        ]
+    },
+    {
+        "name": "Bubble Gum",
+        "cap_color": [
+            88,
+            250,
+            242
+        ],
+        "body_color": [
+            246,
+            74,
+            186
+        ],
+        "label_color": [
             204,
-            172
+            242,
+            238
+        ]
+    },
+    {
+        "name": "Poison",
+        "cap_color": [
+            185,
+            101,
+            203
+        ],
+        "body_color": [
+            204,
+            189,
+            230
+        ],
+        "label_color": [
+            130,
+            143,
+            221
+        ]
+    },
+    {
+        "name": "The Blues (That Are Actually Kinda Purple)",
+        "cap_color": [
+            58,
+            58,
+            58
+        ],
+        "body_color": [
+            95,
+            32,
+            213
+        ],
+        "label_color": [
+            183,
+            207,
+            241
+        ]
+    },
+    {
+        "name": "Splat",
+        "cap_color": [
+            255,
+            0,
+            167
+        ],
+        "body_color": [
+            30,
+            248,
+            34
+        ],
+        "label_color": [
+            250,
+            228,
+            246
+        ]
+    },
+    {
+        "name": "Banana",
+        "cap_color": [
+            196,
+            174,
+            69
+        ],
+        "body_color": [
+            243,
+            242,
+            170
+        ],
+        "label_color": [
+            228,
+            226,
+            89
+        ]
+    },
+    {
+        "name": "Pink And Yellow",
+        "cap_color": [
+            80,
+            80,
+            80
+        ],
+        "body_color": [
+            233,
+            0,
+            119
+        ],
+        "label_color": [
+            236,
+            230,
+            66
+        ]
+    },
+    {
+        "name": "Blue Grey",
+        "cap_color": [
+            126,
+            186,
+            234
+        ],
+        "body_color": [
+            225,
+            225,
+            225
+        ],
+        "label_color": [
+            126,
+            186,
+            234
+        ]
+    },
+    {
+        "name": "Red Grey",
+        "cap_color": [
+            234,
+            75,
+            75
+        ],
+        "body_color": [
+            225,
+            225,
+            225
+        ],
+        "label_color": [
+            237,
+            184,
+            193
+        ]
+    },
+    {
+        "name": "Blue Orange",
+        "cap_color": [
+            78,
+            78,
+            78
+        ],
+        "body_color": [
+            48,
+            189,
+            240
+        ],
+        "label_color": [
+            253,
+            199,
+            91
         ]
     }
 ]
