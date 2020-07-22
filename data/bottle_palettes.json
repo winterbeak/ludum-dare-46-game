@@ -36,24 +36,6 @@
         ]
     },
     {
-        "name": "Lime Lime",
-        "cap_color": [
-            114,
-            238,
-            114
-        ],
-        "body_color": [
-            225,
-            225,
-            225
-        ],
-        "label_color": [
-            114,
-            238,
-            114
-        ]
-    },
-    {
         "name": "Yellow Grey",
         "cap_color": [
             196,
