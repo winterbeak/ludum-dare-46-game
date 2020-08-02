@@ -336,6 +336,9 @@ class PlayScreen:
         self.green_timer_frame = 30  # Makes timer turn green
         time_gain.play_random()  # Plays time-gain sound
 
+    def _reached_win_condition(self):
+        return self.death_time > self.ambulance_time and not self.win
+
     def update(self):
 
         if not self.in_ending_cutscene:
@@ -390,7 +393,7 @@ class PlayScreen:
                     self.previous_brand = bottle.brand  # Updates brand
 
                     # If you won, this handles winning
-                    if self.death_time > self.ambulance_time and not self.win:
+                    if self._reached_win_condition():
                         self._win()
 
                         # Removes all bottles after the winning bottle
