@@ -331,7 +331,7 @@ class PlayScreen:
         else:
             return self.bottle_is_safe(bottle) == self.last_eaten_is_safe
 
-    def _add_time(self):
+    def _apply_bottle_eaten_reward(self):
         self.death_time += self.bottle_time  # Adds time
         self.green_timer_frame = 30  # Makes timer turn green
         time_gain.play_random()  # Plays time-gain sound
@@ -389,7 +389,7 @@ class PlayScreen:
 
                 # Consume the bottle if you eat something that doesn't kill you
                 else:
-                    self._add_time()
+                    self._apply_bottle_eaten_reward()
                     self.previous_brand = bottle.brand  # Updates brand
 
                     # If you won, this handles winning
