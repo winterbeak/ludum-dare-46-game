@@ -156,7 +156,8 @@ class PlayScreen:
 
         self.homunculus_eat_delay = 0
 
-        self.green_timer_frame = 0
+        self.timer_color = colors.HOMUNCULUS_ORANGE
+        self.timer_flash_frame = 0
         self.one_more_frame = 0
 
         self.game_over = False
@@ -331,9 +332,16 @@ class PlayScreen:
         else:
             return self.bottle_is_safe(bottle) == self.last_eaten_is_safe
 
+    def _timer_flash(self, length, color):
+        self.timer_flash_frame = length
+        self.timer_color = color
+
     def _apply_bottle_eaten_reward(self):
         self.death_time += self.bottle_time  # Adds time
-        self.green_timer_frame = 30  # Makes timer turn green
+
+        # Makes timer turn green for 30 frames
+        self._timer_flash(30, colors.TIME_ADDED_GREEN)
+
         time_gain.play_random()  # Plays time-gain sound
 
     def _reached_win_condition(self):
@@ -416,13 +424,17 @@ class PlayScreen:
         if time_math.ms_time_to(self.death_time) < 0 and not self.in_ending_cutscene:
             self._lose()
 
-        # Handles turning the timer green when time is gained
-        if self.green_timer_frame > 0:
-            self.green_timer_frame -= 1
+        # If the timer is flashing, count down until it stops flashing
+        if self.timer_flash_frame > 0:
+            self.timer_flash_frame -= 1
 
-            # If you die, the timer stops being green.
+            # Turns the timer back to orange
+            if self.timer_flash_frame == 0:
+                self.timer_color = colors.HOMUNCULUS_ORANGE
+
+            # If you die, the timer stops being colored.
             if self.game_over:
-                self.green_timer_frame = 0
+                self.timer_flash_frame = 0
 
         # If currently in shifting animation
         if self.is_shifting():
@@ -548,10 +560,6 @@ class PlayScreen:
             shake = 0
         else:
             shake = max(0, (15000 - milliseconds) / 5000)
-        if self.green_timer_frame > 0:
-            color = colors.TIME_ADDED_GREEN
-        else:
-            color = colors.HOMUNCULUS_ORANGE
 
         if self.win:
             time = time_math.ms_to_min_sec_ms(self.death_anim_countdown)
@@ -560,7 +568,7 @@ class PlayScreen:
         else:
             time = time_math.min_sec_ms_time_to(self.death_time)
         position = self.HOMUNCULUS_TIMER_POSITION
-        countdowns.draw(surface, color, time, position, shake)
+        countdowns.draw(surface, self.timer_color, time, position, shake)
 
     def draw_controls(self, surface, position):
 
