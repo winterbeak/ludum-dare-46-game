@@ -126,6 +126,8 @@ class PlayScreen:
     AMBULANCE_COUNTDOWN_POSITION = (40, 6)
     HOMUNCULUS_COUNTDOWN_POSITION = (40, 80)
 
+    CONTROLS_POSITION = (328, 322)
+
     DEATH_CIRCLE_COUNT = 8
 
     # Length of delay is the sum of the first five frames of the eating animation
@@ -593,7 +595,7 @@ class PlayScreen:
         ambulance_text.draw(surface, (5, 7))
         homunculus_text.draw(surface, (5, 88))
 
-        self.draw_controls(surface, (328, 322))
+        self.draw_controls(surface, self.CONTROLS_POSITION)
 
     def draw_homunculus(self, surface):
         y = screen.unscaled.get_height() - homunculus_idle.single_height
