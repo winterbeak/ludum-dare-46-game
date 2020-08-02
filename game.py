@@ -123,8 +123,8 @@ class PlayScreen:
 
     HOMUNCULUS_EAT_DELAY_LENGTH = 5
 
-    AMBULANCE_TIMER_POSITION = (40, 6)
-    HOMUNCULUS_TIMER_POSITION = (40, 80)
+    AMBULANCE_COUNTDOWN_POSITION = (40, 6)
+    HOMUNCULUS_COUNTDOWN_POSITION = (40, 80)
 
     DEATH_CIRCLE_COUNT = 8
 
@@ -156,8 +156,8 @@ class PlayScreen:
 
         self.homunculus_eat_delay = 0
 
-        self.timer_color = colors.HOMUNCULUS_ORANGE
-        self.timer_flash_frame = 0
+        self.countdown_color = colors.HOMUNCULUS_ORANGE
+        self.countdown_flash_frame = 0
         self.one_more_frame = 0
 
         self.game_over = False
@@ -332,15 +332,15 @@ class PlayScreen:
         else:
             return self.bottle_is_safe(bottle) == self.last_eaten_is_safe
 
-    def _timer_flash(self, length, color):
-        self.timer_flash_frame = length
-        self.timer_color = color
+    def _countdown_flash(self, length, color):
+        self.countdown_flash_frame = length
+        self.countdown_color = color
 
     def _apply_bottle_eaten_reward(self):
         self.death_time += self.bottle_time  # Adds time
 
-        # Makes timer turn green for 30 frames
-        self._timer_flash(30, colors.TIME_ADDED_GREEN)
+        # Makes countdown turn green for 30 frames
+        self._countdown_flash(30, colors.TIME_ADDED_GREEN)
 
         time_gain.play_random()  # Plays time-gain sound
 
@@ -424,17 +424,17 @@ class PlayScreen:
         if time_math.ms_time_to(self.death_time) < 0 and not self.in_ending_cutscene:
             self._lose()
 
-        # If the timer is flashing, count down until it stops flashing
-        if self.timer_flash_frame > 0:
-            self.timer_flash_frame -= 1
+        # If the countdown is flashing, count down until it stops flashing
+        if self.countdown_flash_frame > 0:
+            self.countdown_flash_frame -= 1
 
-            # Turns the timer back to orange
-            if self.timer_flash_frame == 0:
-                self.timer_color = colors.HOMUNCULUS_ORANGE
+            # Turns the countdown back to orange
+            if self.countdown_flash_frame == 0:
+                self.countdown_color = colors.HOMUNCULUS_ORANGE
 
-            # If you die, the timer stops being colored.
+            # If you die, the countdown stops being colored.
             if self.game_over:
-                self.timer_flash_frame = 0
+                self.countdown_flash_frame = 0
 
         # If currently in shifting animation
         if self.is_shifting():
@@ -546,15 +546,15 @@ class PlayScreen:
         surface.blit(rotated, (x2, y2))
 
     def draw_countdowns(self, surface):
-        # Ambulance timer
+        # Ambulance countdown
         if self.win:
             time = time_math.ms_to_min_sec_ms(self.ambulance_anim_countdown)
         else:
             time = time_math.min_sec_ms_time_to(self.ambulance_time)
-        position = self.AMBULANCE_TIMER_POSITION
+        position = self.AMBULANCE_COUNTDOWN_POSITION
         countdowns.draw(surface, colors.AMBULANCE_RED, time, position)
 
-        # Homunculus timer
+        # Homunculus countdown
         milliseconds = time_math.ms_time_to(self.death_time)
         if self.win:
             shake = 0
@@ -567,8 +567,8 @@ class PlayScreen:
             time = (0, 0, 0)
         else:
             time = time_math.min_sec_ms_time_to(self.death_time)
-        position = self.HOMUNCULUS_TIMER_POSITION
-        countdowns.draw(surface, self.timer_color, time, position, shake)
+        position = self.HOMUNCULUS_COUNTDOWN_POSITION
+        countdowns.draw(surface, self.countdown_color, time, position, shake)
 
     def draw_controls(self, surface, position):
 
@@ -589,7 +589,7 @@ class PlayScreen:
     def draw_ui_text(self, surface):
         self.draw_countdowns(surface)
 
-        # Homunculus and ambulance timer labels
+        # Homunculus and ambulance countdown labels
         ambulance_text.draw(surface, (5, 7))
         homunculus_text.draw(surface, (5, 88))
 
