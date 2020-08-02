@@ -75,7 +75,7 @@ def render_small_number(text, color, shake=0):
     return surface
 
 
-def draw(surface, color, time, position, shake=0):
+def draw_timer(surface, color, time, position, shake=0):
     """ Draws the countdown to a given time.
 
     The time variable is a 3-tuple in minutes/seconds/milliseconds form.

@@ -554,7 +554,7 @@ class PlayScreen:
         else:
             time = time_math.min_sec_ms_time_to(self.ambulance_time)
         position = self.AMBULANCE_COUNTDOWN_POSITION
-        countdowns.draw(surface, colors.AMBULANCE_RED, time, position)
+        countdowns.draw_timer(surface, colors.AMBULANCE_RED, time, position)
 
         # Homunculus countdown
         milliseconds = time_math.ms_time_to(self.death_time)
@@ -570,7 +570,7 @@ class PlayScreen:
         else:
             time = time_math.min_sec_ms_time_to(self.death_time)
         position = self.HOMUNCULUS_COUNTDOWN_POSITION
-        countdowns.draw(surface, self.countdown_color, time, position, shake)
+        countdowns.draw_timer(surface, self.countdown_color, time, position, shake)
 
     def draw_controls(self, surface, position):
 
