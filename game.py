@@ -1057,11 +1057,11 @@ def play_result_transition(play, result):
     result.bottle_num = len(result.bottles) - 1
     result.shift.frame = result.shift.length
 
-    if play_screen.win:
+    if play.win:
         result.win = True
         win_sound.play_random()
 
-        progress_tracker.complete_level(play_screen.menu_level_num)
+        progress_tracker.complete_level(play.menu_level_num)
         progress_tracker.save_progress()
     else:
         result.win = False
