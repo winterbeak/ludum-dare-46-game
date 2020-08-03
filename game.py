@@ -642,6 +642,73 @@ class PlayScreen:
         # surface.blit(fps_text, (10, 10))
 
 
+class RaceScreen(PlayScreen):
+    def __init__(self):
+        super().__init__()
+        self.starting_bottles = 10
+        self._bottles_left = 0
+        self._percentage_left = 0
+
+        self.incorrect_penalty = 2
+        self.start_time = 0
+
+    @property
+    def bottles_left(self):
+        return self._bottles_left
+
+    @bottles_left.setter
+    def bottles_left(self, value):
+        self._bottles_left = value
+        self._percentage_left = value / self.starting_bottles
+
+    @property
+    def percentage_left(self):
+        return self._percentage_left
+
+    def _lose(self, last_bottle=None):
+        self.bottles_left += self.incorrect_penalty
+
+    def _time_ran_out(self):
+        return False
+
+    def _apply_bottle_eaten_reward(self):
+        self.bottles_left -= 1
+
+    def _reached_win_condition(self):
+        return self.bottles_left <= 0
+
+    def _determine_minor_tick_interval(self):
+        # Should always tick fastest if 1 bottle is left
+        if self.bottles_left == 1:
+            return 125
+
+        if self.percentage_left > 0.5:
+            interval = 1000
+        elif self.percentage_left > 0.25:
+            interval = 500
+        elif self.percentage_left > 0.08:
+            interval = 250
+        else:
+            interval = 125
+
+        return interval
+
+    def draw_countdowns(self, surface):
+        milliseconds = pygame.time.get_ticks() - self.start_time
+        time = time_math.ms_to_min_sec_ms(milliseconds)
+        position = self.AMBULANCE_COUNTDOWN_POSITION
+        countdowns.draw_timer(surface, colors.AMBULANCE_RED, time, position)
+
+        bottle_count = str(self.bottles_left)
+        shake = max(0, int((1 - self.percentage_left) * 3))
+        count = countdowns.render_number(bottle_count, colors.HOMUNCULUS_ORANGE, shake)
+        surface.blit(count, self.HOMUNCULUS_COUNTDOWN_POSITION)
+
+    def draw_ui_text(self, surface):
+        self.draw_countdowns(surface)
+        self.draw_controls(surface, self.CONTROLS_POSITION)
+
+
 class MenuScreen(PlayScreen):
     BOTTLE_ICON_SPACING = 12
     BOTTLE_ICON_SCALE = 10
@@ -1068,6 +1135,14 @@ def play_result_transition(play, result):
         lose_sound.play_random()
 
 
+def menu_race_transition(menu, race):
+    menu_play_transition(menu, race)
+    race.starting_bottles = 7  # Change to be based on the level later
+    race.bottles_left = race.starting_bottles
+    race.incorrect_penalty = 1  # Change to be based on the level later
+    race.start_time = pygame.time.get_ticks()
+
+
 INCIDENTS_PATH = files.json_path("incidents")
 INCIDENT_NAMES = [
     incidents.EFFECTS,
@@ -1099,6 +1174,9 @@ RESULT_SCREEN = 2
 result_screen = ResultScreen()
 result_screen.background = background
 
+RACE_SCREEN = 3
+race_screen = RaceScreen()
+
 current_screen = MENU_SCREEN
 running = True
 
@@ -1118,8 +1196,12 @@ while True:
 
         if menu_screen.selected:
             menu_screen.selected = False
-            current_screen = PLAY_SCREEN
-            menu_play_transition(menu_screen, play_screen)
+            if pygame.K_r in events.keys.queue:
+                current_screen = RACE_SCREEN
+                menu_race_transition(menu_screen, race_screen)
+            else:
+                current_screen = PLAY_SCREEN
+                menu_play_transition(menu_screen, play_screen)
 
     elif current_screen == PLAY_SCREEN:
         play_screen.update()
@@ -1136,6 +1218,20 @@ while True:
         else:
             play_screen.draw(screen.unscaled)
 
+    elif current_screen == RACE_SCREEN:
+        race_screen.update()
+
+        if (race_screen.game_over or race_screen.win) and not race_screen.in_ending_cutscene:
+            play_result_transition(race_screen, result_screen)
+            race_screen.game_over = False
+            race_screen.win = False
+            current_screen = RESULT_SCREEN
+            # Since result_screen is not drawn, skip a frame
+            continue
+
+        else:
+            race_screen.draw(screen.unscaled)
+
     elif current_screen == RESULT_SCREEN:
         result_screen.update()
         result_screen.draw(screen.unscaled)
@@ -1145,6 +1241,7 @@ while True:
             current_screen = MENU_SCREEN
 
             play_screen = PlayScreen()
+            race_screen = RaceScreen()
 
     screen.scale_blit()
     screen.update(60)
