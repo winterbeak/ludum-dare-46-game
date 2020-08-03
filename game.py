@@ -357,6 +357,12 @@ class PlayScreen:
     def _reached_win_condition(self):
         return self.death_time > self.ambulance_time and not self.win
 
+    def _time_ran_out(self):
+        if self.in_ending_cutscene:
+            return False
+
+        return time_math.ms_time_to(self.death_time) < 0
+
     def update(self):
 
         if not self.in_ending_cutscene:
@@ -423,7 +429,7 @@ class PlayScreen:
                 eat.play_random()
 
         # Lose if time runs out
-        if time_math.ms_time_to(self.death_time) < 0 and not self.in_ending_cutscene:
+        if self._time_ran_out():
             self._lose()
 
         # If the countdown is flashing, count down until it stops flashing
