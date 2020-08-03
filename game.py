@@ -291,13 +291,21 @@ class PlayScreen:
 
         self.death_anim_frame += 1
 
-    def _win(self):
+    def _win(self, last_bottle=None):
+        if last_bottle:
+            while self.bottles[-1] is not last_bottle:
+                self.bottles.pop()
+
         self.in_ending_cutscene = True
         self.win = True
         self.ambulance_anim_countdown = time_math.ms_time_to(self.ambulance_time)
         self.death_anim_countdown = time_math.ms_time_to(self.death_time)
 
-    def _lose(self):
+    def _lose(self, last_bottle=None):
+        if last_bottle:
+            while self.bottles[-1] is not last_bottle:
+                self.bottles.pop()
+
         self.in_ending_cutscene = True
         self.game_over = True
         death.play_random()
@@ -391,11 +399,7 @@ class PlayScreen:
 
                 # Lose if you eat something that kills you
                 if self._does_this_kill_me(bottle):
-                    self._lose()
-
-                    # Removes all bottles after the lethal bottle
-                    while self.bottles[-1] is not bottle:
-                        self.bottles.pop()
+                    self._lose(bottle)
 
                 # Consume the bottle if you eat something that doesn't kill you
                 else:
@@ -404,11 +408,7 @@ class PlayScreen:
 
                     # If you won, this handles winning
                     if self._reached_win_condition():
-                        self._win()
-
-                        # Removes all bottles after the winning bottle
-                        while self.bottles[-1] is not bottle:
-                            self.bottles.pop()
+                        self._win(bottle)
 
                 # Updates some variables (mostly used for alternating stages)
                 self.has_eaten = True
