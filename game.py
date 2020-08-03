@@ -216,6 +216,20 @@ class PlayScreen:
         self._start_shifting_animation()
         self._next_bottle()
 
+    def _determine_minor_tick_interval(self):
+        current = time_math.ms_time_to(self.death_time)
+
+        if current > 30000:
+            interval = 1000
+        elif current > 15000:
+            interval = 500
+        elif current > 5000:
+            interval = 250
+        else:
+            interval = 125
+
+        return interval
+
     def _play_timer_sounds(self):
         """ Handles the playing of the timer ticks. """
 
@@ -226,15 +240,7 @@ class PlayScreen:
             tick.play_random()
 
         # The amount of time between subticks depends on the time left.
-        if current > 30000:
-            interval = 1000
-        elif current > 15000:
-            interval = 500
-        elif current > 5000:
-            interval = 250
-        else:
-            interval = 125
-
+        interval = self._determine_minor_tick_interval()
         if time_math.crosses_interval(previous, current, interval):
             subtick.play_random()
 
