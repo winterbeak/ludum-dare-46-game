@@ -709,10 +709,12 @@ class RaceScreen(PlayScreen):
         position = self.AMBULANCE_COUNTDOWN_POSITION
         countdowns.draw_timer(surface, colors.AMBULANCE_RED, time, position)
 
-        bottle_count = str(self.bottles_left)
+        count = self.bottles_left
+        exclamation = self.bottles_left == 1
+        color = colors.HOMUNCULUS_ORANGE
         shake = max(0, int((1 - self.percentage_left) * 3))
-        count = countdowns.render_number(bottle_count, colors.HOMUNCULUS_ORANGE, shake)
-        surface.blit(count, self.HOMUNCULUS_COUNTDOWN_POSITION)
+        text = countdowns.render_left_count(count, exclamation, color, shake)
+        surface.blit(text, self.HOMUNCULUS_COUNTDOWN_POSITION)
 
     def draw_ui_text(self, surface):
         self.draw_countdowns(surface)
