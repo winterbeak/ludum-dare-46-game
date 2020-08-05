@@ -677,12 +677,14 @@ class RaceScreen(PlayScreen):
 
     def _lose(self, last_bottle=None):
         self.bottles_left += self.incorrect_penalty
+        self._countdown_flash(30, colors.AMBULANCE_RED)
 
     def _time_ran_out(self):
         return False
 
     def _apply_bottle_eaten_reward(self):
         self.bottles_left -= 1
+        self._countdown_flash(30, colors.TIME_ADDED_GREEN)
 
     def _reached_win_condition(self):
         return self.bottles_left <= 0
@@ -711,7 +713,7 @@ class RaceScreen(PlayScreen):
 
         count = self.bottles_left
         exclamation = self.bottles_left == 1
-        color = colors.HOMUNCULUS_ORANGE
+        color = self.countdown_color
         shake = max(0, int((1 - self.percentage_left) * 3))
         text = countdowns.render_left_count(count, exclamation, color, shake)
         surface.blit(text, self.HOMUNCULUS_COUNTDOWN_POSITION)
