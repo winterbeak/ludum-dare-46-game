@@ -652,6 +652,16 @@ class RaceScreen(PlayScreen):
         self.incorrect_penalty = 2
         self.start_time = 0
 
+        original_position = super().AMBULANCE_COUNTDOWN_POSITION
+        x = original_position[0] - 30
+        y = original_position[1]
+        self.AMBULANCE_COUNTDOWN_POSITION = (x, y)
+
+        original_position = super().HOMUNCULUS_COUNTDOWN_POSITION
+        x = original_position[0] - 30
+        y = original_position[1]
+        self.HOMUNCULUS_COUNTDOWN_POSITION = (x, y)
+
     @property
     def bottles_left(self):
         return self._bottles_left
