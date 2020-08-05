@@ -97,7 +97,7 @@ death = sound.load_numbers("death%d", 1, volumes=0.5)
 start_release = sound.load_numbers("start_release%d", 1, volumes=0.8)
 start_press = sound.load_numbers("start_press%d", 1, volumes=0.8)
 
-time_gain = sound.load_numbers("time_gain%d", 1, volumes=0.6)
+correct = sound.load_numbers("correct%d", 1, volumes=0.6)
 
 ambulance_arrive = sound.load_numbers("ambulance%d", 1, volumes=0.5)
 
@@ -358,7 +358,7 @@ class PlayScreen:
         # Makes countdown turn green for 30 frames
         self._countdown_flash(30, colors.TIME_ADDED_GREEN)
 
-        time_gain.play_random()  # Plays time-gain sound
+        correct.play_random()  # Plays time-gain sound
 
     def _reached_win_condition(self):
         return self.death_time > self.ambulance_time and not self.win
