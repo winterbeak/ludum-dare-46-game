@@ -98,6 +98,7 @@ start_release = sound.load_numbers("start_release%d", 1, volumes=0.8)
 start_press = sound.load_numbers("start_press%d", 1, volumes=0.8)
 
 correct = sound.load_numbers("correct%d", 1, volumes=0.6)
+incorrect = sound.load_numbers("incorrect%d", 1, volumes=0.6)
 
 ambulance_arrive = sound.load_numbers("ambulance%d", 1, volumes=0.5)
 
@@ -678,6 +679,7 @@ class RaceScreen(PlayScreen):
     def _lose(self, last_bottle=None):
         self.bottles_left += self.incorrect_penalty
         self._countdown_flash(30, colors.AMBULANCE_RED)
+        incorrect.play_random()
 
     def _time_ran_out(self):
         return False
@@ -685,6 +687,7 @@ class RaceScreen(PlayScreen):
     def _apply_bottle_eaten_reward(self):
         self.bottles_left -= 1
         self._countdown_flash(30, colors.TIME_ADDED_GREEN)
+        correct.play_random()
 
     def _reached_win_condition(self):
         return self.bottles_left <= 0
