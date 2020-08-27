@@ -494,10 +494,10 @@ class PlayScreen:
         if not self.is_tossing():
             bottle2 = self.previous_bottle
             x2, y2 = geometry.centered(self.BOTTLE_SECTION, bottle2.total_size)
-            x2 += self.shift.current_value + self.SHIFT_AMOUNT
+            x2 += int(self.shift.current_value) + self.SHIFT_AMOUNT
             surface.blit(self.render_bottle(bottle2), (x2, y2))
 
-        x1 += self.shift.current_value
+        x1 += int(self.shift.current_value)
         surface.blit(self.render_bottle(bottle1), (x1, y1))
 
     def render_bottle(self, bottle):
@@ -517,8 +517,8 @@ class PlayScreen:
 
         bottle = self.previous_bottle
         x2, y2 = geometry.centered(self.BOTTLE_SECTION, bottle.total_size)
-        x2 += self.toss_x.current_value
-        y2 += self.toss_y.current_value
+        x2 += int(self.toss_x.current_value)
+        y2 += int(self.toss_y.current_value)
 
         bottle_sprite = bottle.render()
         width = int(bottle_sprite.get_width() * self.toss_scale.current_value)
@@ -714,11 +714,11 @@ class MenuScreen(PlayScreen):
         x2, y2 = geometry.centered(self.BOTTLE_SECTION, bottle2.total_size)
 
         if self._shift_direction == const.LEFT:
-            x1 -= self.shift.current_value
-            x2 -= self.shift.current_value + self.SHIFT_AMOUNT
+            x1 -= int(self.shift.current_value)
+            x2 -= int(self.shift.current_value) + self.SHIFT_AMOUNT
         else:
-            x1 += self.shift.current_value
-            x2 += self.shift.current_value + self.SHIFT_AMOUNT
+            x1 += int(self.shift.current_value)
+            x2 += int(self.shift.current_value) + self.SHIFT_AMOUNT
 
         surface.blit(self.render_bottle(bottle1), (x1, y1))
         surface.blit(self.render_bottle(bottle2), (x2, y2))
@@ -771,7 +771,7 @@ class MenuScreen(PlayScreen):
     def _draw_bottle_select(self, surface, position, selected_bottle_num, symbols=None):
 
         # Draws the bottles
-        offset = self._bottle_icon_row_scroll
+        offset = int(self._bottle_icon_row_scroll)
         bottle_icon_row = self.render_bottle_icon_row(200, offset - 100, symbols)
         x = position[0] + 2
         y = position[1] + 3
@@ -934,7 +934,7 @@ class ResultScreen(MenuScreen):
 
         # Draws return to menu text
         text = graphics.tahoma.render("Press SPACE to return to level select.", False, colors.BLACK)
-        text_x = (self.BOTTLE_SECTION_LEFT - text.get_width()) / 2
+        text_x = (self.BOTTLE_SECTION_LEFT - text.get_width()) // 2
 
         rect = (text_x - 10, 250, text.get_width() + 20, text.get_height() + 20)
         pygame.draw.rect(surface, colors.WHITE, rect)
