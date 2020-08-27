@@ -1154,9 +1154,9 @@ def play_result_transition(play, result):
 
 def menu_race_transition(menu, race):
     menu_play_transition(menu, race)
-    race.starting_bottles = 7  # Change to be based on the level later
+    race.starting_bottles = menu.current_level.racemode_starting_bottles
     race.bottles_left = race.starting_bottles
-    race.incorrect_penalty = 1  # Change to be based on the level later
+    race.incorrect_penalty = menu.current_level.racemode_incorrect_penalty
     race.start_time = pygame.time.get_ticks()
 
 

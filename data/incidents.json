@@ -33,7 +33,9 @@
             15,
             0
         ],
-        "alternating": false
+        "alternating": false,
+        "racemode_starting_bottles": 7,
+        "racemode_incorrect_penalty": 1
     },
     "allergens": {
         "number": 2,
@@ -69,7 +71,9 @@
             10,
             0
         ],
-        "alternating": false
+        "alternating": false,
+        "racemode_starting_bottles": 7,
+        "racemode_incorrect_penalty": 1
     },
     "effects_allergens": {
         "number": 3,
@@ -105,7 +109,9 @@
             15,
             0
         ],
-        "alternating": false
+        "alternating": false,
+        "racemode_starting_bottles": 7,
+        "racemode_incorrect_penalty": 1
     },
     "fast": {
         "number": 1,
@@ -141,7 +147,9 @@
             7,
             0
         ],
-        "alternating": false
+        "alternating": false,
+        "racemode_starting_bottles": 7,
+        "racemode_incorrect_penalty": 1
     },
     "effects_hard": {
         "number": 4,
@@ -177,7 +185,9 @@
             12,
             0
         ],
-        "alternating": false
+        "alternating": false,
+        "racemode_starting_bottles": 7,
+        "racemode_incorrect_penalty": 1
     },
     "effects_allergens_hard": {
         "number": 5,
@@ -213,7 +223,9 @@
             12,
             0
         ],
-        "alternating": false
+        "alternating": false,
+        "racemode_starting_bottles": 7,
+        "racemode_incorrect_penalty": 1
     },
     "faster": {
         "number": 6,
@@ -249,7 +261,9 @@
             3,
             0
         ],
-        "alternating": false
+        "alternating": false,
+        "racemode_starting_bottles": 7,
+        "racemode_incorrect_penalty": 1
     },
     "effects_brands": {
         "number": 7,
@@ -285,7 +299,9 @@
             10,
             0
         ],
-        "alternating": false
+        "alternating": false,
+        "racemode_starting_bottles": 7,
+        "racemode_incorrect_penalty": 1
     },
     "effects_allergens_brands": {
         "number": 8,
@@ -321,7 +337,9 @@
             15,
             0
         ],
-        "alternating": false
+        "alternating": false,
+        "racemode_starting_bottles": 7,
+        "racemode_incorrect_penalty": 1
     },
     "effects_bootlegs": {
         "number": 9,
@@ -357,7 +375,9 @@
             12,
             0
         ],
-        "alternating": false
+        "alternating": false,
+        "racemode_starting_bottles": 7,
+        "racemode_incorrect_penalty": 1
     },
     "effects_verification": {
         "number": 10,
@@ -393,7 +413,9 @@
             12,
             0
         ],
-        "alternating": false
+        "alternating": false,
+        "racemode_starting_bottles": 7,
+        "racemode_incorrect_penalty": 1
     },
     "effects_alternation": {
         "number": 11,
@@ -429,6 +451,8 @@
             10,
             0
         ],
-        "alternating": true
+        "alternating": true,
+        "racemode_starting_bottles": 7,
+        "racemode_incorrect_penalty": 1
     }
 }

@@ -24,6 +24,9 @@ EFFECTS_BOOTLEGS = "effects_bootlegs"
 EFFECTS_VERIFICATION = "effects_verification"
 EFFECTS_ALTERNATION = "effects_alternation"
 
+RACEMODE_STARTING_BOTTLES = "racemode_starting_bottles"
+RACEMODE_INCORRECT_PENALTY = "racemode_incorrect_penalty"
+
 
 class Incident:
     def __init__(self, number, bottle, text, ambulance_time, homunculus_time, bottle_time):
@@ -35,6 +38,9 @@ class Incident:
         self.bottle_time = bottle_time
         self.alternating = False
 
+        self.racemode_starting_bottles = 7
+        self.racemode_incorrect_penalty = 1
+
     def to_dict(self):
         d = {
             NUMBER: self.number,
@@ -44,6 +50,9 @@ class Incident:
             HOMUNCULUS_TIME: time_math.ms_to_min_sec_ms(self.homunculus_time),
             BOTTLE_TIME: time_math.ms_to_min_sec_ms(self.bottle_time),
             ALTERNATING: self.alternating,
+
+            RACEMODE_STARTING_BOTTLES: self.racemode_starting_bottles,
+            RACEMODE_INCORRECT_PENALTY: self.racemode_incorrect_penalty,
         }
         return d
 
@@ -58,6 +67,8 @@ def incident_from_dict(d):
 
     incident = Incident(number, bottle, text, ambulance_time, homunculus_time, bottle_time)
     incident.alternating = d[ALTERNATING]
+    incident.racemode_starting_bottles = d[RACEMODE_STARTING_BOTTLES]
+    incident.racemode_incorrect_penalty = d[RACEMODE_INCORRECT_PENALTY]
 
     return incident
 
