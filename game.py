@@ -191,6 +191,8 @@ class PlayScreen:
 
         self.menu_level_num = 0
 
+        self._feed_skip_locked = False
+
     def _next_bottle(self):
         """ Generates the next bottle.
 
@@ -304,6 +306,7 @@ class PlayScreen:
                 self.bottles.pop()
 
         self.in_ending_cutscene = True
+        self._feed_skip_locked = True
         self.win = True
         self.ambulance_anim_countdown = time_math.ms_time_to(self.ambulance_time)
         self.death_anim_countdown = time_math.ms_time_to(self.death_time)
@@ -314,6 +317,7 @@ class PlayScreen:
                 self.bottles.pop()
 
         self.in_ending_cutscene = True
+        self._feed_skip_locked = True
         self.game_over = True
         death.play_random()
 
@@ -372,7 +376,7 @@ class PlayScreen:
 
     def update(self):
 
-        if not self.in_ending_cutscene:
+        if not self._feed_skip_locked:
             if events.keys.pressed_key == pygame.K_LEFT:
                 feed_press.play_random()
             elif events.keys.pressed_key == pygame.K_RIGHT:
