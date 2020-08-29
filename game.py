@@ -691,6 +691,11 @@ class RaceScreen(PlayScreen):
                 self._showing_mistake = False
                 self._feed_skip_locked = False
 
+    def _win(self, last_bottle=None):
+        super()._win(last_bottle)
+        self.ambulance_anim_countdown = 0
+        self.death_anim_countdown = 0
+
     def _lose(self, last_bottle=None):
         self.bottles_left += self.incorrect_penalty
         self._countdown_flash(30, colors.AMBULANCE_RED)
