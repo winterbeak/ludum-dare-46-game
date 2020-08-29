@@ -1,6 +1,7 @@
 import sound
 
 import pygame
+import pygame.gfxdraw
 
 import events
 import window
@@ -657,6 +658,8 @@ class RaceScreen(PlayScreen):
         self.incorrect_penalty = 2
         self.start_time = 0
 
+        self._showing_mistake = False
+
         original_position = super().AMBULANCE_COUNTDOWN_POSITION
         x = original_position[0] - 30
         y = original_position[1]
@@ -680,9 +683,18 @@ class RaceScreen(PlayScreen):
     def percentage_left(self):
         return self._percentage_left
 
+    def update(self):
+        super().update()
+
+        if self._showing_mistake:
+            if events.keys.released_key == pygame.K_SPACE:
+                self._showing_mistake = False
+                self._feed_skip_locked = False
+
     def _lose(self, last_bottle=None):
         self.bottles_left += self.incorrect_penalty
         self._countdown_flash(30, colors.AMBULANCE_RED)
+        self._showing_mistake = True
         incorrect.play_random()
 
     def _time_ran_out(self):
@@ -711,6 +723,24 @@ class RaceScreen(PlayScreen):
             interval = 125
 
         return interval
+
+    def _feed_current_bottle(self):
+        super()._feed_current_bottle()
+        if self._does_this_kill_me(self.previous_bottle):
+            self._feed_skip_locked = True
+
+    def draw(self, surface):
+        super().draw(surface)
+
+        if self._showing_mistake:
+            screen_rect = (0, 0, surface.get_width(), surface.get_height())
+            pygame.gfxdraw.box(surface, screen_rect, (0, 0, 0, 100))
+
+            bottle_sprite = self.previous_bottle.render(True)
+            object_size = bottle_sprite.get_size()
+            position = geometry.centered(screen_rect, object_size)
+
+            surface.blit(bottle_sprite, position)
 
     def draw_countdowns(self, surface):
         milliseconds = pygame.time.get_ticks() - self.start_time
