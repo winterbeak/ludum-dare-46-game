@@ -357,7 +357,7 @@ class PlayScreen:
                 homunculus.col_num = HOMUNCULUS_EAT
 
         # Verdict of whether the bottle eaten was lethal or not
-        if not self.in_ending_cutscene and homunculus.col_num == HOMUNCULUS_EAT:
+        if not self.in_ending_cutscene:
 
             # Counts down timers
             for i in range(len(self.judgement_timers)):
