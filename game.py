@@ -405,9 +405,9 @@ class PlayScreen:
                 del self.judgement_timers[0]
                 del self.bottles_to_judge[0]
 
-            # Plays the homunculus eating sound when it eats something
-            if homunculus.frame == 4 and homunculus.delay == 0:
-                eat.play_random()
+        # Plays the homunculus eating sound when it eats something
+        if homunculus.frame == 4 and homunculus.delay == 0:
+            eat.play_random()
 
         # Lose if time runs out
         if time_math.ms_time_to(self.death_time) < 0 and not self.in_ending_cutscene:
