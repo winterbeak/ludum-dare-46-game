@@ -747,6 +747,20 @@ class RaceScreen(PlayScreen):
 
             surface.blit(bottle_sprite, position)
 
+            # Continue text
+            text = graphics.tahoma.render("Press SPACE to continue.", False, colors.BLACK)
+            bottle_bottom = position[1] + bottle_sprite.get_height()
+            container_height = surface.get_height() - bottle_bottom
+            text_container = (0, bottle_bottom, surface.get_width(), container_height)
+            text_position = geometry.centered(text_container, text.get_size())
+
+            box_x = text_position[0] - 10
+            box_y = text_position[1] - 10
+            rect = (box_x, box_y, text.get_width() + 20, text.get_height() + 20)
+            pygame.draw.rect(surface, colors.WHITE, rect)
+
+            surface.blit(text, text_position)
+
     def draw_countdowns(self, surface):
         milliseconds = pygame.time.get_ticks() - self.start_time
         time = time_math.ms_to_min_sec_ms(milliseconds)
