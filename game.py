@@ -112,6 +112,17 @@ win_sound = sound.load_numbers("win%d", 1, volumes=0.5)
 lose_sound = sound.load_numbers("lose%d", 1, volumes=0.4)
 
 
+class Screen:
+    def __init__(self):
+        pass
+
+    def update(self):
+        pass
+
+    def draw(self, surface):
+        pass
+
+
 class PlayScreen:
     """ Handles the main gameplay. """
 
