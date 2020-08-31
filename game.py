@@ -1,6 +1,7 @@
 import sound
 
 import pygame
+import pygame.gfxdraw
 
 import events
 import window
@@ -97,7 +98,8 @@ death = sound.load_numbers("death%d", 1, volumes=0.5)
 start_release = sound.load_numbers("start_release%d", 1, volumes=0.8)
 start_press = sound.load_numbers("start_press%d", 1, volumes=0.8)
 
-time_gain = sound.load_numbers("time_gain%d", 1, volumes=0.6)
+correct = sound.load_numbers("correct%d", 1, volumes=0.6)
+incorrect = sound.load_numbers("incorrect%d", 1, volumes=0.6)
 
 ambulance_arrive = sound.load_numbers("ambulance%d", 1, volumes=0.5)
 
@@ -123,8 +125,10 @@ class PlayScreen:
 
     HOMUNCULUS_EAT_DELAY_LENGTH = 5
 
-    AMBULANCE_TIMER_POSITION = (40, 6)
-    HOMUNCULUS_TIMER_POSITION = (40, 80)
+    AMBULANCE_COUNTDOWN_POSITION = (40, 6)
+    HOMUNCULUS_COUNTDOWN_POSITION = (40, 80)
+
+    CONTROLS_POSITION = (328, 322)
 
     DEATH_CIRCLE_COUNT = 8
 
@@ -156,7 +160,8 @@ class PlayScreen:
 
         self.homunculus_eat_delay = 0
 
-        self.green_timer_frame = 0
+        self.countdown_color = colors.HOMUNCULUS_ORANGE
+        self.countdown_flash_frame = 0
         self.one_more_frame = 0
 
         self.game_over = False
@@ -187,6 +192,8 @@ class PlayScreen:
 
         self.menu_level_num = 0
 
+        self._feed_skip_locked = False
+
     def _next_bottle(self):
         """ Generates the next bottle.
 
@@ -213,6 +220,20 @@ class PlayScreen:
         self._start_shifting_animation()
         self._next_bottle()
 
+    def _determine_minor_tick_interval(self):
+        current = time_math.ms_time_to(self.death_time)
+
+        if current > 30000:
+            interval = 1000
+        elif current > 15000:
+            interval = 500
+        elif current > 5000:
+            interval = 250
+        else:
+            interval = 125
+
+        return interval
+
     def _play_timer_sounds(self):
         """ Handles the playing of the timer ticks. """
 
@@ -223,15 +244,7 @@ class PlayScreen:
             tick.play_random()
 
         # The amount of time between subticks depends on the time left.
-        if current > 30000:
-            interval = 1000
-        elif current > 15000:
-            interval = 500
-        elif current > 5000:
-            interval = 250
-        else:
-            interval = 125
-
+        interval = self._determine_minor_tick_interval()
         if time_math.crosses_interval(previous, current, interval):
             subtick.play_random()
 
@@ -288,14 +301,24 @@ class PlayScreen:
 
         self.death_anim_frame += 1
 
-    def _win(self):
+    def _win(self, last_bottle=None):
+        if last_bottle:
+            while self.bottles[-1] is not last_bottle:
+                self.bottles.pop()
+
         self.in_ending_cutscene = True
+        self._feed_skip_locked = True
         self.win = True
         self.ambulance_anim_countdown = time_math.ms_time_to(self.ambulance_time)
         self.death_anim_countdown = time_math.ms_time_to(self.death_time)
 
-    def _lose(self):
+    def _lose(self, last_bottle=None):
+        if last_bottle:
+            while self.bottles[-1] is not last_bottle:
+                self.bottles.pop()
+
         self.in_ending_cutscene = True
+        self._feed_skip_locked = True
         self.game_over = True
         death.play_random()
 
@@ -331,14 +354,30 @@ class PlayScreen:
         else:
             return self.bottle_is_safe(bottle) == self.last_eaten_is_safe
 
-    def _add_time(self):
+    def _countdown_flash(self, length, color):
+        self.countdown_flash_frame = length
+        self.countdown_color = color
+
+    def _apply_bottle_eaten_reward(self):
         self.death_time += self.bottle_time  # Adds time
-        self.green_timer_frame = 30  # Makes timer turn green
-        time_gain.play_random()  # Plays time-gain sound
+
+        # Makes countdown turn green for 30 frames
+        self._countdown_flash(30, colors.TIME_ADDED_GREEN)
+
+        correct.play_random()  # Plays time-gain sound
+
+    def _reached_win_condition(self):
+        return self.death_time > self.ambulance_time and not self.win
+
+    def _time_ran_out(self):
+        if self.in_ending_cutscene:
+            return False
+
+        return time_math.ms_time_to(self.death_time) < 0
 
     def update(self):
 
-        if not self.in_ending_cutscene:
+        if not self._feed_skip_locked:
             if events.keys.pressed_key == pygame.K_LEFT:
                 feed_press.play_random()
             elif events.keys.pressed_key == pygame.K_RIGHT:
@@ -378,24 +417,16 @@ class PlayScreen:
 
                 # Lose if you eat something that kills you
                 if self._does_this_kill_me(bottle):
-                    self._lose()
-
-                    # Removes all bottles after the lethal bottle
-                    while self.bottles[-1] is not bottle:
-                        self.bottles.pop()
+                    self._lose(bottle)
 
                 # Consume the bottle if you eat something that doesn't kill you
                 else:
-                    self._add_time()
+                    self._apply_bottle_eaten_reward()
                     self.previous_brand = bottle.brand  # Updates brand
 
                     # If you won, this handles winning
-                    if self.death_time > self.ambulance_time and not self.win:
-                        self._win()
-
-                        # Removes all bottles after the winning bottle
-                        while self.bottles[-1] is not bottle:
-                            self.bottles.pop()
+                    if self._reached_win_condition():
+                        self._win(bottle)
 
                 # Updates some variables (mostly used for alternating stages)
                 self.has_eaten = True
@@ -410,16 +441,20 @@ class PlayScreen:
             eat.play_random()
 
         # Lose if time runs out
-        if time_math.ms_time_to(self.death_time) < 0 and not self.in_ending_cutscene:
+        if self._time_ran_out():
             self._lose()
 
-        # Handles turning the timer green when time is gained
-        if self.green_timer_frame > 0:
-            self.green_timer_frame -= 1
+        # If the countdown is flashing, count down until it stops flashing
+        if self.countdown_flash_frame > 0:
+            self.countdown_flash_frame -= 1
 
-            # If you die, the timer stops being green.
+            # Turns the countdown back to orange
+            if self.countdown_flash_frame == 0:
+                self.countdown_color = colors.HOMUNCULUS_ORANGE
+
+            # If you die, the countdown stops being colored.
             if self.game_over:
-                self.green_timer_frame = 0
+                self.countdown_flash_frame = 0
 
         # If currently in shifting animation
         if self.is_shifting():
@@ -531,24 +566,20 @@ class PlayScreen:
         surface.blit(rotated, (x2, y2))
 
     def draw_countdowns(self, surface):
-        # Ambulance timer
+        # Ambulance countdown
         if self.win:
             time = time_math.ms_to_min_sec_ms(self.ambulance_anim_countdown)
         else:
             time = time_math.min_sec_ms_time_to(self.ambulance_time)
-        position = self.AMBULANCE_TIMER_POSITION
-        countdowns.draw(surface, colors.AMBULANCE_RED, time, position)
+        position = self.AMBULANCE_COUNTDOWN_POSITION
+        countdowns.draw_timer(surface, colors.AMBULANCE_RED, time, position)
 
-        # Homunculus timer
+        # Homunculus countdown
         milliseconds = time_math.ms_time_to(self.death_time)
         if self.win:
             shake = 0
         else:
             shake = max(0, (15000 - milliseconds) / 5000)
-        if self.green_timer_frame > 0:
-            color = colors.TIME_ADDED_GREEN
-        else:
-            color = colors.HOMUNCULUS_ORANGE
 
         if self.win:
             time = time_math.ms_to_min_sec_ms(self.death_anim_countdown)
@@ -556,8 +587,8 @@ class PlayScreen:
             time = (0, 0, 0)
         else:
             time = time_math.min_sec_ms_time_to(self.death_time)
-        position = self.HOMUNCULUS_TIMER_POSITION
-        countdowns.draw(surface, color, time, position, shake)
+        position = self.HOMUNCULUS_COUNTDOWN_POSITION
+        countdowns.draw_timer(surface, self.countdown_color, time, position, shake)
 
     def draw_controls(self, surface, position):
 
@@ -578,11 +609,11 @@ class PlayScreen:
     def draw_ui_text(self, surface):
         self.draw_countdowns(surface)
 
-        # Homunculus and ambulance timer labels
+        # Homunculus and ambulance countdown labels
         ambulance_text.draw(surface, (5, 7))
         homunculus_text.draw(surface, (5, 88))
 
-        self.draw_controls(surface, (328, 322))
+        self.draw_controls(surface, self.CONTROLS_POSITION)
 
     def draw_homunculus(self, surface):
         y = screen.unscaled.get_height() - homunculus_idle.single_height
@@ -615,6 +646,137 @@ class PlayScreen:
 
         # fps_text = graphics.tahoma.render(str(screen.clock.get_fps()), False, colors.WHITE, colors.BLACK)
         # surface.blit(fps_text, (10, 10))
+
+
+class RaceScreen(PlayScreen):
+    def __init__(self):
+        super().__init__()
+        self.starting_bottles = 10
+        self._bottles_left = 0
+        self._percentage_left = 0
+
+        self.incorrect_penalty = 2
+        self.start_time = 0
+
+        self._showing_mistake = False
+
+        original_position = super().AMBULANCE_COUNTDOWN_POSITION
+        x = original_position[0] - 30
+        y = original_position[1]
+        self.AMBULANCE_COUNTDOWN_POSITION = (x, y)
+
+        original_position = super().HOMUNCULUS_COUNTDOWN_POSITION
+        x = original_position[0] - 30
+        y = original_position[1]
+        self.HOMUNCULUS_COUNTDOWN_POSITION = (x, y)
+
+    @property
+    def bottles_left(self):
+        return self._bottles_left
+
+    @bottles_left.setter
+    def bottles_left(self, value):
+        self._bottles_left = value
+        self._percentage_left = value / self.starting_bottles
+
+    @property
+    def percentage_left(self):
+        return self._percentage_left
+
+    def update(self):
+        super().update()
+
+        if self._showing_mistake:
+            if events.keys.released_key == pygame.K_SPACE:
+                self._showing_mistake = False
+                self._feed_skip_locked = False
+
+    def _win(self, last_bottle=None):
+        super()._win(last_bottle)
+        self.ambulance_anim_countdown = 0
+        self.death_anim_countdown = 0
+
+    def _lose(self, last_bottle=None):
+        self.bottles_left += self.incorrect_penalty
+        self._countdown_flash(30, colors.AMBULANCE_RED)
+        self._showing_mistake = True
+        incorrect.play_random()
+
+    def _time_ran_out(self):
+        return False
+
+    def _apply_bottle_eaten_reward(self):
+        self.bottles_left -= 1
+        self._countdown_flash(30, colors.TIME_ADDED_GREEN)
+        correct.play_random()
+
+    def _reached_win_condition(self):
+        return self.bottles_left <= 0
+
+    def _determine_minor_tick_interval(self):
+        # Should always tick fastest if 1 bottle is left
+        if self.bottles_left == 1:
+            return 125
+
+        if self.percentage_left > 0.5:
+            interval = 1000
+        elif self.percentage_left > 0.25:
+            interval = 500
+        elif self.percentage_left > 0.08:
+            interval = 250
+        else:
+            interval = 125
+
+        return interval
+
+    def _feed_current_bottle(self):
+        super()._feed_current_bottle()
+        if self._does_this_kill_me(self.previous_bottle):
+            self._feed_skip_locked = True
+
+    def draw(self, surface):
+        super().draw(surface)
+
+        if self._showing_mistake:
+            screen_rect = (0, 0, surface.get_width(), surface.get_height())
+            pygame.gfxdraw.box(surface, screen_rect, (0, 0, 0, 100))
+
+            bottle_sprite = self.previous_bottle.render(True)
+            object_size = bottle_sprite.get_size()
+            position = geometry.centered(screen_rect, object_size)
+
+            surface.blit(bottle_sprite, position)
+
+            # Continue text
+            text = graphics.tahoma.render("Press SPACE to continue.", False, colors.BLACK)
+            bottle_bottom = position[1] + bottle_sprite.get_height()
+            container_height = surface.get_height() - bottle_bottom
+            text_container = (0, bottle_bottom, surface.get_width(), container_height)
+            text_position = geometry.centered(text_container, text.get_size())
+
+            box_x = text_position[0] - 10
+            box_y = text_position[1] - 10
+            rect = (box_x, box_y, text.get_width() + 20, text.get_height() + 20)
+            pygame.draw.rect(surface, colors.WHITE, rect)
+
+            surface.blit(text, text_position)
+
+    def draw_countdowns(self, surface):
+        milliseconds = pygame.time.get_ticks() - self.start_time
+        time = time_math.ms_to_min_sec_ms(milliseconds)
+        position = self.AMBULANCE_COUNTDOWN_POSITION
+        countdowns.draw_timer(surface, colors.AMBULANCE_RED, time, position)
+
+        count = self.bottles_left
+        exclamation = self.bottles_left == 1
+        color = self.countdown_color
+        shake = max(0, int((1 - self.percentage_left) * 3))
+        text = countdowns.render_left_count(count, exclamation, color, shake)
+        surface.blit(text, self.HOMUNCULUS_COUNTDOWN_POSITION)
+
+    def draw_ui_text(self, surface):
+        self.draw_countdowns(surface)
+        self.draw_controls(surface, self.CONTROLS_POSITION)
 
 
 class MenuScreen(PlayScreen):
@@ -1032,15 +1194,23 @@ def play_result_transition(play, result):
     result.bottle_num = len(result.bottles) - 1
     result.shift.frame = result.shift.length
 
-    if play_screen.win:
+    if play.win:
         result.win = True
         win_sound.play_random()
 
-        progress_tracker.complete_level(play_screen.menu_level_num)
+        progress_tracker.complete_level(play.menu_level_num)
         progress_tracker.save_progress()
     else:
         result.win = False
         lose_sound.play_random()
+
+
+def menu_race_transition(menu, race):
+    menu_play_transition(menu, race)
+    race.starting_bottles = menu.current_level.racemode_starting_bottles
+    race.bottles_left = race.starting_bottles
+    race.incorrect_penalty = menu.current_level.racemode_incorrect_penalty
+    race.start_time = pygame.time.get_ticks()
 
 
 INCIDENTS_PATH = files.json_path("incidents")
@@ -1074,6 +1244,9 @@ RESULT_SCREEN = 2
 result_screen = ResultScreen()
 result_screen.background = background
 
+RACE_SCREEN = 3
+race_screen = RaceScreen()
+
 current_screen = MENU_SCREEN
 running = True
 
@@ -1093,8 +1266,12 @@ while True:
 
         if menu_screen.selected:
             menu_screen.selected = False
-            current_screen = PLAY_SCREEN
-            menu_play_transition(menu_screen, play_screen)
+            if pygame.K_r in events.keys.queue:
+                current_screen = RACE_SCREEN
+                menu_race_transition(menu_screen, race_screen)
+            else:
+                current_screen = PLAY_SCREEN
+                menu_play_transition(menu_screen, play_screen)
 
     elif current_screen == PLAY_SCREEN:
         play_screen.update()
@@ -1111,6 +1288,20 @@ while True:
         else:
             play_screen.draw(screen.unscaled)
 
+    elif current_screen == RACE_SCREEN:
+        race_screen.update()
+
+        if (race_screen.game_over or race_screen.win) and not race_screen.in_ending_cutscene:
+            play_result_transition(race_screen, result_screen)
+            race_screen.game_over = False
+            race_screen.win = False
+            current_screen = RESULT_SCREEN
+            # Since result_screen is not drawn, skip a frame
+            continue
+
+        else:
+            race_screen.draw(screen.unscaled)
+
     elif current_screen == RESULT_SCREEN:
         result_screen.update()
         result_screen.draw(screen.unscaled)
@@ -1120,6 +1311,7 @@ while True:
             current_screen = MENU_SCREEN
 
             play_screen = PlayScreen()
+            race_screen = RaceScreen()
 
     screen.scale_blit()
     screen.update(60)
