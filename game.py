@@ -127,13 +127,30 @@ class BottleScreen(Screen):
     def __init__(self, bottle_container):
         super().__init__()
         self.bottles = []
-        self.current_bottle_num = 0
+        self._current_bottle_num = 0
 
         self.bottle_container = bottle_container
 
     @property
     def current_bottle(self):
         return self.bottles[self.current_bottle_num]
+
+    @property
+    def current_bottle_num(self):
+        return self._current_bottle_num
+
+    @current_bottle_num.setter
+    def current_bottle_num(self, value):
+        """ current_bottle_num must be within the bounds of [0, index of last
+        bottle in bottles list].  If the value trying to be set is outside the
+        bounds, current_bottle_num is set to the closest bound instead.
+        """
+        if value < 0:
+            self._current_bottle_num = 0
+        elif value >= len(self.bottles):
+            self._current_bottle_num = len(self.bottles) - 1
+        else:
+            self._current_bottle_num = value
 
     def update(self):
         pass
