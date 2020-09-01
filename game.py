@@ -123,6 +123,17 @@ class Screen:
         pass
 
 
+class BottleScreen(Screen):
+    def __init__(self):
+        super().__init__()
+
+    def update(self):
+        pass
+
+    def draw(self, surface):
+        pass
+
+
 class PlayScreen:
     """ Handles the main gameplay. """
 
