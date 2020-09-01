@@ -124,9 +124,11 @@ class Screen:
 
 
 class BottleScreen(Screen):
-    def __init__(self):
+    def __init__(self, bottle_container):
         super().__init__()
         self._current_bottle = None
+
+        self.bottle_container = bottle_container
 
     @property
     def current_bottle(self):
@@ -136,7 +138,13 @@ class BottleScreen(Screen):
         pass
 
     def draw(self, surface):
-        pass
+        if self._current_bottle:
+            self._draw_current_bottle(surface)
+
+    def _draw_current_bottle(self, surface):
+        bottle = self.current_bottle
+        x, y = geometry.centered(self.bottle_container, bottle.total_size)
+        surface.blit(bottle.render(), (x, y))
 
 
 class PlayScreen:
