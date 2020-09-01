@@ -126,6 +126,11 @@ class Screen:
 class BottleScreen(Screen):
     def __init__(self):
         super().__init__()
+        self._current_bottle = None
+
+    @property
+    def current_bottle(self):
+        return self._current_bottle
 
     def update(self):
         pass
