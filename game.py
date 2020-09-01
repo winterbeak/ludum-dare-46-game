@@ -126,19 +126,20 @@ class Screen:
 class BottleScreen(Screen):
     def __init__(self, bottle_container):
         super().__init__()
-        self._current_bottle = None
+        self.bottles = []
+        self.current_bottle_num = 0
 
         self.bottle_container = bottle_container
 
     @property
     def current_bottle(self):
-        return self._current_bottle
+        return self.bottles[self.current_bottle_num]
 
     def update(self):
         pass
 
     def draw(self, surface):
-        if self._current_bottle:
+        if len(self.bottles) > 0:
             self._draw_current_bottle(surface)
 
     def _draw_current_bottle(self, surface):
