@@ -10,6 +10,11 @@ class Curve:
         self.end = end_value
         self.active = False
 
+    def restart(self):
+        """ Activates the curve starting from frame 0. """
+        self.frame = 0
+        self.active = True
+
 
 class Linear(Curve):
     def __init__(self, start_value, end_value, length):
