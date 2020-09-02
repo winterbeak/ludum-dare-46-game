@@ -118,6 +118,7 @@ class SineOut(Sine):
         self.a = end_value - start_value
         self.c = start_value
 
+
 class SineIn(Sine):
     def __init__(self, start_value, end_value, length):
         """ Represents a sine function that fades in.
