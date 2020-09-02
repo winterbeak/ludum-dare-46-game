@@ -1,7 +1,8 @@
 import math
+import abc
 
 
-class Curve:
+class Curve(abc.ABC):
     def __init__(self, start_value, end_value, length):
         """ An abstract base class for mathematical curves.
 
@@ -18,6 +19,10 @@ class Curve:
         self.end = end_value
         self.active = False
 
+    @property
+    def current_value(self):
+        return self.value_at(self.frame)
+
     def update(self):
         if self.active:
             self.frame += 1
@@ -30,6 +35,10 @@ class Curve:
         self.frame = 0
         self.active = True
 
+    @abc.abstractmethod
+    def value_at(self, frame):
+        pass
+
 
 class Linear(Curve):
     def __init__(self, start_value, end_value, length):
@@ -40,10 +49,6 @@ class Linear(Curve):
 
     def value_at(self, frame):
         return self.m * frame + self.b
-
-    @property
-    def current_value(self):
-        return self.value_at(self.frame)
 
 
 class Quadratic(Curve):
@@ -63,10 +68,6 @@ class Quadratic(Curve):
     def value_at(self, frame):
         inside = self.k * frame - self.d
         return self.a * (inside * inside) + self.c
-
-    @property
-    def current_value(self):
-        return self.value_at(self.frame)
 
 
 class QuadraticArc(Quadratic):
@@ -99,10 +100,6 @@ class Sine(Curve):
     def value_at(self, frame):
         inside = self.k * (frame - self.d)
         return self.a * math.sin(inside) + self.c
-
-    @property
-    def current_value(self):
-        return self.value_at(self.frame)
 
 
 class SineOut(Sine):
