@@ -8,6 +8,7 @@ class Curve:
         self.length = length
         self.start = start_value
         self.end = end_value
+        self.active = False
 
 
 class Linear(Curve):
