@@ -10,6 +10,13 @@ class Curve:
         self.end = end_value
         self.active = False
 
+    def update(self):
+        if self.active:
+            self.frame += 1
+
+            if self.frame >= self.last_frame:
+                self.active = False
+
     def restart(self):
         """ Activates the curve starting from frame 0. """
         self.frame = 0
