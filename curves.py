@@ -45,7 +45,7 @@ class Linear(Curve):
         """ Represents a linear function. """
         super().__init__(start_value, end_value, length)
         self.b = start_value
-        self.m = (end_value - self.b) / length
+        self.m = (end_value - self.b) / (length - 1)
 
     def value_at(self, frame):
         return self.m * frame + self.b
@@ -79,7 +79,7 @@ class QuadraticArc(Quadratic):
         """
         super().__init__(start_value, peak_value, length)
         self.c = peak_value
-        self.d = length / 2
+        self.d = (length - 1) / 2
         self.a = (start_value - self.c) / (self.d ** 2)
 
 
@@ -111,7 +111,7 @@ class SineOut(Sine):
         quarter of the default sine function.
         """
         super().__init__(start_value, end_value, length)
-        self.k = (2 * math.pi) / (length * 4)
+        self.k = (2 * math.pi) / ((length - 1) * 4)
         self.a = end_value - start_value
         self.c = start_value
 
@@ -125,7 +125,7 @@ class SineIn(Sine):
         quarter of the default sine function.
         """
         super().__init__(start_value, end_value, length)
-        self.k = (2 * math.pi) / (length * 4)
+        self.k = (2 * math.pi) / ((length - 1) * 4)
         self.a = end_value - start_value
         self.c = start_value
         self.d = length
