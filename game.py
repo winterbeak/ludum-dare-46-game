@@ -121,7 +121,7 @@ class PlayScreen:
                       screen.unscaled.get_height())
 
     SHIFT_AMOUNT = 600
-    SHIFT_LENGTH = 15
+    SHIFT_LENGTH = 16
 
     HOMUNCULUS_EAT_DELAY_LENGTH = 5
 
