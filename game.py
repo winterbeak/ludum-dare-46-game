@@ -124,12 +124,18 @@ class Screen:
 
 
 class BottleScreen(Screen):
+    SHIFT_AMOUNT = 600
+    SHIFT_LENGTH = 16
+
     def __init__(self, bottle_container):
         super().__init__()
         self.bottles = []
         self._current_bottle_num = 0
 
         self.bottle_container = bottle_container
+
+        self._shift = curves.SineOut(0, self.SHIFT_AMOUNT, self.SHIFT_LENGTH)
+        self._shift_direction = const.LEFT
 
     @property
     def current_bottle(self):
@@ -153,16 +159,38 @@ class BottleScreen(Screen):
             self._current_bottle_num = value
 
     def update(self):
-        pass
+        self._shift.update()
 
     def draw(self, surface):
         if len(self.bottles) > 0:
             self._draw_current_bottle(surface)
 
+    def _shift_left(self):
+        if self.current_bottle_num < len(self.bottles) - 1:
+            self._shift.restart()
+            self._shift_direction = const.LEFT
+            self.current_bottle_num += 1
+
+    def _shift_right(self):
+        if self.current_bottle_num > 0:
+            self._shift.restart()
+            self._shift_direction = const.RIGHT
+            self.current_bottle_num -= 1
+
     def _draw_current_bottle(self, surface):
         bottle = self.current_bottle
-        x, y = geometry.centered(self.bottle_container, bottle.total_size)
-        surface.blit(bottle.render(), (x, y))
+        base_x, base_y = geometry.centered(self.bottle_container, bottle.total_size)
+
+        if self._shift.active:
+            if self._shift_direction == const.LEFT:
+                x = base_x - self._shift.current_value + self.SHIFT_AMOUNT
+            else:
+                x = base_x + self._shift.current_value - self.SHIFT_AMOUNT
+
+            surface.blit(bottle.render(), (x, base_y))
+
+        else:
+            surface.blit(bottle.render(), (base_x, base_y))
 
 
 class PlayScreen:
