@@ -131,6 +131,7 @@ class BottleScreen(Screen):
         super().__init__()
         self.bottles = []
         self._current_bottle_num = 0
+        self._previous_bottle_num = 0
 
         self.bottle_container = bottle_container
 
@@ -151,6 +152,8 @@ class BottleScreen(Screen):
         bottle in bottles list].  If the value trying to be set is outside the
         bounds, current_bottle_num is set to the closest bound instead.
         """
+        self._previous_bottle_num = self._current_bottle_num
+
         if value < 0:
             self._current_bottle_num = 0
         elif value >= len(self.bottles):
@@ -158,12 +161,23 @@ class BottleScreen(Screen):
         else:
             self._current_bottle_num = value
 
+    @property
+    def previous_bottle(self):
+        return self.bottles[self._previous_bottle_num]
+
+    @property
+    def previous_bottle_num(self):
+        return self._previous_bottle_num
+
     def update(self):
         self._shift.update()
 
     def draw(self, surface):
         if len(self.bottles) > 0:
             self._draw_current_bottle(surface)
+
+            if self._shift.active:
+                self._draw_previous_bottle(surface)
 
     def _shift_left(self):
         if self.current_bottle_num < len(self.bottles) - 1:
@@ -186,6 +200,21 @@ class BottleScreen(Screen):
                 x = base_x - self._shift.current_value + self.SHIFT_AMOUNT
             else:
                 x = base_x + self._shift.current_value - self.SHIFT_AMOUNT
+
+            surface.blit(bottle.render(), (x, base_y))
+
+        else:
+            surface.blit(bottle.render(), (base_x, base_y))
+
+    def _draw_previous_bottle(self, surface):
+        bottle = self.previous_bottle
+        base_x, base_y = geometry.centered(self.bottle_container, bottle.total_size)
+
+        if self._shift.active:
+            if self._shift_direction == const.LEFT:
+                x = base_x - self._shift.current_value
+            else:
+                x = base_x + self._shift.current_value
 
             surface.blit(bottle.render(), (x, base_y))
 
