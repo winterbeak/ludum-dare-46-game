@@ -179,13 +179,13 @@ class BottleScreen(Screen):
             if self._shift.active:
                 self._draw_previous_bottle(surface)
 
-    def _shift_left(self):
+    def _shift_to_next_bottle(self):
         if self.current_bottle_num < len(self.bottles) - 1:
             self._shift.restart()
             self._shift_direction = const.LEFT
             self.current_bottle_num += 1
 
-    def _shift_right(self):
+    def _shift_to_previous_bottle(self):
         if self.current_bottle_num > 0:
             self._shift.restart()
             self._shift_direction = const.RIGHT
