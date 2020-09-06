@@ -112,6 +112,113 @@ win_sound = sound.load_numbers("win%d", 1, volumes=0.5)
 lose_sound = sound.load_numbers("lose%d", 1, volumes=0.4)
 
 
+class BottleIconRow:
+    ICON_SCALE = 10
+    ICON_SPACING = 12
+
+    def __init__(self, bottle_list, position, width):
+        self.bottles = bottle_list
+        self._position = position
+        self._width = width
+        self._scroll = 0
+        self.selected_bottle_num = 0
+
+    def update(self):
+        self._update_scroll()
+
+    def draw(self, surface, symbols=None):
+
+        bottle_position = self._position.offset(2, 3)
+        bottle_row = self._render_icons(symbols)
+        surface.blit(bottle_row, bottle_position)
+
+        self._draw_ui(surface)
+
+    def _update_scroll(self):
+        target = self._center_x_of_selected_bottle()
+        diff = target - self._scroll
+        if abs(diff) > 0.001:
+            self._scroll += diff / 5
+
+    def _center_x_of_selected_bottle(self):
+        scale = self.ICON_SCALE
+        bottle_num = self.selected_bottle_num
+
+        x = 0
+        for i in range(bottle_num):
+            x += self.bottles[i].downscaled_total_width(scale)
+            x += self.ICON_SPACING
+        x += self.bottles[bottle_num].downscaled_total_width(scale) // 2
+        return x
+
+    def _max_icon_height(self):
+        scale = self.ICON_SCALE
+
+        height = 0
+        for bottle in self.bottles:
+            bottle_height = bottle.downscaled_total_height(scale)
+            height = max(height, bottle_height)
+
+        return height
+
+    def _render_icons(self, symbols=None):
+        if symbols:
+            misc.force_length(symbols, len(self.bottles), const.SYMBOL_NONE)
+        else:
+            symbols = [const.SYMBOL_NONE] * len(self.bottles)
+
+        scale = self.ICON_SCALE
+
+        height = self._max_icon_height() + 4
+        surface = graphics.new_surface((self._width, height))
+
+        x = -self._scroll + self._width // 2
+        for bottle, symbol in zip(self.bottles, symbols):
+            bottle_width = bottle.downscaled_total_width(scale)
+
+            # Skips any bottle that isn't rendered due to the offset
+            if x + bottle_width > 0:
+                y = (height - bottle.downscaled_total_height(scale)) // 2
+                sprite = bottle.render_downscaled_body(scale)
+                surface.blit(sprite, (x, y))
+
+                if symbol == const.SYMBOL_CHECK:
+                    check_x = x + bottle_width - 8
+                    check_y = y + bottle.downscaled_total_height(scale) - 10
+                    checkmark.draw(surface, (check_x, check_y))
+
+                elif symbol == const.SYMBOL_CROSS:
+                    cross_x = x + bottle_width - 8
+                    cross_y = y + bottle.downscaled_total_height(scale) - 10
+                    cross.draw(surface, (cross_x, cross_y))
+
+            x += bottle_width + self.ICON_SPACING
+
+            # Stops rendering bottles if the end of the surface is reached
+            if x > self._width:
+                break
+
+        return surface
+
+    def _draw_ui(self, surface):
+        surface.blit(row_cap_left.render(), self._position.coords)
+
+        self._draw_pointer(surface)
+
+        right_cap_position = self._position.offset(self._width, 0)
+        surface.blit(row_cap_right.render(), right_cap_position)
+
+    def _draw_pointer(self, surface):
+        x = self._position.x + (self._width // 2) - 3
+        x += self._center_x_of_selected_bottle()
+        x -= int(self._scroll)
+
+        bottle = self.bottles[self.selected_bottle_num]
+        y = self._position.y + 6
+        y -= bottle.downscaled_total_height(self.ICON_SCALE) // 2
+        surface.blit(row_pointer.render(), (x, y))
+
+
 class Screen:
     def __init__(self):
         pass
