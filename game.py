@@ -366,10 +366,28 @@ class SelectionScreen(BottleScreen):
         self._icon_row.update()
         self._icon_row.selected_bottle_num = self.current_bottle_num
 
+        self._handle_inputs()
+
     def draw(self, surface, symbols=None):
         super().draw(surface)
         self._icon_row.draw(surface, symbols)
         self._draw_arrow_keys(surface)
+
+    def _handle_inputs(self):
+
+        if events.keys.pressed_key == pygame.K_LEFT:
+            menu_press.play_random()
+
+        elif events.keys.pressed_key == pygame.K_RIGHT:
+            menu_press.play_random()
+
+        if events.keys.released_key == pygame.K_LEFT:
+            menu_release.play_random()
+            self._shift_to_previous_bottle()
+
+        elif events.keys.released_key == pygame.K_RIGHT:
+            menu_release.play_random()
+            self._shift_to_next_bottle()
 
     def _draw_arrow_keys(self, surface):
         y = self._icon_row.position.y + 5
