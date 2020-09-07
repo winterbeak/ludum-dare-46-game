@@ -236,7 +236,7 @@ class BottleScreen(Screen):
 
     def __init__(self, bottle_container):
         super().__init__()
-        self.bottles = []
+        self._bottles = []
         self._current_bottle_num = 0
         self._previous_bottle_num = 0
 
@@ -246,6 +246,14 @@ class BottleScreen(Screen):
         self._shift_direction = const.LEFT
 
         self.show_color_codes = False
+
+    @property
+    def bottles(self):
+        return self._bottles
+
+    @bottles.setter
+    def bottles(self, value):
+        self._bottles = value
 
     @property
     def current_bottle(self):
