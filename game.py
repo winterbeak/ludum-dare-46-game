@@ -358,9 +358,9 @@ class SelectionScreen(BottleScreen):
         self._icon_row.update()
         self._icon_row.selected_bottle_num = self.current_bottle_num
 
-    def draw(self, surface):
+    def draw(self, surface, symbols=None):
         super().draw(surface)
-        self._icon_row.draw(surface)
+        self._icon_row.draw(surface, symbols)
 
 
 class PlayScreen:
