@@ -127,6 +127,10 @@ class BottleIconRow:
     def position(self):
         return self._position
 
+    @property
+    def width(self):
+        return self._width
+
     def update(self):
         self._update_scroll()
 
