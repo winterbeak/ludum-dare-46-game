@@ -245,6 +245,8 @@ class BottleScreen(Screen):
         self._shift = curves.SineOut(0, self.SHIFT_AMOUNT, self.SHIFT_LENGTH)
         self._shift_direction = const.LEFT
 
+        self.show_color_codes = False
+
     @property
     def current_bottle(self):
         return self.bottles[self.current_bottle_num]
@@ -308,10 +310,10 @@ class BottleScreen(Screen):
             else:
                 x = base_x + self._shift.current_value - self.SHIFT_AMOUNT
 
-            surface.blit(bottle.render(), (x, base_y))
+            surface.blit(bottle.render(self.show_color_codes), (x, base_y))
 
         else:
-            surface.blit(bottle.render(), (base_x, base_y))
+            surface.blit(bottle.render(self.show_color_codes), (base_x, base_y))
 
     def _draw_previous_bottle(self, surface):
         bottle = self.previous_bottle
@@ -323,10 +325,10 @@ class BottleScreen(Screen):
             else:
                 x = base_x + self._shift.current_value
 
-            surface.blit(bottle.render(), (x, base_y))
+            surface.blit(bottle.render(self.show_color_codes), (x, base_y))
 
         else:
-            surface.blit(bottle.render(), (base_x, base_y))
+            surface.blit(bottle.render(self.show_color_codes), (base_x, base_y))
 
 
 class PlayScreen:
