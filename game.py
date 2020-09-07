@@ -1319,72 +1319,50 @@ class MenuScreen(PlayScreen):
         return height
 
 
-class ResultScreen(MenuScreen):
+class ResultScreen(SelectionScreen):
+
+    BOTTLE_CONTAINER_LEFT = 300
+    BOTTLE_CONTAINER = (BOTTLE_CONTAINER_LEFT, 0,
+                        screen.unscaled.get_width() - BOTTLE_CONTAINER_LEFT,
+                        screen.unscaled.get_height())
+
+    ICON_ROW_POSITION = geometry.Point(368, 13)
+    ICON_ROW_WIDTH = 200
 
     def __init__(self):
-        super().__init__()
-        self.bottles = None
+        super().__init__(self.BOTTLE_CONTAINER, self.ICON_ROW_POSITION, self.ICON_ROW_WIDTH)
+        self.space_key_active = True
+
+        self.selected = False
         self.background = None
-        self._bottle_num = 0
         self.allergies = []
         self.win = False
-        self.TEXT_SECTION = (0, 0, self.BOTTLE_SECTION_LEFT, screen.unscaled.get_height())
+        self.TEXT_SECTION = (0, 0, self.BOTTLE_CONTAINER_LEFT, screen.unscaled.get_height())
 
     def update(self):
-        if self.is_shifting():
-            self.shift.frame += 1
 
-        if events.keys.released_key == pygame.K_SPACE:
-            self.selected = True
+        if events.keys.released_key == pygame.K_LEFT:
 
-        elif events.keys.released_key == pygame.K_LEFT:
-
-            menu_release.play_random()
-
-            if self.bottle_num > 0:
+            if self._current_bottle_num > 0:
                 for allergy in self.current_bottle.adds_allergies:
                     self.allergies.remove(allergy)
 
-                self.bottle_num -= 1
-
         elif events.keys.released_key == pygame.K_RIGHT:
 
-            menu_release.play_random()
-
-            if self.bottle_num < len(self.bottles) - 1:
-                self.bottle_num += 1
-
+            if self._current_bottle_num < len(self.bottles) - 1:
                 for allergy in self.current_bottle.adds_allergies:
                     self.allergies.append(allergy)
 
-        if events.keys.released_key == pygame.K_SPACE:
-            start_release.play_random()
-            self.selected = True
+        super().update()
 
-        if events.keys.pressed_key == pygame.K_SPACE:
-            start_press.play_random()
+    def _space_key_action(self):
+        self.selected = True
 
-        if events.keys.pressed_key == pygame.K_LEFT:
-            menu_press.play_random()
-        elif events.keys.pressed_key == pygame.K_RIGHT:
-            menu_press.play_random()
-
-        self._scroll_to_bottle(self._bottle_num)
-
-    def render_bottle(self, bottle):
-        return bottle.render(text_color_codes=True)
-
-    def draw(self, surface):
+    def draw(self, surface, symbols=None):
         if self.win:
             self.background.draw(surface, (0, 0))
         else:
             surface.fill(colors.BLACK)
-
-        self.draw_bottles(surface)
-        if self.win:
-            ui.draw(surface, (0, 0))
-
-        self.draw_controls(surface, (334, 18))
 
         # Draws the row of bottle icons
         symbols = []
@@ -1396,11 +1374,11 @@ class ResultScreen(MenuScreen):
             else:
                 symbols.append(const.SYMBOL_NONE)
 
-        self._draw_bottle_select(surface, (368, 13), self._bottle_num, symbols)
+        super().draw(surface, symbols)
 
         # Draws return to menu text
         text = graphics.tahoma.render("Press SPACE to return to level select.", False, colors.BLACK)
-        text_x = (self.BOTTLE_SECTION_LEFT - text.get_width()) // 2
+        text_x = (self.BOTTLE_CONTAINER_LEFT - text.get_width()) // 2
 
         rect = (text_x - 10, 250, text.get_width() + 20, text.get_height() + 20)
         pygame.draw.rect(surface, colors.WHITE, rect)
@@ -1415,10 +1393,10 @@ class ResultScreen(MenuScreen):
 
         if self.allergies:
             string += " <br> Allergies: " + ", ".join(self.allergies)
-        max_width = self.BOTTLE_SECTION[2] - 40
+        max_width = self.BOTTLE_CONTAINER[2] - 40
         text = graphics.text_block_color_codes(string, graphics.tahoma, max_width)
 
-        text_x = self.BOTTLE_SECTION[0] + 20
+        text_x = self.BOTTLE_CONTAINER[0] + 20
 
         rect = (text_x - 10, 310, text.get_width() + 20, text.get_height() + 20)
         pygame.draw.rect(surface, colors.WHITE, rect)
@@ -1436,23 +1414,6 @@ class ResultScreen(MenuScreen):
             x, y = geometry.centered(self.TEXT_SECTION, size)
             y -= 50
             sprite.draw(surface, (x, y))
-
-    @property
-    def bottle_num(self):
-        return self._bottle_num
-
-    @bottle_num.setter
-    def bottle_num(self, value):
-        if value < self._bottle_num:
-            self._shift_direction = const.RIGHT
-        elif value > self._bottle_num:
-            self._shift_direction = const.LEFT
-        else:
-            return
-        self._bottle_num = value
-        self.previous_bottle = self.current_bottle
-        self.current_bottle = self.bottles[value]
-        self._start_shifting_animation()
 
 
 def menu_play_transition(menu, play):
@@ -1494,9 +1455,7 @@ def play_result_transition(play, result):
 
     result.allergies = play.allergies
     result.bottles = play.bottles
-    result.current_bottle = play.previous_bottle
-    result.bottle_num = len(result.bottles) - 1
-    result.shift.frame = result.shift.length
+    result.current_bottle_num = len(result.bottles) - 1
 
     if play.win:
         result.win = True
