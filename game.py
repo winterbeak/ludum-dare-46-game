@@ -369,6 +369,20 @@ class SelectionScreen(BottleScreen):
     def draw(self, surface, symbols=None):
         super().draw(surface)
         self._icon_row.draw(surface, symbols)
+        self._draw_arrow_keys(surface)
+
+    def _draw_arrow_keys(self, surface):
+        y = self._icon_row.position.y + 5
+
+        left_x = self._icon_row.position.x - 28
+        if pygame.K_LEFT in events.keys.queue:
+            left_x -= 6
+        key_left.draw(surface, (left_x, y))
+
+        right_x = self._icon_row.position.x + self._icon_row.width + 13
+        if pygame.K_RIGHT in events.keys.queue:
+            right_x += 6
+        key_right.draw(surface, (right_x, y))
 
 
 class PlayScreen:
