@@ -339,6 +339,30 @@ class BottleScreen(Screen):
             surface.blit(bottle.render(self.show_color_codes), (base_x, base_y))
 
 
+class SelectionScreen(BottleScreen):
+    def __init__(self, bottle_container, icon_row_position, icon_row_width):
+        super().__init__(bottle_container)
+        self._icon_row = BottleIconRow(self.bottles, icon_row_position, icon_row_width)
+
+    @property
+    def bottles(self):
+        return self._bottles
+
+    @bottles.setter
+    def bottles(self, value):
+        self._bottles = value
+        self._icon_row.bottles = value
+
+    def update(self):
+        super().update()
+        self._icon_row.update()
+        self._icon_row.selected_bottle_num = self.current_bottle_num
+
+    def draw(self, surface):
+        super().draw(surface)
+        self._icon_row.draw(surface)
+
+
 class PlayScreen:
     """ Handles the main gameplay. """
 
