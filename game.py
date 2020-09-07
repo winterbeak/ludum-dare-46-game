@@ -352,6 +352,8 @@ class SelectionScreen(BottleScreen):
         super().__init__(bottle_container)
         self._icon_row = BottleIconRow(self.bottles, icon_row_position, icon_row_width)
 
+        self.space_key_active = False
+
     @property
     def bottles(self):
         return self._bottles
@@ -375,6 +377,14 @@ class SelectionScreen(BottleScreen):
 
     def _handle_inputs(self):
 
+        if self.space_key_active:
+            if events.keys.pressed_key == pygame.K_SPACE:
+                start_press.play_random()
+
+            if events.keys.released_key == pygame.K_SPACE:
+                start_release.play_random()
+                self._space_key_action()
+
         if events.keys.pressed_key == pygame.K_LEFT:
             menu_press.play_random()
 
@@ -388,6 +398,9 @@ class SelectionScreen(BottleScreen):
         elif events.keys.released_key == pygame.K_RIGHT:
             menu_release.play_random()
             self._shift_to_next_bottle()
+
+    def _space_key_action(self):
+        pass
 
     def _draw_arrow_keys(self, surface):
         y = self._icon_row.position.y + 5
