@@ -123,6 +123,10 @@ class BottleIconRow:
         self._scroll = 0
         self.selected_bottle_num = 0
 
+    @property
+    def position(self):
+        return self._position
+
     def update(self):
         self._update_scroll()
 
