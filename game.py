@@ -1455,6 +1455,13 @@ def play_result_transition(play, result):
                 play.bottles[bottle_index].effects[effect_index] = string
 
     result.allergies = play.allergies
+
+    # Removes allergies added by the last bottle, since the list of allergies on
+    # the results screen functions in a way where the last bottle's allergies
+    # should never show up
+    for allergy in play.bottles[-1].adds_allergies:
+        result.allergies.remove(allergy)
+
     result.bottles = play.bottles
     result.current_bottle_num = len(result.bottles) - 1
 
