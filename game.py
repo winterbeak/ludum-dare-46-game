@@ -365,8 +365,8 @@ class SelectionScreen(BottleScreen):
 
     def update(self):
         super().update()
-        self._icon_row.update()
         self._icon_row.selected_bottle_num = self.current_bottle_num
+        self._icon_row.update()
 
         self._handle_inputs()
 
