@@ -1344,7 +1344,8 @@ class ResultScreen(SelectionScreen):
         if events.keys.released_key == pygame.K_LEFT:
 
             if self._current_bottle_num > 0:
-                for allergy in self.current_bottle.adds_allergies:
+                bottle = self.bottles[self.current_bottle_num - 1]
+                for allergy in bottle.adds_allergies:
                     self.allergies.remove(allergy)
 
         elif events.keys.released_key == pygame.K_RIGHT:
