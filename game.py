@@ -405,12 +405,12 @@ class SelectionScreen(BottleScreen):
     def _draw_arrow_keys(self, surface):
         y = self._icon_row.position.y + 5
 
-        left_x = self._icon_row.position.x - 28
+        left_x = self._icon_row.position.x - 24
         if pygame.K_LEFT in events.keys.queue:
             left_x -= 6
         key_left.draw(surface, (left_x, y))
 
-        right_x = self._icon_row.position.x + self._icon_row.width + 13
+        right_x = self._icon_row.position.x + self._icon_row.width + 9
         if pygame.K_RIGHT in events.keys.queue:
             right_x += 6
         key_right.draw(surface, (right_x, y))
